@@ -1,3 +1,4 @@
+import * as functions from 'firebase-functions';
 import { Response } from 'express';
 import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
@@ -34,8 +35,10 @@ const UserValidation = {
     }
 };
 
+const apiVersion = functions.config().env.api.version;
+
 @ApiPath({
-    path: '/todo-0711/us-central1/api/v1/users',
+    path: `/api/${apiVersion}/users`,
     name: 'Version',
     security: { basicAuth: [] }
 })

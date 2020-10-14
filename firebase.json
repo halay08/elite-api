@@ -12,6 +12,7 @@
             ".firebaserc",
             "firebase.json",
             "**/node_modules/**",
+            "**/logs/**",
             "**/src/**",
             "**/public/**"
         ],

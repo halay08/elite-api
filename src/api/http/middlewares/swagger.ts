@@ -6,6 +6,7 @@ export default (app: express.Application) => {
     app.use(
         swaggerExpress({
             definition: {
+                schemes: ["http", "https"],
                 info: {
                     title: 'Elite API',
                     version: '1.0'

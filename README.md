@@ -1,4 +1,4 @@
-# Elite
+# Elite API
 
 A DDD application focused on separation of concerns and scalability.
 Loosely coupling with clear dependency graphs provided by Inversion of Control.
@@ -15,6 +15,20 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
         ├── domain # Business domain classes and everything that composes domain model
         ├── infra # Communication with what is external of application
         └── libs # Common functionalities
+
+## Dev Environment
+
+Start firestore for database.
+
+```sh
+yarn firestore:start
+```
+
+Open another terminal, then run:
+
+```sh
+yarn dev
+```
 
 ## API
 
