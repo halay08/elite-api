@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "elites-work-staging",
+    "production": "react-firebase-dashboard-97a48"
+  }
+}

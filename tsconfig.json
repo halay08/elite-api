@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "types": ["reflect-metadata", "swagger-express-ts"],
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "outDir": "lib",
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2017",
+        "resolveJsonModule": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false,
+        "baseUrl": "src",
+        "paths": {
+            "@/src/*": ["./*"],
+            "@/api/http/*": ["api/http/*"],
+            "@/app/*": ["app/*"],
+            "@/domain/*": ["domain/*"],
+            "@/libs/*": ["libs/*"],
+            "@/infra/*": ["infra/*"],
+            "@/infra/repositories/*": ["infra/database/repositories/*"]
+        }
+    },
+    "compileOnSave": true,
+    "include": ["src"],
+    "exclude": ["**/*.json.gpg"]
+}

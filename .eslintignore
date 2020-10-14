@@ -1,0 +1,4 @@
+*.json.gpg
+*.json
+*.html
+dist
