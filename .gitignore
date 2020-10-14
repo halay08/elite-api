@@ -15,3 +15,6 @@ node_modules/
 
 logs
 *.log
+
+# VS Code local history
+.history/
