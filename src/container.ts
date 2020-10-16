@@ -13,6 +13,7 @@ import { IServer, Server } from './api/http/server';
 import { FirestoreData } from './infra/database/firestores';
 import { Logger } from './infra/logging/pino';
 import TYPES from './types';
+import FireAuth from '@/infra/auth/firebase/auth';
 
 const container = new Container();
 if (process.env.NODE_ENV === 'develop') {
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV === 'develop') {
 
 // Manually
 container.bind(TYPES.Database).to(FirestoreData).inSingletonScope();
+
+container.bind(TYPES.FireAuth).to(FireAuth).inSingletonScope();
 
 container.bind(TYPES.Logger).to(Logger).inSingletonScope();
 

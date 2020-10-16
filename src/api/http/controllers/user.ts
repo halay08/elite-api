@@ -4,6 +4,7 @@ import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
 import {
+    BaseHttpController,
     controller,
     httpDelete,
     httpGet,
@@ -24,11 +25,12 @@ import {
 import { User } from '@/domain/user';
 import { UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
+import { authorize } from '@/api/http/middlewares';
 
 const UserValidation = {
     create: {
         body: Joi.object({
-            id: Joi.number(),
+            uid: Joi.number(),
             name: Joi.string().min(6).required(),
             email: Joi.string().email().required()
         })
@@ -43,8 +45,10 @@ const apiVersion = functions.config().env.api.version;
     security: { basicAuth: [] }
 })
 @controller(`/users`)
-export class UserController implements interfaces.Controller {
-    constructor(@inject(TYPES.UserService) private userService: UserService) {}
+export class UserController extends BaseHttpController implements interfaces.Controller {
+    constructor(@inject(TYPES.UserService) private userService: UserService) {
+        super();
+    }
 
     @ApiOperationGet({
         description: 'Get users list',
@@ -71,13 +75,32 @@ export class UserController implements interfaces.Controller {
         }
     }
 
-    @httpGet('/:id')
+    @ApiOperationGet({
+        description: 'Get user by id',
+        summary: 'Get user by document id',
+        path: '/:id',
+        responses: {
+            200: {
+                description: 'Success',
+                type: SwaggerDefinitionConstant.Response.Type.ARRAY,
+                model: 'User',
+            },
+            401: {
+                description: 'Unauthorized',
+            },
+        },
+        security: {
+            bearerHeader: []
+        }
+    })
+    @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
     public async getUser(
         @requestParam('id') id: string,
         @response() res: Response
     ): Promise<User | void> {
         try {
             const data = await this.userService.getUser(id);
+            console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
 
             return data;
         } catch (error) {

@@ -9,4 +9,5 @@ if (process.env.NODE_ENV === 'develop') {
     });
 }
 
-export { db };
+export default db;
+
