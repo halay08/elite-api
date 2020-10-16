@@ -11,6 +11,7 @@ import ValidationHandler from '@/api/http/middlewares/validation';
 import { Logger } from '@/infra/logging/pino';
 import Container from '@/src/container';
 import TYPES from '@/src/types';
+import AuthProvider from './providers/auth';
 
 export interface IServer {
     start(): Application;
@@ -22,9 +23,15 @@ export class Server implements IServer {
 
     start(): Application {
         const logger = this.theLogger.get();
-        const server = new InversifyExpressServer(Container, null, {
-            rootPath: `/${apiVersion}`
-        });
+        const server = new InversifyExpressServer(
+            Container,
+            null,
+            {
+                rootPath: `/${apiVersion}`
+            },
+            null,
+            AuthProvider,
+        );
 
         server.setConfig((app) => {
             swagger(app);

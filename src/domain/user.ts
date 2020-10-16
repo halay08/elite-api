@@ -8,8 +8,6 @@ import { Entity } from './entity';
     name: 'User'
 })
 export class UserEntity {
-    id?: string;
-
     @ApiModelProperty({
         description: 'Email',
         required: true
@@ -25,17 +23,12 @@ export class UserEntity {
 
 @injectable()
 export class User extends Entity<UserEntity> {
-    constructor(props: UserEntity) {
-        const { id } = props;
-        super(props, id);
+    constructor(props: UserEntity, _id?: string) {
+        super(props, _id);
     }
 
-    public static create(props: UserEntity): User {
-        const instance = new User(props);
+    public static create(props: UserEntity, _id?: string): User {
+        const instance = new User(props, _id);
         return instance;
-    }
-
-    get id(): string {
-        return this._id;
     }
 }

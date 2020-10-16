@@ -5,6 +5,29 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
 
 ![alt text](architecture.png "Clean Architecture")
 
+- [Elite API](#elite-api)
+  - [Getting Started](#getting-started)
+  - [Project architecture](#project-architecture)
+  - [Setup Development Environment](#setup-development-environment)
+    - [Set firebase project alias](#set-firebase-project-alias)
+    - [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
+    - [Set environment configuration](#set-environment-configuration)
+    - [Retrieve current environment configuration](#retrieve-current-environment-configuration)
+    - [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
+    - [Start the dev server](#start-the-dev-server)
+  - [Using API](#using-api)
+    - [Authorization](#authorization)
+    - [Create an user](#create-an-user)
+    - [List items](#list-items)
+    - [List item by id](#list-item-by-id)
+    - [Update User](#update-user)
+    - [Delete User](#delete-user)
+  - [Troubleshooting](#troubleshooting)
+
+## Getting Started
+
+...
+
 ## Project architecture
 
     .
@@ -24,7 +47,9 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
 firebase use staging
 ```
 
-### Decrypt the service account which is used to connect to firebase. (passphase: 3lite)
+### Decrypt the service account. (passphase: 3lite)
+
+It's used to authenticate and connect to firebase
 
 ```sh
 yarn decrypt:serviceAccountKey
@@ -64,12 +89,64 @@ Open another terminal to start the development server:
 yarn dev
 ```
 
-## API
+## Using API
+
+### Authorization
+
+To set the custom claims for user, please use the sample code below:
+
+```ts
+@inject(TYPES.AuthService) private readonly _authService: AuthService;
+
+// ...
+
+// Firebase user uid = I4bwuWF6uRUe10wqil7DrxvSdvm2
+// Role is admin | student | tutor
+this._authService.setCustomUserClaims('I4bwuWF6uRUe10wqil7DrxvSdvm2', {role: 'admin'});
+```
+
+Use authorization middleware decorator in controller:
+
+```ts
+@httpGet('/', authorize({ roles: ['admin']}))
+public async getUsers(@response() res: Response): Promise<User[] | void> {
+    try {
+        const data = await this.userService.getUsers();
+        // The AuthProvider decoded user token after logging.
+        // You can see the decodedIdToken and user information below:
+        // console.log('Decoded Id Token: ', this.httpContext.user.details);
+
+        return data;
+    } catch (error) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+    }
+}
+```
+
+If you want to allow the action for some roles, please add more items in the roles array, see it below
+
+`@httpGet('/', authorize({ roles: ['admin', 'student']}))`
+
+If the action is required two role for executing, please add two middleware decorators to `@httpGet` decorator:
+
+`@httpGet('/', authorize({ roles: ['admin']}), authorize({ roles: ['student']}))`
+
+Note: We have some APIs that open to publish for all users. It means without authentication and authorization.
+
+Manual check user authenticated in controller:
+
+```
+@httpGet('/')
+public async fooAction() {
+    const isAuthenticated: boolean = this.httpContext.user.isAuthenticated();
+    // ...
+}
+```
 
 ### Create an user
 
 ```sh
-curl -XPOST -i -H"Content-Type: application/json" -d'{"id" : 1, "email": "abc@gmail.com", "name": "Learning Kubernetes"}' http://localhost:5000/todo-0711/us-central1/api/v1/users
+curl -XPOST -i -H"Content-Type: application/json" -d'{"uid" : 1, "email": "abc@gmail.com", "name": "Learning Kubernetes"}' http://localhost:5000/elites-work-staging/asia-east2/api/v1/users
 
 # output
 bC4XfImu5r9SC3UfhCFr
@@ -78,23 +155,51 @@ bC4XfImu5r9SC3UfhCFr
 ### List items
 
 ```sh
-curl -I http://localhost:5000/todo-0711/us-central1/api/v1/users | jq
+curl -I http://localhost:5000/elites-work-staging/asia-east2/api/v1/users | jq
+```
+
+Sample response data
+
+```json
+[
+    {
+        "_id": "zcCqsJbdCVjbvf8Inqzd",
+        "props": {
+            "name": "Khiem 2",
+            "email": "khiem.le@codeenginestudio.com"
+        }
+    }
+]
 ```
 
 ### List item by id
 
 ```sh
-curl -I http://localhost:5000/todo-0711/us-central1/api/v1/users/bC4XfImu5r9SC3UfhCFr | jq
+curl -I http://localhost:5000/elites-work-staging/asia-east2/api/v1/users/bC4XfImu5r9SC3UfhCFr | jq
+```
+
+Sample response data
+
+```json
+{
+    "_id": "zcCqsJbdCVjbvf8Inqzd",
+    "props": {
+        "name": "Khiem 2",
+        "email": "khiem.le@codeenginestudio.com"
+    }
+}
 ```
 
 ### Update User
 
 ```sh
-curl -XPUT -i -H"Content-Type: application/json" -d'{"id" : 1, "email": "abc@gmail.com", "name": "Learning React"}' http://localhost:5000/todo-0711/us-central1/api/v1/users/bC4XfImu5r9SC3UfhCFr
+curl -XPUT -i -H"Content-Type: application/json" -d'{"uid" : 1, "email": "abc@gmail.com", "name": "Learning React"}' http://localhost:5000/elites-work-staging/asia-east2/api/v1/users/bC4XfImu5r9SC3UfhCFr
 ```
 
-# Delete User
+### Delete User
 
 ```sh
-curl -XDELETE -i http://localhost:5000/todo-0711/us-central1/api/v1/users/qPXJqaJrcly2BXja1v8v
+curl -XDELETE -i http://localhost:5000/elites-work-staging/asia-east2/api/v1/users/qPXJqaJrcly2BXja1v8v
 ```
+
+## Troubleshooting
