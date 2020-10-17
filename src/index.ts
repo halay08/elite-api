@@ -1,13 +1,13 @@
-require('dotenv').config()
+require('dotenv').config();
 
-// eslint-disable-next-line import/no-unassigned-import
 import './firebase.config';
+
 import * as functions from 'firebase-functions';
 
 import { IServer } from '@/api/http/server';
 
 import Container from './container';
-// import { nextApp } from './frontend/functions';
+
 import TYPES from './types';
 
 const region = functions.config().env.region;

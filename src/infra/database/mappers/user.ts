@@ -5,9 +5,12 @@ import { User } from '@/domain/user';
  */
 export class UserMapper {
     public static toDomain(raw: any): User {
-        return User.create({
-            name: raw.name,
-            email: raw.email
-        }, raw._id);
+        return User.create(
+            {
+                name: raw.name,
+                email: raw.email
+            },
+            raw._id
+        );
     }
 }

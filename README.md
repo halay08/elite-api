@@ -3,26 +3,27 @@
 A DDD application focused on separation of concerns and scalability.
 Loosely coupling with clear dependency graphs provided by Inversion of Control.
 
-![alt text](architecture.png "Clean Architecture")
+![alt text](architecture.png 'Clean Architecture')
 
-- [Elite API](#elite-api)
-  - [Getting Started](#getting-started)
-  - [Project architecture](#project-architecture)
-  - [Setup Development Environment](#setup-development-environment)
-    - [Set firebase project alias](#set-firebase-project-alias)
-    - [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
-    - [Set environment configuration](#set-environment-configuration)
-    - [Retrieve current environment configuration](#retrieve-current-environment-configuration)
-    - [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
-    - [Start the dev server](#start-the-dev-server)
-  - [Using API](#using-api)
-    - [Authorization](#authorization)
-    - [Create an user](#create-an-user)
-    - [List items](#list-items)
-    - [List item by id](#list-item-by-id)
-    - [Update User](#update-user)
-    - [Delete User](#delete-user)
-  - [Troubleshooting](#troubleshooting)
+-   [Elite API](#elite-api)
+    -   [Getting Started](#getting-started)
+    -   [Project architecture](#project-architecture)
+    -   [Setup Development Environment](#setup-development-environment)
+        -   [Set firebase project alias](#set-firebase-project-alias)
+        -   [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
+        -   [Set environment configuration](#set-environment-configuration)
+        -   [Retrieve current environment configuration](#retrieve-current-environment-configuration)
+        -   [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
+        -   [Start the dev server](#start-the-dev-server)
+    -   [Using API](#using-api)
+        -   [Authorization](#authorization)
+        -   [Create an user](#create-an-user)
+        -   [List items](#list-items)
+        -   [List item by id](#list-item-by-id)
+        -   [Update User](#update-user)
+        -   [Delete User](#delete-user)
+    -   [VS Code](#vs-code)
+    -   [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
@@ -200,6 +201,18 @@ curl -XPUT -i -H"Content-Type: application/json" -d'{"uid" : 1, "email": "abc@gm
 
 ```sh
 curl -XDELETE -i http://localhost:5000/elites-work-staging/asia-east2/api/v1/users/qPXJqaJrcly2BXja1v8v
+```
+
+## VS Code
+
+Automatically fix code in VS Code
+
+```js
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+}
 ```
 
 ## Troubleshooting

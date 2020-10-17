@@ -14,18 +14,13 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import {
-    ApiOperationGet,
-    ApiOperationPost,
-    ApiPath,
-    SwaggerDefinitionConstant
-} from 'swagger-express-ts';
+import { ApiOperationGet, ApiOperationPost, ApiPath, SwaggerDefinitionConstant } from 'swagger-express-ts';
 
 import { User } from '@/domain/user';
 import { UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
-import { apiVersion } from '@/api/http/config/constants'
+import { apiVersion } from '@/api/http/config/constants';
 
 const UserValidation = {
     create: {
@@ -81,21 +76,18 @@ export class UserController extends BaseHttpController implements interfaces.Con
             200: {
                 description: 'Success',
                 type: SwaggerDefinitionConstant.Response.Type.ARRAY,
-                model: 'User',
+                model: 'User'
             },
             401: {
-                description: 'Unauthorized',
-            },
+                description: 'Unauthorized'
+            }
         },
         security: {
             bearerHeader: []
         }
     })
     @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
-    public async getUser(
-        @requestParam('id') id: string,
-        @response() res: Response
-    ): Promise<User | void> {
+    public async getUser(@requestParam('id') id: string, @response() res: Response): Promise<User | void> {
         try {
             const data = await this.userService.getUser(id);
             console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
@@ -147,10 +139,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
     }
 
     @httpDelete('/:id')
-    public async deleteUser(
-        @requestParam('id') id: string,
-        @response() res: Response
-    ): Promise<string | void> {
+    public async deleteUser(@requestParam('id') id: string, @response() res: Response): Promise<string | void> {
         try {
             const data = await this.userService.deleteUser(id);
 

@@ -8,7 +8,6 @@ import { Entity } from './entity';
     name: 'Country'
 })
 export class CountryEtity {
-
     @ApiModelProperty({
         description: 'Name of country',
         required: true
@@ -28,15 +27,14 @@ export class CountryEtity {
     createdAt: Date;
 
     @ApiModelProperty({
-        description: 'Updated time. Optional',
+        description: 'Updated time. Optional'
     })
     updatedAt?: Date;
 
     @ApiModelProperty({
-        description: 'Deleted time. Optional',
+        description: 'Deleted time. Optional'
     })
     deletedAt?: Date;
-
 }
 
 @injectable()

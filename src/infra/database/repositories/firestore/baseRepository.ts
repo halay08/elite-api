@@ -5,7 +5,6 @@ import TYPES from '@/src/types';
 
 @injectable()
 export default abstract class BaseRepository<T> {
-
     // Use for current collection, it's shorter to call,
     // ex., this.collection.find() instead of this.database.{collection_name}.find()
     protected collection: FirestoreCollection<T>;
@@ -19,5 +18,4 @@ export default abstract class BaseRepository<T> {
     }
 
     protected abstract getCollection(): string;
-    
 }

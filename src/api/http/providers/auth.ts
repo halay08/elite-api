@@ -12,7 +12,6 @@ const authService = inject(TYPES.AuthService);
  * Principal
  */
 class Principal implements fireauth.IPrincipal {
-
     /**
      * Details  of principal
      */
@@ -20,7 +19,7 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Creates an instance of principal.
-     * @param details 
+     * @param details
      */
     public constructor(details: any) {
         this.details = details;
@@ -28,7 +27,7 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Determines whether authenticated is
-     * @returns authenticated 
+     * @returns authenticated
      */
     public isAuthenticated(): Promise<boolean> {
         return Promise.resolve(this.details.user !== null);
@@ -36,8 +35,8 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Determines whether resource owner is
-     * @param resourceId 
-     * @returns resource owner 
+     * @param resourceId
+     * @returns resource owner
      */
     public isResourceOwner(resourceId: any): Promise<boolean> {
         // TODO:
@@ -46,8 +45,8 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Determines whether in role is
-     * @param role 
-     * @returns in role 
+     * @param role
+     * @returns in role
      */
     public isInRole(role: string): Promise<boolean> {
         const userRole: string = this.details.user.customClaims?.role;
@@ -56,8 +55,8 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Determines whether in roles is
-     * @param roles 
-     * @returns in roles 
+     * @param roles
+     * @returns in roles
      */
     public isInRoles(roles: string[]): Promise<boolean> {
         const userRole: string = this.details.user.customClaims?.role;
@@ -66,12 +65,11 @@ class Principal implements fireauth.IPrincipal {
 
     /**
      * Determines whether banned is
-     * @returns banned 
+     * @returns banned
      */
     public isDisabled(): Promise<boolean> {
         return Promise.resolve(this.details.user.disabled);
     }
-
 }
 
 @injectable()
@@ -92,7 +90,7 @@ class AuthProvider implements interfaces.AuthProvider {
     ): Promise<interfaces.Principal> {
         const details: any = {
             decodedIdToken: null,
-            user: null,
+            user: null
         };
 
         const bearerHeader = req.header('Authorization') || '';
@@ -112,8 +110,8 @@ class AuthProvider implements interfaces.AuthProvider {
             }
         }
 
-        const principal = new Principal({...details});
-        
+        const principal = new Principal({ ...details });
+
         return principal;
     }
 }

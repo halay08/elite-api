@@ -4,7 +4,12 @@ module.exports = {
         es6: true,
         node: true
     },
-    extends: ['plugin:import/errors', 'plugin:import/warnings'],
+    extends: [
+        'plugin:import/errors',
+        'plugin:import/warnings',
+        'prettier/@typescript-eslint',
+        'plugin:prettier/recommended'
+    ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         project: 'tsconfig.json',
@@ -27,8 +32,8 @@ module.exports = {
         eqeqeq: ['warn', 'always'],
         'import/no-deprecated': 'warn',
         'import/no-extraneous-dependencies': 'error',
-        'import/no-unassigned-import': 'warn',
-        'import/no-unresolved': 'warn',
+        'import/no-unassigned-import': 'off',
+        'import/no-unresolved': 'off',
         'no-cond-assign': 'error',
         'no-duplicate-case': 'error',
         'no-duplicate-imports': 'error',

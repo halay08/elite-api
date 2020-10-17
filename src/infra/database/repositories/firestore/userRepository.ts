@@ -9,10 +9,9 @@ import BaseRepository from './baseRepository';
 
 @provide(TYPES.UserRepository)
 export default class UserRepository extends BaseRepository<User> implements IUserRepository {
-
     /**
      * Gets collection
-     * @returns  
+     * @returns
      */
     protected getCollection() {
         return 'users';
@@ -20,7 +19,7 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Finds all
-     * @returns all 
+     * @returns all
      */
     async findAll(): Promise<User[]> {
         const users = await this.collection.findAll();
@@ -29,8 +28,8 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Finds by id
-     * @param id 
-     * @returns by id 
+     * @param id
+     * @returns by id
      */
     async findById(id: string): Promise<User> {
         const item = await this.collection.findById(id);
@@ -42,8 +41,8 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Creates user repository
-     * @param user 
-     * @returns create 
+     * @param user
+     * @returns create
      */
     async create(user: User): Promise<string> {
         const inserted = await this.collection.create(user);
@@ -52,9 +51,9 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Updates user repository
-     * @param id 
-     * @param user 
-     * @returns update 
+     * @param id
+     * @param user
+     * @returns update
      */
     async update(id: string, user: User): Promise<string> {
         return await this.collection.update(id, user);
@@ -62,11 +61,10 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Deletes user repository
-     * @param id 
-     * @returns delete 
+     * @param id
+     * @returns delete
      */
     async delete(id: string): Promise<string> {
         return await this.collection.delete(id);
     }
-    
 }

@@ -5,8 +5,8 @@ import { ApiModel, ApiModelProperty } from 'swagger-express-ts';
     name: 'CallToken'
 })
 export class CallToken {
-  @ApiModelProperty({
-      description: 'Token'
-  })
-  token: string;
+    @ApiModelProperty({
+        description: 'Token'
+    })
+    token: string;
 }

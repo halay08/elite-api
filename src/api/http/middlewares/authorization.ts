@@ -5,7 +5,7 @@ import HttpStatus from 'http-status-codes';
 
 /**
  * Authorizations factory
- * @returns  
+ * @returns
  */
 function authorizationFactory() {
     return (config: { roles?: string[] }) => {
@@ -24,16 +24,16 @@ function authorizationFactory() {
                     const authorized = await principal.isInRoles(roles);
                     if (authorized) {
                         next();
-                        return
+                        return;
                     }
                 }
             }
 
             // If role is defined but not have authorization.
             if (config.roles) {
-                res.status(HttpStatus.UNAUTHORIZED).end("Unauthorized");
+                res.status(HttpStatus.UNAUTHORIZED).end('Unauthorized');
             }
-            
+
             next();
         };
     };

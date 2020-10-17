@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 import { fireauth, BaseAuth } from './types';
 
 /**
@@ -6,7 +6,6 @@ import { fireauth, BaseAuth } from './types';
  */
 @injectable()
 export default class FireAuth extends BaseAuth implements fireauth.IAuth {
-    
     /**
      * Verifies a Firebase ID token (JWT). If the token is valid, the promise is
      * fulfilled with the token's decoded claims; otherwise, the promise is

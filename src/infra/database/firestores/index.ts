@@ -10,7 +10,4 @@ class FirestoreData {
     public users: FirestoreCollection<User> = new FirestoreCollection('users');
 }
 
-export {
-    FirestoreCollection,
-    FirestoreData
-}
+export { FirestoreCollection, FirestoreData };

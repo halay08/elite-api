@@ -12,7 +12,6 @@ export class BaseAuth {
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace fireauth {
-
     // eslint-disable-next-line
     interface IDecodedIdToken extends admin.auth.DecodedIdToken { }
 
@@ -30,29 +29,28 @@ export declare namespace fireauth {
 
     interface IPrincipal extends interfaces.Principal {
         /**
-         * 
-         * @returns disabled 
+         *
+         * @returns disabled
          */
         isDisabled(): Promise<boolean>;
 
         /**
-         * 
-         * @param role 
-         * @returns in role 
+         *
+         * @param role
+         * @returns in role
          */
         isInRoles(roles: string[]): Promise<boolean>;
     }
 
     type IPrincipalDetail = {
-        decodedIdToken: IDecodedIdToken,
-        user: IUserRecord,
-    }
+        decodedIdToken: IDecodedIdToken;
+        user: IUserRecord;
+    };
 
     /**
      * Iauth
      */
     interface IAuth {
-        
         /**
          * Gets the user data for the user corresponding to a given email.
          *
@@ -113,7 +111,7 @@ export declare namespace fireauth {
          *   updated user data.
          */
         updateUser(uid: string, properties: IUpdateRequest): Promise<IUserRecord>;
-        
+
         /**
          * Verifies a Firebase ID token (JWT). If the token is valid, the promise is
          * fulfilled with the token's decoded claims; otherwise, the promise is
@@ -172,6 +170,6 @@ export declare namespace fireauth {
          * @return A promise fulfilled with the user
          *   data corresponding to the provided `uid`.
          */
-        getUser(uid: string): Promise<IUserRecord>
+        getUser(uid: string): Promise<IUserRecord>;
     }
 }

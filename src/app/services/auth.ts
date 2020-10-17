@@ -6,14 +6,11 @@ import { inject } from 'inversify';
 
 @provide(TYPES.AuthService)
 export default class AuthService {
-
     /**
      * Creates an instance of auth service.
-     * @param _auth 
+     * @param _auth
      */
-    constructor(
-        @inject(TYPES.FireAuth) private readonly _auth: fireauth.IAuth
-    ) {}
+    constructor(@inject(TYPES.FireAuth) private readonly _auth: fireauth.IAuth) {}
 
     /**
      * Verifies a Firebase ID token (JWT). If the token is valid, the promise is

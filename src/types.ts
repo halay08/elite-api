@@ -8,7 +8,7 @@ const TYPES = {
 
     UserRepository: Symbol.for('UserRepository'),
     UserService: Symbol.for('UserService'),
-    AuthService: Symbol.for('AuthService'),
+    AuthService: Symbol.for('AuthService')
 };
 
 export default TYPES;

@@ -1,20 +1,10 @@
 import { Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
-import {
-    controller,
-    httpGet,
-    interfaces,
-    queryParam,
-    response
-} from 'inversify-express-utils';
-import {
-    ApiOperationGet,
-    ApiPath,
-    SwaggerDefinitionConstant
-} from 'swagger-express-ts';
+import { controller, httpGet, interfaces, queryParam, response } from 'inversify-express-utils';
+import { ApiOperationGet, ApiPath, SwaggerDefinitionConstant } from 'swagger-express-ts';
 
-import { apiVersion } from '@/api/http/config/constants'
+import { apiVersion } from '@/api/http/config/constants';
 import { CallToken } from '@/domain/call';
 import { Call } from '@/infra/call/agora';
 
@@ -27,7 +17,7 @@ import TYPES from '@/src/types';
 })
 @controller(`/call`)
 export class CallController implements interfaces.Controller {
-    @inject(TYPES.Call) private call: Call
+    @inject(TYPES.Call) private call: Call;
 
     @ApiOperationGet({
         description: 'Get Call Token',
@@ -44,19 +34,20 @@ export class CallController implements interfaces.Controller {
         }
     })
     @httpGet('/')
-    public async getToken(@queryParam('channelName') channelName: string,
-                          @queryParam('expiredTime') expiredTime: number = 0, 
-                          @queryParam('uid') uid: number = 0, 
-                          @queryParam('role') role: string = '', 
-                          @response() res: Response): Promise<CallToken | void> {
+    public async getToken(
+        @queryParam('channelName') channelName: string,
+        @queryParam('expiredTime') expiredTime: number = 0,
+        @queryParam('uid') uid: number = 0,
+        @queryParam('role') role: string = '',
+        @response() res: Response
+    ): Promise<CallToken | void> {
         try {
             if (!channelName) {
                 res.status(400).json({ error: 'channel name is required' }).end();
             }
-            return this.call.getToken(channelName, expiredTime, uid, role)
+            return this.call.getToken(channelName, expiredTime, uid, role);
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
         }
     }
-
 }

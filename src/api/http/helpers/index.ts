@@ -1,5 +1,3 @@
 import httpContext from './httpContext';
 
-export {
-    httpContext,
-}
+export { httpContext };

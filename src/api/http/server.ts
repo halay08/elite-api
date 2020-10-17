@@ -30,7 +30,7 @@ export class Server implements IServer {
                 rootPath: `/${apiVersion}`
             },
             null,
-            AuthProvider,
+            AuthProvider
         );
 
         server.setConfig((app) => {

@@ -4,7 +4,7 @@ import * as TypesaurusAdd from 'typesaurus/add';
 
 /**
  * Firestore collection
- * @template T 
+ * @template T
  */
 export default class FirestoreCollection<T> {
     /**
@@ -27,10 +27,12 @@ export default class FirestoreCollection<T> {
     async findById(id: string): Promise<T> {
         const doc = await get(this._collection, id);
 
-        return doc ? {
-            ...doc.data,
-            _id: doc.ref.id,
-        } : (null as any);
+        return doc
+            ? {
+                  ...doc.data,
+                  _id: doc.ref.id
+              }
+            : (null as any);
     }
 
     /**
@@ -77,8 +79,8 @@ export default class FirestoreCollection<T> {
         return docs.map(({ data, ref }) => {
             return {
                 ...data,
-                _id: ref.id,
-            }
+                _id: ref.id
+            };
         });
     }
 }
