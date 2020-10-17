@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "moduleResolution": "node",
-        "types": ["reflect-metadata", "swagger-express-ts"],
+        "types": ["reflect-metadata", "swagger-express-ts", "jest"],
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "outDir": "lib",
@@ -26,5 +26,5 @@
     },
     "compileOnSave": true,
     "include": ["src"],
-    "exclude": ["**/*.json.gpg"]
+    "exclude": ["**/*.json.gpg", "jest.config.js"]
 }

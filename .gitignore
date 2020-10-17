@@ -12,6 +12,7 @@ node_modules/
 .runtimeconfig.json
 
 !.eslintrc.js
+!*.config.js
 
 logs
 *.log

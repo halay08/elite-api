@@ -1,6 +1,7 @@
-// eslint-disable-next-line import/no-unassigned-import
-import './firebase-config';
+require('dotenv').config()
 
+// eslint-disable-next-line import/no-unassigned-import
+import './firebase.config';
 import * as functions from 'firebase-functions';
 
 import { IServer } from '@/api/http/server';

@@ -1,4 +1,4 @@
-import { admin } from '@/src/firebase-config';
+import { admin } from '@/src/firebase.config';
 import { injectable } from 'inversify';
 import { interfaces } from 'inversify-express-utils';
 
@@ -10,6 +10,7 @@ export class BaseAuth {
     protected auth: admin.auth.Auth = admin.auth();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace fireauth {
 
     // eslint-disable-next-line

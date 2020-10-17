@@ -1,8 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { FirestoreData } from '@/infra/database/firestores';
+import { FirestoreData, FirestoreCollection } from '@/infra/database/firestores';
 import TYPES from '@/src/types';
-import { FirestoreCollection } from '@/infra/database/firestores';
 
 @injectable()
 export default abstract class BaseRepository<T> {

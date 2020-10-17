@@ -1,4 +1,3 @@
-import * as functions from 'firebase-functions';
 import { Response } from 'express';
 import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
@@ -26,6 +25,7 @@ import { User } from '@/domain/user';
 import { UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
+import { apiVersion } from '@/api/http/config/constants'
 
 const UserValidation = {
     create: {
@@ -36,8 +36,6 @@ const UserValidation = {
         })
     }
 };
-
-const apiVersion = functions.config().env.api.version;
 
 @ApiPath({
     path: `/api/${apiVersion}/users`,
