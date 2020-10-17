@@ -90,22 +90,26 @@ class AuthProvider implements interfaces.AuthProvider {
         res: express.Response,
         next: express.NextFunction
     ): Promise<interfaces.Principal> {
-        const token = req.header('x-auth-token') || '';
-
         const details: any = {
             decodedIdToken: null,
             user: null,
         };
 
-        try {
-            // Get Decoded Id Token
-            const decodedIdToken: fireauth.IDecodedIdToken = await this._authService.verifyIdToken(token);
-            const user: fireauth.IUserRecord = await this._authService.getUser(decodedIdToken.uid);
+        const bearerHeader = req.header('Authorization') || '';
 
-            details.decodedIdToken = decodedIdToken;
-            details.user = user;
-        } catch (e) {
-            console.log(e.message);
+        if (bearerHeader) {
+            const bearer = bearerHeader.split(' ');
+            const token = bearer[bearer.length - 1];
+            try {
+                // Get Decoded Id Token
+                const decodedIdToken: fireauth.IDecodedIdToken = await this._authService.verifyIdToken(token);
+                const user: fireauth.IUserRecord = await this._authService.getUser(decodedIdToken.uid);
+
+                details.decodedIdToken = decodedIdToken;
+                details.user = user;
+            } catch (e) {
+                console.log(e.message);
+            }
         }
 
         const principal = new Principal({...details});

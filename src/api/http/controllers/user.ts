@@ -75,6 +75,24 @@ export class UserController extends BaseHttpController implements interfaces.Con
         }
     }
 
+    @ApiOperationGet({
+        description: 'Get user by id',
+        summary: 'Get user by document id',
+        path: '/:id',
+        responses: {
+            200: {
+                description: 'Success',
+                type: SwaggerDefinitionConstant.Response.Type.ARRAY,
+                model: 'User',
+            },
+            401: {
+                description: 'Unauthorized',
+            },
+        },
+        security: {
+            bearerHeader: []
+        }
+    })
     @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
     public async getUser(
         @requestParam('id') id: string,
