@@ -90,6 +90,22 @@ Open another terminal to start the development server:
 yarn dev
 ```
 
+## API Documentation
+
+Using [APIDoc](https://apidocjs.com/) as documentation for Restful APIs.
+
+Running the following command to generate documentation:
+
+```
+yarn docs
+```
+
+### VS Code snippet
+
+Install the following extenstion to generate APIDoc format
+
+https://marketplace.visualstudio.com/items?itemName=myax.appidocsnippets
+
 ## Using API
 
 ### Authorization

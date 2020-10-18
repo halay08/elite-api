@@ -14,13 +14,10 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { ApiOperationGet, ApiOperationPost, ApiPath, SwaggerDefinitionConstant } from 'swagger-express-ts';
-
 import { User } from '@/domain/user';
 import { UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
-import { apiVersion } from '@/api/http/config/constants';
 
 const UserValidation = {
     create: {
@@ -32,31 +29,48 @@ const UserValidation = {
     }
 };
 
-@ApiPath({
-    path: `/api/${apiVersion}/users`,
-    name: 'Version',
-    security: { basicAuth: [] }
-})
 @controller(`/users`)
 export class UserController extends BaseHttpController implements interfaces.Controller {
     constructor(@inject(TYPES.UserService) private userService: UserService) {
         super();
     }
 
-    @ApiOperationGet({
-        description: 'Get users list',
-        summary: 'Get users list',
-        responses: {
-            200: {
-                description: 'Success',
-                type: SwaggerDefinitionConstant.Response.Type.ARRAY,
-                model: 'User'
-            }
-        },
-        security: {
-            apiKeyHeader: []
-        }
-    })
+    /**
+     *
+     * @api {GET} /users Get list of users
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     *
+     * @apiHeader {String} Authorization Access token
+     * @apiHeaderExample {json} Header-Example:
+     *   {
+     *      "Authorization": "Bearer sdhjfksfdhjk23903482093483290"
+     *   }
+     *
+     * @apiSuccess (200) {Array} List of users
+     * @apiSuccessExample {Array} Success-Response:
+     * [
+     *      {
+     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
+     *          "props": {
+     *              "name": "test123",
+     *              "email": "test@gmail.com"
+     *          }
+     *      }
+     * ]
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "something went wrong"
+     *   }
+     *
+     * @apiError UNAUTHORIZED Return Error Message.
+     * @apiErrorExample {String} Error-Response:
+     *   Error 401: Unauthorized
+     *   Unauthorized
+     */
     @httpGet('/')
     public async getUsers(@response() res: Response): Promise<User[] | void> {
         try {
@@ -68,24 +82,42 @@ export class UserController extends BaseHttpController implements interfaces.Con
         }
     }
 
-    @ApiOperationGet({
-        description: 'Get user by id',
-        summary: 'Get user by document id',
-        path: '/:id',
-        responses: {
-            200: {
-                description: 'Success',
-                type: SwaggerDefinitionConstant.Response.Type.ARRAY,
-                model: 'User'
-            },
-            401: {
-                description: 'Unauthorized'
-            }
-        },
-        security: {
-            bearerHeader: []
-        }
-    })
+    /**
+     *
+     * @api {GET} /users/:id Get user by id
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     *
+     * @apiHeader {String} Authorization Access token
+     * @apiHeaderExample {json} Header-Example:
+     *   {
+     *      "Authorization": "Bearer sdhjfksfdhjk23903482093483290"
+     *   }
+     *
+     * @apiParam  {String} userId Id of user
+     *
+     * @apiSuccess (200) {Object} User data
+     * @apiSuccessExample {Object} Success-Response:
+     *      {
+     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
+     *          "props": {
+     *              "name": "test123",
+     *              "email": "test@gmail.com"
+     *          }
+     *      }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     *
+     * @apiError UNAUTHORIZED Return Error Message.
+     * @apiErrorExample {String} Error-Response:
+     *   Error 401: Unauthorized
+     *   Unauthorized
+     */
     @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
     public async getUser(@requestParam('id') id: string, @response() res: Response): Promise<User | void> {
         try {
@@ -98,20 +130,26 @@ export class UserController extends BaseHttpController implements interfaces.Con
         }
     }
 
-    @ApiOperationPost({
-        description: 'Create a new user',
-        summary: 'Signup',
-        security: {
-            // bearerHeader: []
-        },
-        parameters: {
-            body: { description: 'New version', required: true, model: 'User' }
-        },
-        responses: {
-            200: { description: 'Success' },
-            400: { description: 'Parameters fail' }
-        }
-    })
+    /**
+     *
+     * @api {POST} /users Create a new user
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     *
+     * @apiParam  {String} email Email of user
+     * @apiParam  {String} name Name of user
+     *
+     * @apiSuccess (200) {String} User's Id
+     * @apiSuccessExample {String} Success-Response:
+     *     "Ygfec8d3BfVk7E7OeDPm"
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     */
     @httpPost('/', validate(UserValidation.create))
     public async newUser(@requestBody() user: User, @response() res: Response): Promise<void> {
         try {
@@ -123,6 +161,33 @@ export class UserController extends BaseHttpController implements interfaces.Con
         }
     }
 
+    /**
+     *
+     * @api {PUT} /users/:id Update user
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     *
+     * @apiParam  {String} id Id
+     * @apiParam  {String} email Email of user
+     * @apiParam  {String} name Name of user
+     *
+     * @apiSuccess (200) {Object} New data updated
+     * @apiSuccessExample {Object} Success-Response:
+     *      {
+     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
+     *          "props": {
+     *              "name": "test123",
+     *              "email": "test@gmail.com"
+     *          }
+     *      }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     */
     @httpPut('/:id', validate(UserValidation.create))
     public async updateUser(
         @requestParam('id') id: string,
@@ -138,6 +203,25 @@ export class UserController extends BaseHttpController implements interfaces.Con
         }
     }
 
+    /**
+     *
+     * @api {DELETE} /users/:id Delete an user
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     *
+     * @apiParam  {String} id Id
+     *
+     * @apiSuccess (200) {Object} New data updated
+     * @apiSuccessExample {String} Success-Response:
+     * "w3HspOWwQ2BKYw6DKNQh"
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     */
     @httpDelete('/:id')
     public async deleteUser(@requestParam('id') id: string, @response() res: Response): Promise<string | void> {
         try {

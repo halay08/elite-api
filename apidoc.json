@@ -1,0 +1,7 @@
+{
+  "name": "Elite",
+  "version": "1.0.0",
+  "description": "",
+  "url": "https://api.github.com/v1",
+  "sampleUrl": "http://localhost:5000/elites-work-staging/asia-east2/api/v1"
+}
