@@ -10,7 +10,7 @@ export type IUserNotification = {
     receiver?: IEmbedUser & domain.IObjectId;
 
     // 0 ---> Normal 1 ---> Warning 2 ---> Urgent
-    type: NonNullable<number>;
+    type: domain.NotificationType;
 
     subject: string;
 
@@ -20,7 +20,7 @@ export type IUserNotification = {
 /**
  * User notification entity
  */
-export type IUserNotificationEntity = IUserNotification & domain.ITimstamp;
+export type IUserNotificationEntity = domain.IEntity & IUserNotification & domain.ITimstamp;
 
 // Collection: user_notificationns
 @injectable()

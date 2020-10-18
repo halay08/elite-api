@@ -3,6 +3,11 @@ import { injectable } from 'inversify';
 import { Entity } from './entity';
 import { domain } from './types';
 
+export enum PunishmentType {
+    CASH = 'cash',
+    PERCENTAGE = 'percentage'
+}
+
 export type IPolicy = {
     name: string;
 
@@ -19,13 +24,13 @@ export type IPolicy = {
     /**
      * Punishment type ($ or %)
      */
-    punishment_type: string;
+    punishment_type: PunishmentType;
 };
 
 /**
  * Policy entity
  */
-export type IPolicyEntity = IPolicy & domain.ITimstamp;
+export type IPolicyEntity = domain.IEntity & IPolicy & domain.ITimstamp;
 
 // Collection: policies
 @injectable()

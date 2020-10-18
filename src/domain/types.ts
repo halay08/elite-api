@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace domain {
-    export type IEntity = {};
+    export type IEntity = {
+        _id?: string;
+    };
 
     export type ITimstamp = {
         /**
@@ -49,6 +51,12 @@ export declare namespace domain {
 
         second?: number;
     };
+
+    export enum NotificationType {
+        NORMAL = 0,
+        WARNING = 1,
+        URGENT = 2
+    }
 }
 
 /**

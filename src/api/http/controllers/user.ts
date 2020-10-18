@@ -14,11 +14,10 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { User, IUserEntity, factory as entityFactory } from '@/domain/index';
+import { User, IUserEntity, factory as entityFactory, UserRole } from '@/domain/index';
 import { UserService, AuthService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
-import { USER_ROLES } from '@/api/http/config/constants';
 import { NewUserPayload } from '@/api/http/requests/user';
 
 const UserValidation = {
@@ -26,10 +25,9 @@ const UserValidation = {
         body: Joi.object({
             role: Joi.string()
                 .required()
-                .valid(...USER_ROLES),
+                .valid(...Object.values(UserRole)),
             email: Joi.string().email().required(),
-            uid: Joi.string().required(),
-            createdAt: Joi.string()
+            uid: Joi.string().required()
         })
     }
 };
@@ -147,7 +145,6 @@ export class UserController extends BaseHttpController implements interfaces.Con
      * @apiParam  {String} uid uid of user
      * @apiParam  {String} email Email of user
      * @apiParam  {String} role Role of user
-     * @apiParam  {String} createdAt Created time of user
      *
      * @apiSuccess (200) {Object} Valid event
      * @apiSuccessExample {Object} Success-Response:
@@ -165,7 +162,11 @@ export class UserController extends BaseHttpController implements interfaces.Con
     @httpPost('/', validate(UserValidation.create))
     public async create(@requestBody() req: NewUserPayload, @response() res: Response): Promise<void> {
         try {
-            const entity: Partial<IUserEntity> = { role: req.role, email: req.email, createdAt: new Date() };
+            const role: UserRole = (<any>UserRole)[req.role.toUpperCase()];
+            const entity: Partial<IUserEntity> = {
+                role: role,
+                email: req.email
+            };
             const user = entityFactory(User, entity, req.uid);
             const data = await this.userService.create(user);
             await this.authService.setCustomUserClaims(req.uid, { role: req.role });

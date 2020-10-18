@@ -7,15 +7,13 @@ import { factory as entityFactory } from '@/domain/index';
 export class UserMapper {
     public static toDomain(raw: any): User {
         const entity: IUserEntity = {
-            type: raw.type,
+            role: raw.role,
 
             email: raw.email,
 
             name: raw.name,
 
             avatar: raw.avatar,
-
-            role: raw.role,
 
             phoneNumber: raw.phoneNumber,
 

@@ -30,7 +30,7 @@ export type IStudentReviewer = {
 /**
  * StudentReviewer entity
  */
-export type IStudentReviewerEntity = IStudentReviewer & domain.ITimstamp;
+export type IStudentReviewerEntity = domain.IEntity & IStudentReviewer & domain.ITimstamp;
 
 // Collection: student_reviewers
 @injectable()

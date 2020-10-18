@@ -28,7 +28,7 @@ export default class UserService {
         return await this.userRepository.update(id, user);
     }
 
-    public async delete(id: string): Promise<string> {
-        return await this.userRepository.delete(id);
+    public async delete(id: string, softDelete: boolean = true): Promise<string> {
+        return await this.userRepository.delete(id, softDelete);
     }
 }

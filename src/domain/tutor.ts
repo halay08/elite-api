@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { domain, IEmbedUser, ICategory } from '.';
+import { domain, IEmbedUser, ICategory, IDocument } from '.';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace interfaces {
@@ -56,16 +56,6 @@ declare namespace interfaces {
         updated_date?: string;
     };
 
-    type IDocument = domain.IObjectId & {
-        name: NonNullable<string>;
-
-        type: string;
-
-        url: string;
-
-        description?: string;
-    };
-
     enum TutorStatus {
         INVISIBLE = 0,
         ACTIVE = 1,
@@ -81,13 +71,13 @@ export type ITutor = {
 
     educations: interfaces.IEducation[];
 
-    expertises: interfaces.IEducation[];
+    expertises: interfaces.IExpertise[];
 
     certificates: interfaces.ICertificate[];
 
     contracts?: interfaces.IContracts[];
 
-    documents: interfaces.IDocument[];
+    documents: (domain.IObjectId & IDocument)[];
 
     /**
      * Total of followers
@@ -115,7 +105,7 @@ export type ITutor = {
 /**
  * Tutor entity
  */
-export type ITutorEntity = ITutor & domain.ITimstamp;
+export type ITutorEntity = domain.IEntity & ITutor & domain.ITimstamp;
 
 // Collection: tutors
 @injectable()

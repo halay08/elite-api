@@ -15,50 +15,55 @@ export enum UserStatus {
     BANNED = 3
 }
 
-export type IUserEntity = domain.ITimstamp & {
-    type: NonNullable<string>;
+export enum UserRole {
+    ADMIN = 'admin',
+    STUDENT = 'student',
+    TEACHER = 'tutor'
+}
 
-    /**
-     * Email  of user entity
-     */
-    email: NonNullable<string>;
+export type IUserEntity = domain.IEntity &
+    domain.ITimstamp & {
+        role: UserRole;
 
-    /**
-     * Phone number of user entity
-     */
-    phoneNumber: NonNullable<string>;
+        /**
+         * Email  of user entity
+         */
+        email: NonNullable<string>;
 
-    /**
-     * Name  of user entity
-     */
-    name: string;
+        /**
+         * Phone number of user entity
+         */
+        phoneNumber: NonNullable<string>;
 
-    surname?: string;
+        /**
+         * Name  of user entity
+         */
+        name: string;
 
-    avatar?: string;
+        surname?: string;
 
-    role: NonNullable<string>;
+        avatar?: string;
 
-    birthday?: Date;
+        birthday?: Date;
 
-    shortIntro?: string;
+        shortIntro?: string;
 
-    videoIntro?: string;
+        videoIntro?: string;
 
-    address?: string;
+        address?: string;
 
-    timezone: string;
+        timezone: string;
 
-    country: ICountry & domain.IObjectId;
+        country: ICountry & domain.IObjectId;
 
-    language: ILanguage & domain.IObjectId;
+        language: ILanguage & domain.IObjectId;
 
-    category?: (ICategory & domain.IObjectId)[];
+        category?: (ICategory & domain.IObjectId)[];
 
-    violations?: IEmbedViolation[];
+        violations?: IEmbedViolation[];
 
-    status: UserStatus;
-};
+        status: UserStatus;
+    };
 
 export type IEmbedUser = domain.IObjectId & Pick<IUserEntity, 'email' | 'phoneNumber' | 'name' | 'surname' | 'avatar'>;
 

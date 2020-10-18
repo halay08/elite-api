@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { domain, IEmbedTutorSession, IEmbedUser } from '.';
+import { domain, IEmbedTutorSession, IEmbedUser, IBookingPaymentEntity } from '.';
 
 export enum BookingStatus {
     OPEN = 1,
@@ -9,7 +9,7 @@ export enum BookingStatus {
     APPROVED = 3
 }
 
-export type IEmbedBooking = Required<domain.IObjectId> & {
+export type IEmbedBooking = domain.IEntity & {
     student: NonNullable<IEmbedUser>;
 
     bookingNumber: string;
@@ -26,7 +26,7 @@ export type IEmbedBooking = Required<domain.IObjectId> & {
 export type IBooking = Required<IEmbedBooking> & {
     session: IEmbedTutorSession;
 
-    paymentMethod: any; // TODO: will update type later
+    payment: Pick<IBookingPaymentEntity, '_id' | 'paymentMethod'>;
 
     status: BookingStatus;
 };

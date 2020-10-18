@@ -16,7 +16,7 @@ export type IUserInbox = {
 /**
  * User inbox entity
  */
-export type IUserInboxEntity = Required<IUserInbox> & domain.ITimstamp;
+export type IUserInboxEntity = domain.IEntity & Required<IUserInbox> & domain.ITimstamp;
 
 // Collection: user_inbox
 @injectable()

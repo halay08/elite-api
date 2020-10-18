@@ -12,7 +12,7 @@ export type ITutorFollower = {
 /**
  * Tutor follower entity
  */
-export type ITutorFollowerEntity = Required<ITutorFollower> & domain.ITimstamp;
+export type ITutorFollowerEntity = domain.IEntity & Required<ITutorFollower> & domain.ITimstamp;
 
 // Collection: tutor_followers
 @injectable()

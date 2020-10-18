@@ -18,7 +18,7 @@ export type ICountry = {
 /**
  * Country entity
  */
-export type ICountryEntity = Required<ICountry> & domain.ITimstamp;
+export type ICountryEntity = domain.IEntity & Required<ICountry> & domain.ITimstamp;
 
 // Collection: countries
 @injectable()

@@ -13,9 +13,9 @@ export type IBookingInvoice = {
 };
 
 /**
- * BookingInvoice entity
+ * Booking Invoice entity
  */
-export type IBookingInvoiceEntity = Required<IBookingInvoice> & domain.ITimstamp;
+export type IBookingInvoiceEntity = domain.IEntity & Required<IBookingInvoice> & domain.ITimstamp;
 
 // Collection: booking_invoices
 @injectable()

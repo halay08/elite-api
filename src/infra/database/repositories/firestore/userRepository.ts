@@ -64,7 +64,7 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param id
      * @returns delete
      */
-    async delete(id: string): Promise<string> {
-        return await this.collection.delete(id);
+    async delete(id: string, softDelete: boolean = true): Promise<string> {
+        return await this.collection.delete(id, softDelete);
     }
 }

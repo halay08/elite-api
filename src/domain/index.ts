@@ -1,4 +1,4 @@
-import User, { UserStatus, IUserEntity, IEmbedUser } from './user';
+import User, { UserRole, UserStatus, IUserEntity, IEmbedUser } from './user';
 import Country, { ICountryEntity, ICountry } from './country';
 import Language, { ILanguageEntity, ILanguage } from './language';
 import Category, { ICategoryEntity, ICategory } from './category';
@@ -12,7 +12,7 @@ import UserActivity, { IUserActivity, IUserActivityEntity } from './userActivity
 import Student, { IStudent, IStudentEntity } from './student';
 import Tutor, { ITutor, ITutorEntity } from './tutor';
 import { IEmbedTutorSession } from './tutorSession';
-import Booking, { IBooking, IEmbedBooking } from './booking';
+import Booking, { IBooking, IEmbedBooking, IBookingEntity } from './booking';
 import BookingInvoice, { IBookingInvoice, IBookingInvoiceEntity } from './bookingInvoice';
 import StudentReviewer, { IStudentReviewer, IStudentReviewerEntity } from './studentReviewer';
 import StudentWallet, { IStudentWallet, IStudentWalletEntity } from './studentWallet';
@@ -24,6 +24,8 @@ import TutorFollower, { ITutorFollower, ITutorFollowerEntity } from './tutorFoll
 import TutorHappyUser, { ITutorHappyUser, ITutorHappyUserEntity } from './tutorHappyUser';
 import TutorReviewer, { ITutorReviewer, ITutorReviewerEntity } from './tutorReviewer';
 import TutorWallet, { ITutorWalletEntity, ITutorWallet } from './tutorWallet';
+import PaymentMethod, { IPaymentMethodEntity, IPaymentMethod } from './paymentMethod';
+import { IBookingPaymentEntity } from './bookingPayment';
 import TutorWalletTransaction, {
     ITutorWalletTransaction,
     ITutorWalletTransactionEntity
@@ -36,6 +38,7 @@ export {
     IEmbedUser,
     IUserEntity,
     UserStatus,
+    UserRole,
     // ========== Country ========== //
     Country,
     ICountryEntity,
@@ -112,7 +115,13 @@ export {
     Booking,
     IBooking,
     IEmbedBooking,
+    IBookingEntity,
     BookingInvoice,
     IBookingInvoice,
-    IBookingInvoiceEntity
+    IBookingInvoiceEntity,
+    IBookingPaymentEntity,
+    // ========== Payment method ========= //
+    PaymentMethod,
+    IPaymentMethod,
+    IPaymentMethodEntity
 };

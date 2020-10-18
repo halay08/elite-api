@@ -22,7 +22,7 @@ export type ITutorWalletTransaction = {
  * Student wallet transaction entity
  * TODO: This is the temporary model
  */
-export type ITutorWalletTransactionEntity = ITutorWalletTransaction;
+export type ITutorWalletTransactionEntity = domain.IEntity & ITutorWalletTransaction;
 
 // Collection tutor_wallet_transaction
 @injectable()

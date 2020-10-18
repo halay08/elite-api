@@ -18,7 +18,7 @@ export type IUserActivity = {
 /**
  * User activity entity
  */
-export type IUserActivityEntity = Required<IUserActivity> & domain.ITimstamp;
+export type IUserActivityEntity = domain.IEntity & Required<IUserActivity> & domain.ITimstamp;
 
 // Collection user_activities
 @injectable()

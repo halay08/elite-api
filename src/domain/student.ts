@@ -25,7 +25,7 @@ export type IStudent = {
 /**
  * Student entity
  */
-export type IStudentEntity = IStudent & domain.ITimstamp;
+export type IStudentEntity = domain.IEntity & IStudent & domain.ITimstamp;
 
 // Collection: students
 @injectable()

@@ -19,7 +19,7 @@ export type ITutorWallet = {
  * Tutor wallet entity
  * TODO: This is the temporary model
  */
-export type ITutorWalletEntity = ITutorWallet & domain.ITimstamp;
+export type ITutorWalletEntity = domain.IEntity & ITutorWallet & domain.ITimstamp;
 
 @injectable()
 export default class TutorWallet extends Entity<ITutorWalletEntity> {

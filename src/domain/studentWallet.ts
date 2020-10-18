@@ -12,7 +12,7 @@ export type IStudentWallet = {
  * Student wallet entity
  * TODO: This is the temporary model
  */
-export type IStudentWalletEntity = IStudentWallet & domain.ITimstamp;
+export type IStudentWalletEntity = domain.IEntity & IStudentWallet & domain.ITimstamp;
 
 // Collection: student_wallet
 @injectable()

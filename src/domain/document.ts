@@ -3,13 +3,21 @@ import { injectable } from 'inversify';
 import { Entity } from './entity';
 import { domain } from './types';
 
+export enum DocumentType {
+    CURRICULUM = 'curriculum',
+    SLIDE = 'slide',
+    MEDIA = 'media',
+    BOOK = 'book',
+    OTHER = 'other'
+}
+
 export type IDocument = {
     name: NonNullable<string>;
 
     /**
-     * Type of document: curriculum,slide,media,book,other
+     * Document Type
      */
-    type: string;
+    type: DocumentType;
 
     /**
      * Document URL
@@ -19,13 +27,13 @@ export type IDocument = {
     /**
      * Document description
      */
-    description: string;
+    description?: string;
 };
 
 /**
  * Document entity
  */
-export type IDocumentEntity = IDocument & domain.ITimstamp;
+export type IDocumentEntity = domain.IEntity & IDocument & domain.ITimstamp;
 
 // Collection: documents
 @injectable()

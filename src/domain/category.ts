@@ -13,7 +13,7 @@ export type ICategory = {
 /**
  * Category entity
  */
-export type ICategoryEntity = Required<ICategory> & domain.ITimstamp;
+export type ICategoryEntity = domain.IEntity & Required<ICategory> & domain.ITimstamp;
 
 @injectable()
 export default class Category extends Entity<ICategoryEntity> {

@@ -15,7 +15,7 @@ export type IGlobalSettting = {
 /**
  * GlobalSettting entity
  */
-export type IGlobalSetttingEntity = Required<IGlobalSettting> & domain.ITimstamp;
+export type IGlobalSetttingEntity = domain.IEntity & Required<IGlobalSettting> & domain.ITimstamp;
 
 // Collection: global_settings
 @injectable()

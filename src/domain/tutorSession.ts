@@ -3,6 +3,11 @@ import { injectable } from 'inversify';
 import { Entity } from './entity';
 import { domain, IEmbedBooking, IEmbedUser } from '.';
 
+export enum CostType {
+    CASH = 'cash',
+    COINT = 'coin'
+}
+
 export enum TutorSessionStatus {
     AVAILABLE = 0,
     BOOKED = 1, // UNAVAILABLE
@@ -38,7 +43,7 @@ export type IEmbedTutorSession = {
     /**
      * We might consider to use credit-coin to sell the session
      */
-    cost_type: string;
+    costType: CostType;
 };
 
 export type ITutorSession = IEmbedTutorSession & {
@@ -53,7 +58,7 @@ export type ITutorSession = IEmbedTutorSession & {
 /**
  * TutorSession entity
  */
-export type ITutorSessionEntity = ITutorSession & domain.ITimstamp;
+export type ITutorSessionEntity = domain.IEntity & ITutorSession & domain.ITimstamp;
 
 @injectable()
 export default class TutorSession extends Entity<ITutorSessionEntity> {

@@ -18,7 +18,7 @@ export type ILanguage = {
 /**
  * Language entity
  */
-export type ILanguageEntity = ILanguage & domain.ITimstamp;
+export type ILanguageEntity = domain.IEntity & ILanguage & domain.ITimstamp;
 
 // Collection: languages
 @injectable()

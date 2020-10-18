@@ -30,7 +30,7 @@ export type ITutorReviewer = {
 /**
  * StudentReviewer entity
  */
-export type ITutorReviewerEntity = ITutorReviewer & domain.ITimstamp;
+export type ITutorReviewerEntity = domain.IEntity & ITutorReviewer & domain.ITimstamp;
 
 @injectable()
 export default class TutorReviewer extends Entity<ITutorReviewerEntity> {
