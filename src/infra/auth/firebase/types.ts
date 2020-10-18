@@ -19,13 +19,13 @@ export declare namespace fireauth {
     interface IUserRecord extends admin.auth.UserRecord { }
 
     // eslint-disable-next-line
-    interface IGetUsersResult extends admin.auth.GetUsersResult {}
+    interface IGetUsersResult extends admin.auth.GetUsersResult { }
 
     // eslint-disable-next-line
-    interface IListUsersResult extends admin.auth.ListUsersResult {}
+    interface IListUsersResult extends admin.auth.ListUsersResult { }
 
     // eslint-disable-next-line
-    interface IUpdateRequest extends admin.auth.UpdateRequest {}
+    interface IUpdateRequest extends admin.auth.UpdateRequest { }
 
     interface IPrincipal extends interfaces.Principal {
         /**

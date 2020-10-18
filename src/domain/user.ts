@@ -1,21 +1,71 @@
 import { injectable } from 'inversify';
+
 import { Entity } from './entity';
-export class UserEntity {
-    role: string;
+import { domain, ICountry, ILanguage, ICategory, IPolicy } from '.';
 
-    email: string;
+type IEmbedViolation = domain.IObjectId & {
+    date: Date;
+    policy: IPolicy;
+};
 
-    createdAt: string;
+export enum UserStatus {
+    PENDING = 0,
+    ACTIVE = 1,
+    REJECT = 2,
+    BANNED = 3
 }
 
-@injectable()
-export class User extends Entity<UserEntity> {
-    constructor(props: UserEntity, _id?: string) {
-        super(props, _id);
-    }
+export type IUserEntity = domain.ITimstamp & {
+    type: NonNullable<string>;
 
-    public static create(props: UserEntity, _id?: string): User {
-        const instance = new User(props, _id);
-        return instance;
+    /**
+     * Email  of user entity
+     */
+    email: NonNullable<string>;
+
+    /**
+     * Phone number of user entity
+     */
+    phoneNumber: NonNullable<string>;
+
+    /**
+     * Name  of user entity
+     */
+    name: string;
+
+    surname?: string;
+
+    avatar?: string;
+
+    role: NonNullable<string>;
+
+    birthday?: Date;
+
+    shortIntro?: string;
+
+    videoIntro?: string;
+
+    address?: string;
+
+    timezone: string;
+
+    country: ICountry & domain.IObjectId;
+
+    language: ILanguage & domain.IObjectId;
+
+    category?: (ICategory & domain.IObjectId)[];
+
+    violations?: IEmbedViolation[];
+
+    status: UserStatus;
+};
+
+export type IEmbedUser = domain.IObjectId & Pick<IUserEntity, 'email' | 'phoneNumber' | 'name' | 'surname' | 'avatar'>;
+
+// Collection: users
+@injectable()
+export default class User extends Entity<IUserEntity> {
+    constructor(props: Partial<IUserEntity>, _id?: string) {
+        super(props, _id);
     }
 }

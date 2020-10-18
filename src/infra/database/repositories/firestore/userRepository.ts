@@ -1,6 +1,6 @@
 import { provide } from 'inversify-binding-decorators';
 
-import { User } from '@/domain/user';
+import User from '@/domain/user';
 import { UserMapper } from '@/infra/database/mappers/user';
 import TYPES from '@/src/types';
 
