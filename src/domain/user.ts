@@ -23,6 +23,11 @@ export enum UserRole {
 
 export type IUserEntity = domain.IEntity &
     domain.ITimstamp & {
+        /**
+         * Id from firebase authentication
+         */
+        authId: string;
+
         role: UserRole;
 
         /**
@@ -39,6 +44,11 @@ export type IUserEntity = domain.IEntity &
          * Name  of user entity
          */
         name: string;
+
+        /**
+         * This will display on URL. Thus, it should be unique
+         */
+        username: string;
 
         surname?: string;
 

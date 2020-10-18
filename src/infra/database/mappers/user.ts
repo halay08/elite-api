@@ -9,9 +9,13 @@ export class UserMapper {
         const entity: IUserEntity = {
             role: raw.role,
 
+            authId: raw.authId,
+
             email: raw.email,
 
             name: raw.name,
+
+            username: raw.username,
 
             avatar: raw.avatar,
 

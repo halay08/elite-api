@@ -18,7 +18,11 @@
             "@/src/*": ["./*"],
             "@/api/http/*": ["api/http/*"],
             "@/app/*": ["app/*"],
+            "@/app": ["app"],
             "@/domain/*": ["domain/*"],
+            "@/domain": ["domain"],
+            "@/services/*": ["app/services/*"],
+            "@/services": ["app/services"],
             "@/libs/*": ["libs/*"],
             "@/infra/*": ["infra/*"],
             "@/infra/repositories/*": ["infra/database/repositories/*"]

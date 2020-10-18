@@ -1,7 +1,6 @@
 # Compiled JavaScript files
 **/*.js
 **/*.js.map
-docs
 lib
 frontend
 
