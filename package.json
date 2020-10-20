@@ -3,11 +3,8 @@
     "scripts": {
         "clean": "rimraf lib",
         "lint": "eslint 'src/**/*' --fix",
-        "copy:swagger": "mkdir -p ./lib/api/http && cp -r ./src/api/http/swagger ./lib/api/http",
-        "prebuild": "yarn copy:swagger",
         "build": "tsc",
         "test": "ENV_FILE=./.env.test jest",
-        "predev": "yarn copy:swagger",
         "dev": "cross-env NODE_ENV=develop tsc -w | firebase serve --only functions",
         "docs": "rimraf ./docs && apidoc -i ./src -f '.*\\.ts$' -o ./docs -t ./deployment/apidoc-template && serve ./docs",
         "functions:set-env": "firebase functions:config:unset env && firebase functions:config:set env=\"$(cat ./env.json)\"",
@@ -58,8 +55,6 @@
         "pino": "^6.7.0",
         "pino-pretty": "^4.3.0",
         "reflect-metadata": "^0.1.13",
-        "swagger-express-ts": "^1.0.1",
-        "swagger-ui-dist": "^3.35.1",
         "typesaurus": "^6.2.0"
     },
     "devDependencies": {

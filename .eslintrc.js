@@ -33,7 +33,6 @@ module.exports = {
         'import/no-deprecated': 'warn',
         'import/no-extraneous-dependencies': 'error',
         'import/no-unassigned-import': 'off',
-        'import/no-unresolved': 'off',
         'no-cond-assign': 'error',
         'no-duplicate-case': 'error',
         'no-duplicate-imports': 'error',
@@ -70,7 +69,10 @@ module.exports = {
             }
         },
         'import/resolver': {
-            typescript: {} // this loads <rootdir>/tsconfig.json to eslint
+            typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx']
+            }
         }
     }
 };

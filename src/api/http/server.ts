@@ -6,7 +6,6 @@ import { inject, injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 
 import { apiVersion } from '@/api/http/config/constants';
-import swagger from '@/api/http/middlewares/swagger';
 import ValidationHandler from '@/api/http/middlewares/validation';
 import { Logger } from '@/infra/logging/pino';
 import Container from '@/src/container';
@@ -34,8 +33,6 @@ export class Server implements IServer {
         );
 
         server.setConfig((app) => {
-            swagger(app);
-
             app.use(
                 bodyParser.urlencoded({
                     extended: true

@@ -1,12 +1,5 @@
 import { injectable } from 'inversify';
-import { ApiModel, ApiModelProperty } from 'swagger-express-ts';
-
 import { Entity } from './entity';
-
-@ApiModel({
-    description: 'User Model',
-    name: 'User'
-})
 export class UserEntity {
     role: string;
 

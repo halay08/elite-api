@@ -15,6 +15,7 @@ node_modules/
 !.eslintrc.js
 !*.config.js
 !.prettierrc.js
+!setupTest.js
 
 logs
 *.log

@@ -6933,16 +6933,6 @@ supports-hyperlinks@^2.0.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
-swagger-express-ts@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/swagger-express-ts/-/swagger-express-ts-1.0.1.tgz#53a7dc87db3a9e219a9932e15eb81e85fce4e491"
-  integrity sha512-zNEslZ1Cp/+mXa6EjChJEQuZzoRiRkK5n4VTlz2vNM9eeAfzO4WcgRs+DLPH9SB2Ht1zP7b3dAJqx/69US4nzA==
-
-swagger-ui-dist@^3.35.1:
-  version "3.35.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.35.2.tgz#d251a4a3a72501f221c4ef3625f140c900542e45"
-  integrity sha512-19oRW6ZVCTY7JnaMFnIUoxkqI+xhBOGzSFVQTMLDB9KTNASP82v/0SkNpY2T4zbjwZF2Y5bcty9E6rhLGAj0Gg==
-
 symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"

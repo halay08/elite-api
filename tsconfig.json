@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "moduleResolution": "node",
-        "types": ["reflect-metadata", "swagger-express-ts", "jest"],
+        "types": ["reflect-metadata", "jest"],
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "outDir": "lib",
