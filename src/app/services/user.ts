@@ -20,7 +20,7 @@ export default class UserService {
         return await this.userRepository.findById(id);
     }
 
-    public async newUser(user: User): Promise<string> {
+    public async create(user: User): Promise<string> {
         return await this.userRepository.create(user);
     }
 

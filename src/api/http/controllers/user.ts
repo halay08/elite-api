@@ -14,24 +14,32 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { User } from '@/domain/user';
-import { UserService } from '@/src/app/services';
+import { User, UserEntity } from '@/domain/user';
+import { UserService, AuthService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
+import { USER_ROLES } from '@/api/http/config/constants';
+import { NewUserPayload } from '@/api/http/requests/user';
 
 const UserValidation = {
     create: {
         body: Joi.object({
-            uid: Joi.number(),
-            name: Joi.string().min(6).required(),
-            email: Joi.string().email().required()
+            role: Joi.string()
+                .required()
+                .valid(...USER_ROLES),
+            email: Joi.string().email().required(),
+            uid: Joi.string().required(),
+            createdAt: Joi.string()
         })
     }
 };
 
 @controller(`/users`)
 export class UserController extends BaseHttpController implements interfaces.Controller {
-    constructor(@inject(TYPES.UserService) private userService: UserService) {
+    constructor(
+        @inject(TYPES.UserService) private userService: UserService,
+        @inject(TYPES.AuthService) private authService: AuthService
+    ) {
         super();
     }
 
@@ -136,12 +144,16 @@ export class UserController extends BaseHttpController implements interfaces.Con
      * @apiGroup User
      * @apiVersion  1.0.0
      *
+     * @apiParam  {String} uid uid of user
      * @apiParam  {String} email Email of user
-     * @apiParam  {String} name Name of user
+     * @apiParam  {String} role Role of user
+     * @apiParam  {String} createdAt Created time of user
      *
-     * @apiSuccess (200) {String} User's Id
-     * @apiSuccessExample {String} Success-Response:
-     *     "Ygfec8d3BfVk7E7OeDPm"
+     * @apiSuccess (200) {Object} Valid event
+     * @apiSuccessExample {Object} Success-Response:
+     *      {
+     *          "created": true
+     *      }
      *
      * @apiError BAD_REQUEST Return Error Message.
      * @apiErrorExample {Object} Error-Response:
@@ -151,11 +163,13 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpPost('/', validate(UserValidation.create))
-    public async newUser(@requestBody() user: User, @response() res: Response): Promise<void> {
+    public async create(@requestBody() req: NewUserPayload, @response() res: Response): Promise<void> {
         try {
-            const data: string = await this.userService.newUser(user);
-
-            res.status(HttpStatus.CREATED).json(data);
+            const entity: UserEntity = { role: req.role, email: req.email, createdAt: req.createdAt };
+            const user = new User(entity, req.uid);
+            const data = await this.userService.create(user);
+            await this.authService.setCustomUserClaims(req.uid, { role: req.role });
+            res.status(HttpStatus.CREATED).json({ data });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }

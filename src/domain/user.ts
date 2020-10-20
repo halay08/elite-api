@@ -8,17 +8,11 @@ import { Entity } from './entity';
     name: 'User'
 })
 export class UserEntity {
-    @ApiModelProperty({
-        description: 'Email',
-        required: true
-    })
+    role: string;
+
     email: string;
 
-    @ApiModelProperty({
-        description: 'Name',
-        required: true
-    })
-    name: string;
+    createdAt: string;
 }
 
 @injectable()
