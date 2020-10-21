@@ -14,7 +14,7 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { User, UserEntity } from '@/domain/user';
+import { User, IUserEntity, factory as entityFactory } from '@/domain/index';
 import { UserService, AuthService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
@@ -80,9 +80,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   Unauthorized
      */
     @httpGet('/')
-    public async getUsers(@response() res: Response): Promise<User[] | void> {
+    public async all(@response() res: Response): Promise<User[] | void> {
         try {
-            const data = await this.userService.getUsers();
+            const data = await this.userService.getAll();
 
             return data;
         } catch (error) {
@@ -127,9 +127,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   Unauthorized
      */
     @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
-    public async getUser(@requestParam('id') id: string, @response() res: Response): Promise<User | void> {
+    public async get(@requestParam('id') id: string, @response() res: Response): Promise<User | void> {
         try {
-            const data = await this.userService.getUser(id);
+            const data = await this.userService.getById(id);
             console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
 
             return data;
@@ -165,8 +165,8 @@ export class UserController extends BaseHttpController implements interfaces.Con
     @httpPost('/', validate(UserValidation.create))
     public async create(@requestBody() req: NewUserPayload, @response() res: Response): Promise<void> {
         try {
-            const entity: UserEntity = { role: req.role, email: req.email, createdAt: req.createdAt };
-            const user = new User(entity, req.uid);
+            const entity: Partial<IUserEntity> = { role: req.role, email: req.email, createdAt: new Date() };
+            const user = entityFactory(User, entity, req.uid);
             const data = await this.userService.create(user);
             await this.authService.setCustomUserClaims(req.uid, { role: req.role });
             res.status(HttpStatus.CREATED).json({ data });
@@ -203,13 +203,13 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpPut('/:id', validate(UserValidation.create))
-    public async updateUser(
+    public async update(
         @requestParam('id') id: string,
         @requestBody() user: User,
         @response() res: Response
     ): Promise<string | void> {
         try {
-            const data = await this.userService.updateUser(id, user);
+            const data = await this.userService.update(id, user);
 
             return data;
         } catch (error) {
@@ -237,9 +237,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpDelete('/:id')
-    public async deleteUser(@requestParam('id') id: string, @response() res: Response): Promise<string | void> {
+    public async delete(@requestParam('id') id: string, @response() res: Response): Promise<string | void> {
         try {
-            const data = await this.userService.deleteUser(id);
+            const data = await this.userService.delete(id);
 
             return data;
         } catch (error) {

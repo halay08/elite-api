@@ -1,7 +1,7 @@
 import { inject } from 'inversify';
 import { provide } from 'inversify-binding-decorators';
 
-import { User } from '@/domain/user';
+import User from '@/domain/user';
 import { IUserRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 
@@ -12,23 +12,23 @@ export default class UserService {
         private readonly userRepository: IUserRepository
     ) {}
 
-    public async getUsers(): Promise<User[]> {
+    public async getAll(): Promise<User[]> {
         return await this.userRepository.findAll();
     }
 
-    public async getUser(id: string): Promise<User> {
+    public async getById(id: string): Promise<User> {
         return await this.userRepository.findById(id);
     }
 
-    public async create(user: User): Promise<string> {
+    public async create(user: Partial<User>): Promise<string> {
         return await this.userRepository.create(user);
     }
 
-    public async updateUser(id: string, user: User): Promise<string> {
+    public async update(id: string, user: Partial<User>): Promise<string> {
         return await this.userRepository.update(id, user);
     }
 
-    public async deleteUser(id: string): Promise<string> {
+    public async delete(id: string): Promise<string> {
         return await this.userRepository.delete(id);
     }
 }
