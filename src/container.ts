@@ -12,7 +12,7 @@ import { makeLoggerMiddleware } from 'inversify-logger-middleware';
 import { IServer, Server } from './api/http/server';
 import { FirestoreData } from './infra/database/firestores';
 import { Logger } from './infra/logging/pino';
-import { Call } from './infra/call/agora';
+import { Call } from './infra/call/twillio';
 import TYPES from './types';
 import FireAuth from '@/infra/auth/firebase/auth';
 

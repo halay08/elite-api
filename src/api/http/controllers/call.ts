@@ -1,13 +1,25 @@
 import { Response } from 'express';
+import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
-import { controller, httpGet, interfaces, queryParam, response } from 'inversify-express-utils';
+import { controller, httpGet, interfaces, requestParam, queryParam, response } from 'inversify-express-utils';
 
-// import { apiVersion } from '@/api/http/config/constants';
 import { CallToken } from '@/domain/call';
-import { Call } from '@/infra/call/agora';
-
+import { Call } from '@/infra/call/twillio';
 import TYPES from '@/src/types';
+import { env } from '@/api/http/config/constants';
+
+const Validation = {
+    token: {
+        params: Joi.object({
+            user: Joi.string().required(),
+            room: Joi.string().required()
+        }),
+        query: Joi.object({
+            ttl: Joi.number().allow(null, '')
+        })
+    }
+};
 
 @controller(`/call`)
 export class CallController implements interfaces.Controller {
@@ -15,7 +27,7 @@ export class CallController implements interfaces.Controller {
 
     /**
      *
-     * @api {GET} /call Get video call token
+     * @api {GET} /call/token/:user/:room Get video call token
      * @apiName Get Token
      * @apiGroup Video Call
      * @apiVersion  1.0.0
@@ -26,14 +38,14 @@ export class CallController implements interfaces.Controller {
      *       "Authorization": "Bearer: dsfsdkfhjks2904820493204930-sdflskjd"
      *     }
      *
-     * @apiParam  {String} channelName name of channel to join
-     * @apiParam  {Number} [expiredTime] Expiration time
-     * @apiParam  {Number} [uid] Agora user id
-     * @apiParam  {String} [role] Agora role
+     * @apiParam  {String} user Id of user
+     * @apiParam  {String} room Room Id
+     * @apiParam  {String} [ttl=3600] Time to live of token
      *
      * @apiParamExample  {type} Request-Example:
      * {
-     *     channelName : 'hello'
+     *     user : 'Ygfec8d3BfVk7E7OeDPm'
+     *     room : '7E7OeDPm'
      * }
      *
      * @apiSuccess (200) {json} String token
@@ -53,19 +65,16 @@ export class CallController implements interfaces.Controller {
      *
      *
      */
-    @httpGet('/')
+    @httpGet('/token/:user/:room', validate(Validation.token))
     public async getToken(
-        @queryParam('channelName') channelName: string,
-        @queryParam('expiredTime') expiredTime: number = 0,
-        @queryParam('uid') uid: number = 0,
-        @queryParam('role') role: string = '',
+        @requestParam('user') user: string,
+        @requestParam('room') room: string,
+        @queryParam('ttl') ttl: number,
         @response() res: Response
     ): Promise<CallToken | void> {
         try {
-            if (!channelName) {
-                res.status(400).json({ error: 'channel name is required' }).end();
-            }
-            return this.call.getToken(channelName, expiredTime, uid, role);
+            const expiredIn = typeof ttl !== 'number' ? parseInt(env.twilio.TOKEN_TTL) : ttl;
+            return this.call.getToken(user, room, expiredIn);
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
         }
