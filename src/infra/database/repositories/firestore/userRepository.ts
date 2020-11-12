@@ -6,6 +6,7 @@ import TYPES from '@/src/types';
 
 import IUserRepository from '../userRepositoryInterface';
 import BaseRepository from './baseRepository';
+import { Query, QueryOption } from '@/infra/database/firestores/collection';
 
 @provide(TYPES.UserRepository)
 export default class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -55,8 +56,8 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param user
      * @returns update
      */
-    async update(id: string, user: User): Promise<string> {
-        return await this.collection.update(id, user);
+    async update(id: string, user: User): Promise<number> {
+        return await (await this.collection.update(id, user)).writeTime.seconds;
     }
 
     /**
@@ -64,7 +65,20 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param id
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<string> {
-        return await this.collection.delete(id, softDelete);
+    async delete(id: string, softDelete: boolean = true): Promise<number> {
+        return (await this.collection.delete(id, softDelete)).writeTime.seconds;
+    }
+
+    /**
+     * Querys user repository
+     * @template User
+     * @param [queries]
+     * @param [options]
+     * @returns query
+     */
+    async query(queries: Query<User>[] = [], options: Partial<QueryOption<User>> = {}): Promise<User[]> {
+        const docs = await this.collection.query(queries, options);
+
+        return docs.map((item) => UserMapper.toDomain(item));
     }
 }

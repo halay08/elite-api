@@ -24,11 +24,11 @@ export default class UserService {
         return await this.userRepository.create(user);
     }
 
-    public async update(id: string, user: Partial<User>): Promise<string> {
+    public async update(id: string, user: Partial<User>): Promise<number> {
         return await this.userRepository.update(id, user);
     }
 
-    public async delete(id: string, softDelete: boolean = true): Promise<string> {
+    public async delete(id: string, softDelete: boolean = true): Promise<number> {
         return await this.userRepository.delete(id, softDelete);
     }
 }

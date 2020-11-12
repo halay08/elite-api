@@ -208,7 +208,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
         @requestParam('id') id: string,
         @requestBody() user: User,
         @response() res: Response
-    ): Promise<string | void> {
+    ): Promise<number | void> {
         try {
             const data = await this.userService.update(id, user);
 
@@ -238,7 +238,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpDelete('/:id')
-    public async delete(@requestParam('id') id: string, @response() res: Response): Promise<string | void> {
+    public async delete(@requestParam('id') id: string, @response() res: Response): Promise<number | void> {
         try {
             const data = await this.userService.delete(id);
 
