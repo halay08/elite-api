@@ -6,7 +6,7 @@ import TYPES from '@/src/types';
 
 import IUserRepository from '../userRepositoryInterface';
 import BaseRepository from './baseRepository';
-import { Query, QueryOption } from '@/infra/database/firestores/collection';
+import { Query, QueryOption } from '@/src/infra/database/firestore/collection';
 
 @provide(TYPES.UserRepository)
 export default class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -45,9 +45,11 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param user
      * @returns create
      */
-    async create(user: User): Promise<string> {
-        const inserted = await this.collection.create(user);
-        return inserted;
+    async create(user: User, _id?: string): Promise<string> {
+        if (!_id) {
+            return await this.collection.create(user);
+        }
+        return await this.collection.set(_id, user);
     }
 
     /**

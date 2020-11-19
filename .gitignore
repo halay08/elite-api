@@ -21,3 +21,6 @@ logs
 
 # VS Code local history
 .history/
+
+# Env file
+.env

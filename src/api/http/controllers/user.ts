@@ -14,18 +14,17 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { User, IUserEntity, factory as entityFactory, UserRole } from '@/domain/index';
+import { User, factory as entityFactory } from '@/domain/index';
 import { UserService, AuthService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
 import { NewUserPayload } from '@/api/http/requests/user';
+import { IUserEntity, UserRole } from '@/src/domain/types';
 
 const UserValidation = {
     create: {
         body: Joi.object({
-            role: Joi.string()
-                .required()
-                .valid(...Object.values(UserRole)),
+            role: Joi.string().required(),
             email: Joi.string().email().required(),
             uid: Joi.string().required()
         })

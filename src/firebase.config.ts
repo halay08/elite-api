@@ -1,10 +1,11 @@
 import * as admin from 'firebase-admin';
 
 if (process.env.NODE_ENV === 'development') {
-    admin.initializeApp();
+    admin.initializeApp({
+        projectId: process.env.PROJECT_ID
+    });
 
-    const db = admin.firestore();
-    db.settings({
+    admin.firestore().settings({
         host: 'localhost:8080',
         ssl: false
     });

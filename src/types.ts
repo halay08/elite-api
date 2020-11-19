@@ -8,7 +8,10 @@ const TYPES = {
 
     UserRepository: Symbol.for('UserRepository'),
     UserService: Symbol.for('UserService'),
-    AuthService: Symbol.for('AuthService')
+    AuthService: Symbol.for('AuthService'),
+
+    UserSeeding: Symbol.for('UserSeeding'),
+    TutorSeeding: Symbol.for('TutorSeeding')
 };
 
 export default TYPES;

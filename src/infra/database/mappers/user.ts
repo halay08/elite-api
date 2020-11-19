@@ -1,5 +1,5 @@
-import User, { IUserEntity } from '@/domain/user';
-import { factory as entityFactory } from '@/domain/index';
+import { IUserEntity } from '@/domain/types';
+import { User, factory as entityFactory } from '@/domain';
 
 /**
  * User mapper

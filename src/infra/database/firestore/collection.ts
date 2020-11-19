@@ -1,6 +1,6 @@
 import { time } from '@/app/helpers';
-import { domain } from '@/domain';
 import { admin } from '@/src/firebase.config';
+import { IEntity } from '@/domain/types/entity';
 
 type OrderBy<T> = {
     field: keyof T | keyof T[];
@@ -30,7 +30,7 @@ export { OrderBy, Query, QueryOption };
  * Firestore collection
  * @template T
  */
-export default class FirestoreCollection<T extends domain.IEntity> {
+export default class FirestoreCollection<T extends IEntity> {
     #collectionName: string = '';
 
     /**
@@ -51,12 +51,25 @@ export default class FirestoreCollection<T extends domain.IEntity> {
         return admin.firestore().collection(this.#collectionName);
     }
 
+    /**
+     * Create Document Reference unique id
+     * @returns string
+     */
+    genId(): string {
+        const ref: FirebaseFirestore.DocumentReference = admin
+            .firestore()
+            .collection(this.#collectionName)
+            .doc();
+
+        return ref.id;
+    }
+
     async findAll(): Promise<T[]> {
         return this.query([]);
     }
 
-    async findById(id: string): Promise<T> {
-        const doc = await this._collection.doc(id).get();
+    async findById(_id: string): Promise<T> {
+        const doc = await this._collection.doc(_id).get();
 
         return doc
             ? {
@@ -69,7 +82,7 @@ export default class FirestoreCollection<T extends domain.IEntity> {
     /**
      * Creates firestore repository
      * @param data
-     * @returns create
+     * @returns string
      */
     async create(data: T): Promise<string> {
         // Add createdAt value
@@ -86,18 +99,37 @@ export default class FirestoreCollection<T extends domain.IEntity> {
     }
 
     /**
+     * Set data for firestore document.
+     * @param id Id of document
+     * @param data Document data
+     * @returns string
+     */
+    async set(_id: string, data: T): Promise<string> {
+        const dataModel: object = {
+            ...data,
+            createdAt: time.getCurrentUTCDate(),
+            updatedAt: null,
+            deletedAt: null
+        };
+
+        await this._collection.doc(_id).set(dataModel);
+
+        return _id;
+    }
+
+    /**
      * Updates firestore repository
      * @param data
      * @returns update
      */
-    async update(id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
+    async update(_id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
         // Add updatedAt value
         const dataModel: object = {
             ...data,
             updatedAt: time.getCurrentUTCDate()
         };
 
-        const result = await this._collection.doc(id).update(dataModel);
+        const result = await this._collection.doc(_id).update(dataModel);
 
         return result;
     }
@@ -108,7 +140,7 @@ export default class FirestoreCollection<T extends domain.IEntity> {
      * @softDelete Only update deletedAt field to the document
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<FirebaseFirestore.WriteResult> {
+    async delete(_id: string, softDelete: boolean = true): Promise<FirebaseFirestore.WriteResult> {
         let result: FirebaseFirestore.WriteResult;
 
         if (softDelete) {
@@ -117,9 +149,9 @@ export default class FirestoreCollection<T extends domain.IEntity> {
                 deletedAt: time.getCurrentUTCDate()
             };
 
-            result = await this._collection.doc(id).update(dataModel);
+            result = await this._collection.doc(_id).update(dataModel);
         } else {
-            result = await this._collection.doc(id).delete();
+            result = await this._collection.doc(_id).delete();
         }
 
         return result;

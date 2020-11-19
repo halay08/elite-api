@@ -1,29 +1,12 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { domain } from './types';
-
-export type ICountry = {
-    /**
-     * Name  of country entity
-     */
-    name: string;
-
-    /**
-     * Code  of country entity
-     */
-    code: string;
-};
-
-/**
- * Country entity
- */
-export type ICountryEntity = domain.IEntity & Required<ICountry> & domain.ITimstamp;
+import { ICountryEntity } from './types';
 
 // Collection: countries
 @injectable()
 export default class Country extends Entity<ICountryEntity> {
-    constructor(props: ICountryEntity, _id?: string) {
-        super(props, _id);
+    constructor(props: ICountryEntity) {
+        super(props);
     }
 }

@@ -1,40 +1,12 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { domain } from './types';
-import { IEmbedUser } from './user';
+import { ITutorReviewerEntity } from './types';
 
-export type ITutorReviewer = {
-    tutor: NonNullable<IEmbedUser>;
-
-    student: NonNullable<IEmbedUser>;
-
-    /**
-     * Review by 5 stars ✭✭✭✭✭
-     */
-    punctual: NonNullable<number>;
-
-    /**
-     * Review by 5 stars ✭✭✭✭✭
-     */
-    organized: NonNullable<number>;
-
-    /**
-     * Review by 5 stars ✭✭✭✭✭
-     */
-    engaging: NonNullable<number>;
-
-    comment: string;
-};
-
-/**
- * StudentReviewer entity
- */
-export type ITutorReviewerEntity = domain.IEntity & ITutorReviewer & domain.ITimstamp;
-
+// Collection: tutor_reviewers
 @injectable()
 export default class TutorReviewer extends Entity<ITutorReviewerEntity> {
-    constructor(props: ITutorReviewerEntity, _id?: string) {
-        super(props, _id);
+    constructor(props: ITutorReviewerEntity) {
+        super(props);
     }
 }
