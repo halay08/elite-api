@@ -1,7 +1,7 @@
 export type ITimstamp = {
-    createdAt: Date;
+    createdAt?: Date;
 
     updatedAt?: Date;
 
-    deletedAt: Date;
+    deletedAt?: Date;
 };

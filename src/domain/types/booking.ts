@@ -1,5 +1,5 @@
 import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimstamp } from '.';
-import { IEntity } from './entity';
+import IEntity from './entity';
 
 enum IBookingStatus {
     OPEN = 1,
@@ -26,7 +26,7 @@ type IBooking = {
 
     bookedAt: Date;
 
-    payment: Pick<IBookingPaymentEntity, '_id' | 'paymentMethod' | 'orderId' | 'transactionId'>;
+    payment: Pick<IBookingPaymentEntity, 'id' | 'paymentMethod' | 'orderId' | 'transactionId'>;
 
     status: IBookingStatus;
 };

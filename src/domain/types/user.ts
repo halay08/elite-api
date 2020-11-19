@@ -22,32 +22,27 @@ type IEmbedUser = Required<IEntity> & Pick<IUserEntity, 'email' | 'phoneNumber' 
 
 type IUserEntity = IEntity &
     ITimstamp & {
-        /**
-         * Id from firebase authentication
-         */
-        authId: string;
-
         role: UserRole;
 
         /**
          * Email  of user entity
          */
-        email: NonNullable<string>;
+        email?: string;
 
         /**
          * Phone number of user entity
          */
-        phoneNumber: NonNullable<string>;
+        phoneNumber?: string;
 
         /**
          * Name  of user entity
          */
-        name: string;
+        name?: string;
 
         /**
          * This will display on URL. Thus, it should be unique
          */
-        username: string;
+        username?: string;
 
         surname?: string;
 
@@ -61,11 +56,11 @@ type IUserEntity = IEntity &
 
         address?: string;
 
-        timezone: string;
+        timezone?: string;
 
-        country: ICountry & Required<IEntity>;
+        country?: ICountry & Required<IEntity>;
 
-        language: ILanguage & Required<IEntity>;
+        language?: ILanguage & Required<IEntity>;
 
         category?: ICategory & Required<IEntity>;
 

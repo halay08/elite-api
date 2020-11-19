@@ -2,18 +2,17 @@ import { inject, injectable } from 'inversify';
 
 import { FirestoreData, FirestoreCollection } from '@/src/infra/database/firestore';
 import TYPES from '@/src/types';
-import { IEntity } from '@/domain/types/entity';
-import { IQueryOption } from '@/src/infra/database/types';
 import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
+import { IQueryOption } from '@/src/infra/database/types';
 
 @injectable()
-export default abstract class BaseRepository<T extends IEntity> {
+export default abstract class BaseRepository<T> {
     // Use for current collection, it's shorter to call,
     // ex., this.collection.find() instead of this.database.{collection_name}.find()
     protected collection: FirestoreCollection<T>;
 
     // Use for all collections
-    // database.users, database.students,...
+    // database.users, database.payments,...
     @inject(TYPES.Database) protected database: FirestoreData;
 
     constructor() {
@@ -22,7 +21,7 @@ export default abstract class BaseRepository<T extends IEntity> {
 
     protected abstract getCollection(): string;
 
-    abstract async query(queries?: IFirestoreQuery<T>[], options?: Partial<IQueryOption<T>>): Promise<T[]>;
+    abstract query(queries?: IFirestoreQuery<T>[], options?: Partial<IQueryOption<T>>): Promise<T[]>;
 
     /**
      * Create Document Reference unique id

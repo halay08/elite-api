@@ -1,3 +1,5 @@
-export type IEntity = {
-    _id?: string;
+type IEntity = {
+    id?: string;
 };
+
+export default IEntity;

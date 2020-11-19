@@ -1,12 +1,13 @@
 import { provide } from 'inversify-binding-decorators';
-
-import User from '@/domain/user';
-import { UserMapper } from '@/infra/database/mappers/user';
+import { User } from '@/domain';
+import { UserMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-
 import IUserRepository from '../userRepositoryInterface';
 import BaseRepository from './baseRepository';
-import { Query, QueryOption } from '@/src/infra/database/firestore/collection';
+import { IQueryOption } from '@/infra/database/types';
+import { IFirestoreQuery } from '../../firestore/types';
+import { HttpsError } from 'firebase-functions/lib/providers/https';
+import { NotFoundError } from '@/app/errors/notFound';
 
 @provide(TYPES.UserRepository)
 export default class UserRepository extends BaseRepository<User> implements IUserRepository {
@@ -14,8 +15,20 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * Gets collection
      * @returns
      */
-    protected getCollection() {
+    getCollection() {
         return 'users';
+    }
+
+    /**
+     * Querys user repository
+     * @template User
+     * @param [queries]
+     * @param [options]
+     * @returns query
+     */
+    async query(queries: IFirestoreQuery<User>[] = [], options: Partial<IQueryOption<User>> = {}): Promise<User[]> {
+        const docs = await this.collection.query(queries, options);
+        return docs.map((item) => UserMapper.toDomain(item));
     }
 
     /**
@@ -33,11 +46,12 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @returns by id
      */
     async findById(id: string): Promise<User> {
-        const item = await this.collection.findById(id);
-        if (!item) {
-            throw new Error(`User ${id} not found`);
+        const user = await this.collection.findById(id);
+        if (!user) {
+            throw new NotFoundError('User is not found');
         }
-        return UserMapper.toDomain(item);
+
+        return UserMapper.toDomain(user);
     }
 
     /**
@@ -45,11 +59,21 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param user
      * @returns create
      */
-    async create(user: User, _id?: string): Promise<string> {
-        if (!_id) {
-            return await this.collection.create(user);
+    async create(userModel: User): Promise<User> {
+        try {
+            const dto = userModel.serialize();
+            const { id } = dto;
+
+            if (id) {
+                await this.collection.set(id, dto);
+                return userModel;
+            }
+
+            const user = await this.collection.create(dto);
+            return UserMapper.toDomain(user);
+        } catch (error) {
+            throw new HttpsError('invalid-argument', error);
         }
-        return await this.collection.set(_id, user);
     }
 
     /**
@@ -58,8 +82,11 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param user
      * @returns update
      */
-    async update(id: string, user: User): Promise<number> {
-        return await (await this.collection.update(id, user)).writeTime.seconds;
+    async update(id: string, user: User): Promise<User> {
+        const dto = user.serialize();
+        await this.collection.update(id, dto);
+
+        return UserMapper.toDomain(user);
     }
 
     /**
@@ -69,18 +96,5 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      */
     async delete(id: string, softDelete: boolean = true): Promise<number> {
         return (await this.collection.delete(id, softDelete)).writeTime.seconds;
-    }
-
-    /**
-     * Querys user repository
-     * @template User
-     * @param [queries]
-     * @param [options]
-     * @returns query
-     */
-    async query(queries: Query<User>[] = [], options: Partial<QueryOption<User>> = {}): Promise<User[]> {
-        const docs = await this.collection.query(queries, options);
-
-        return docs.map((item) => UserMapper.toDomain(item));
     }
 }

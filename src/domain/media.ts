@@ -7,4 +7,18 @@ export default class Media extends Entity<IMediaEntity> {
     constructor(props: IMediaEntity) {
         super(props);
     }
+
+    /**
+     * Creates entity
+     * @param props Media properties
+     * @returns Media
+     */
+    public static create(props: IMediaEntity): Media {
+        const instance = new Media(props);
+        return instance;
+    }
+
+    get id(): string {
+        return this._id;
+    }
 }

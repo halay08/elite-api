@@ -31,7 +31,7 @@ import {
     IStudentWalletTransaction,
     IStudentWalletTransactionEntity
 } from './studentWalletTransaction';
-import { IEntity } from './entity';
+import IEntity from './entity';
 import { ITimstamp } from './time';
 import { ICostType } from './cost';
 

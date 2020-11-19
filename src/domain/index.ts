@@ -25,7 +25,6 @@ import Language from './language';
 import Category from './category';
 import Country from './country';
 import GlobalSettting from './globalSetting';
-import { factory } from './factory';
 import { Entity } from './entity';
 import { Call } from '../infra/call/twillio';
 
@@ -63,7 +62,6 @@ export {
     Category,
     Country,
     GlobalSettting,
-    factory,
     Entity,
     Call
 };

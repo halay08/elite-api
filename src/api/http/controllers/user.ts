@@ -14,12 +14,12 @@ import {
     requestParam,
     response
 } from 'inversify-express-utils';
-import { User, factory as entityFactory } from '@/domain/index';
+import { User } from '@/domain/index';
 import { UserService, AuthService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
 import { NewUserPayload } from '@/api/http/requests/user';
-import { IUserEntity, UserRole } from '@/src/domain/types';
+import { UserRole, UserStatus } from '@/src/domain/types';
 
 const UserValidation = {
     create: {
@@ -162,11 +162,11 @@ export class UserController extends BaseHttpController implements interfaces.Con
     public async create(@requestBody() req: NewUserPayload, @response() res: Response): Promise<void> {
         try {
             const role: UserRole = (<any>UserRole)[req.role.toUpperCase()];
-            const entity: Partial<IUserEntity> = {
+            const user = User.create({
                 role: role,
-                email: req.email
-            };
-            const user = entityFactory(User, entity, req.uid);
+                email: req.email,
+                status: UserStatus.ACTIVE
+            });
             const data = await this.userService.create(user);
             await this.authService.setCustomUserClaims(req.uid, { role: req.role });
             res.status(HttpStatus.CREATED).json({ data });
@@ -207,7 +207,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
         @requestParam('id') id: string,
         @requestBody() user: User,
         @response() res: Response
-    ): Promise<number | void> {
+    ): Promise<User | void> {
         try {
             const data = await this.userService.update(id, user);
 

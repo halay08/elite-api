@@ -20,11 +20,11 @@ export default class UserService {
         return await this.userRepository.findById(id);
     }
 
-    public async create(user: Partial<User>): Promise<string> {
+    public async create(user: Partial<User>): Promise<User> {
         return await this.userRepository.create(user);
     }
 
-    public async update(id: string, user: Partial<User>): Promise<number> {
+    public async update(id: string, user: Partial<User>): Promise<User> {
         return await this.userRepository.update(id, user);
     }
 

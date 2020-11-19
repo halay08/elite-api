@@ -1,30 +1,8 @@
 import { time } from '@/app/helpers';
 import { admin } from '@/src/firebase.config';
-import { IEntity } from '@/domain/types/entity';
-
-type OrderBy<T> = {
-    field: keyof T | keyof T[];
-
-    order: 'desc' | 'asc';
-};
-
-type Query<T> = {
-    [K in keyof T]?: any;
-} & {
-    operator: FirebaseFirestore.WhereFilterOp;
-};
-
-type QueryOption<T> = {
-    withTrashed: boolean;
-
-    limit: number;
-
-    startAt: number;
-
-    orderBy: OrderBy<T>;
-};
-
-export { OrderBy, Query, QueryOption };
+import { IQueryOption } from '@/infra/database/types';
+import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
+import { IEntity } from '@/src/domain/types';
 
 /**
  * Firestore collection
@@ -45,6 +23,22 @@ export default class FirestoreCollection<T extends IEntity> {
     constructor(collectionName: string) {
         this._collection = admin.firestore().collection(collectionName);
         this.#collectionName = collectionName;
+    }
+
+    /**
+     * Map Firestore document reference and data to entity T
+     * @param doc Document snapshot
+     * @returns T
+     */
+    private _mapDocReference(doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>): T {
+        return doc.exists
+            ? {
+                  ...doc.data(),
+                  id: doc.ref.id,
+                  createdAt: doc.createTime,
+                  updatedAt: doc.updateTime
+              }
+            : (null as any);
     }
 
     getQueryCollection(): FirebaseFirestore.Query<FirebaseFirestore.DocumentData> {
@@ -68,53 +62,48 @@ export default class FirestoreCollection<T extends IEntity> {
         return this.query([]);
     }
 
-    async findById(_id: string): Promise<T> {
-        const doc = await this._collection.doc(_id).get();
+    async findById(id: string): Promise<T> {
+        const doc = await this._collection.doc(id).get();
 
-        return doc
-            ? {
-                  ...doc.data(),
-                  _id: doc.ref.id
-              }
-            : (null as any);
+        return this._mapDocReference(doc);
+    }
+
+    /**
+     * Creates firestore document.
+     * @param id Id of document
+     * @param data Document data
+     * @returns create
+     */
+    async set(id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
+        const dataModel = {
+            ...data,
+            createdAt: time.getCurrentUTCDate()
+        };
+
+        // Not allow to write field `id` to database
+        delete dataModel.id;
+
+        return await this._collection.doc(id).set(dataModel);
     }
 
     /**
      * Creates firestore repository
      * @param data
-     * @returns string
+     * @returns create
      */
-    async create(data: T): Promise<string> {
+    async create(data: Partial<T>): Promise<T> {
         // Add createdAt value
-        const dataModel: object = {
+        const dataModel = {
             ...data,
-            createdAt: time.getCurrentUTCDate(),
-            updatedAt: null,
             deletedAt: null
         };
 
-        const result = this._collection.add(dataModel);
+        // Not allow to write field `id` to database
+        delete dataModel.id;
 
-        return (await result).id;
-    }
+        const doc = await this._collection.add(dataModel);
 
-    /**
-     * Set data for firestore document.
-     * @param id Id of document
-     * @param data Document data
-     * @returns string
-     */
-    async set(_id: string, data: T): Promise<string> {
-        const dataModel: object = {
-            ...data,
-            createdAt: time.getCurrentUTCDate(),
-            updatedAt: null,
-            deletedAt: null
-        };
-
-        await this._collection.doc(_id).set(dataModel);
-
-        return _id;
+        return this._mapDocReference(await doc.get());
     }
 
     /**
@@ -122,16 +111,11 @@ export default class FirestoreCollection<T extends IEntity> {
      * @param data
      * @returns update
      */
-    async update(_id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
-        // Add updatedAt value
-        const dataModel: object = {
-            ...data,
-            updatedAt: time.getCurrentUTCDate()
-        };
+    async update(id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
+        // Not allow to write field `id` to database
+        delete data.id;
 
-        const result = await this._collection.doc(_id).update(dataModel);
-
-        return result;
+        return await this._collection.doc(id).update(data);
     }
 
     /**
@@ -140,7 +124,7 @@ export default class FirestoreCollection<T extends IEntity> {
      * @softDelete Only update deletedAt field to the document
      * @returns delete
      */
-    async delete(_id: string, softDelete: boolean = true): Promise<FirebaseFirestore.WriteResult> {
+    async delete(id: string, softDelete: boolean = true): Promise<FirebaseFirestore.WriteResult> {
         let result: FirebaseFirestore.WriteResult;
 
         if (softDelete) {
@@ -149,9 +133,9 @@ export default class FirestoreCollection<T extends IEntity> {
                 deletedAt: time.getCurrentUTCDate()
             };
 
-            result = await this._collection.doc(_id).update(dataModel);
+            result = await this._collection.doc(id).update(dataModel);
         } else {
-            result = await this._collection.doc(_id).delete();
+            result = await this._collection.doc(id).delete();
         }
 
         return result;
@@ -163,7 +147,7 @@ export default class FirestoreCollection<T extends IEntity> {
      * @param queries
      * @returns query
      */
-    async query<T>(queries: Query<T>[] = [], options: Partial<QueryOption<T>> = {}): Promise<T[]> {
+    async query(queries: IFirestoreQuery<T>[] = [], options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
         let query = this.getQueryCollection();
 
         // Not include trashed documents
@@ -197,11 +181,6 @@ export default class FirestoreCollection<T extends IEntity> {
 
         const documentData = await query.get();
 
-        return documentData.docs.map((doc) => {
-            return {
-                ...doc.data(),
-                _id: doc.ref.id
-            } as any;
-        });
+        return documentData.docs.map((doc) => this._mapDocReference(doc));
     }
 }

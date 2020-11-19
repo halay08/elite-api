@@ -8,4 +8,18 @@ export default class TutorWalletTransaction extends Entity<ITutorWalletTransacti
     constructor(props: ITutorWalletTransactionEntity) {
         super(props);
     }
+
+    /**
+     * Creates entity
+     * @param props TutorWalletTransaction properties
+     * @returns TutorWalletTransaction
+     */
+    public static create(props: ITutorWalletTransactionEntity): TutorWalletTransaction {
+        const instance = new TutorWalletTransaction(props);
+        return instance;
+    }
+
+    get id(): string {
+        return this._id;
+    }
 }

@@ -1,15 +1,12 @@
-import { IUserEntity } from '@/domain/types';
-import { User, factory as entityFactory } from '@/domain';
+import { User } from '@/domain';
 
 /**
  * User mapper
  */
 export class UserMapper {
     public static toDomain(raw: any): User {
-        const entity: IUserEntity = {
+        return User.create({
             role: raw.role,
-
-            authId: raw.authId,
 
             email: raw.email,
 
@@ -48,8 +45,6 @@ export class UserMapper {
             updatedAt: raw.updatedAt,
 
             deletedAt: raw.deletedAt
-        };
-
-        return entityFactory(User, entity, raw._id);
+        });
     }
 }

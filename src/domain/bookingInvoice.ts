@@ -9,4 +9,18 @@ export default class BookingInvoice extends Entity<IBookingInvoiceEntity> {
     constructor(props: IBookingInvoiceEntity) {
         super(props);
     }
+
+    /**
+     * Creates entity
+     * @param props BookingInvoice properties
+     * @returns BookingInvoice
+     */
+    public static create(props: IBookingInvoiceEntity): BookingInvoice {
+        const instance = new BookingInvoice(props);
+        return instance;
+    }
+
+    get id(): string {
+        return this._id;
+    }
 }
