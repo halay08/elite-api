@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
-import { controller, httpGet, interfaces, requestParam, queryParam, response } from 'inversify-express-utils';
+import { controller, httpGet, interfaces, queryParam, response } from 'inversify-express-utils';
 
 import { CallToken } from '@/domain/call';
 import { Call } from '@/infra/call/twillio';
@@ -11,11 +11,9 @@ import { env } from '@/api/http/config/constants';
 
 const Validation = {
     token: {
-        params: Joi.object({
-            user: Joi.string().required(),
-            room: Joi.string().required()
-        }),
         query: Joi.object({
+            identity: Joi.string().required(),
+            roomName: Joi.string().required(),
             ttl: Joi.number().allow(null, '')
         })
     }
@@ -65,16 +63,16 @@ export class CallController implements interfaces.Controller {
      *
      *
      */
-    @httpGet('/token/:user/:room', validate(Validation.token))
+    @httpGet('/token', validate(Validation.token))
     public async getToken(
-        @requestParam('user') user: string,
-        @requestParam('room') room: string,
+        @queryParam('identity') identity: string,
+        @queryParam('roomName') roomName: string,
         @queryParam('ttl') ttl: number,
         @response() res: Response
     ): Promise<CallToken | void> {
         try {
             const expiredIn = typeof ttl !== 'number' ? parseInt(env.twilio.TOKEN_TTL) : ttl;
-            return this.call.getToken(user, room, expiredIn);
+            return this.call.getToken(identity, roomName, expiredIn);
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
         }
