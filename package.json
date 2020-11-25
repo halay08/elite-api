@@ -7,7 +7,7 @@
         "watch": "ENV_FILE=./.env tsc -w",
         "test": "ENV_FILE=./.env.test jest",
         "predev": "yarn functions:set-env",
-        "dev": "yarn watch | yarn emulators:startImport",
+        "dev": "yarn watch | yarn emulators:start",
         "doc:build": "rimraf ./docs && apidoc -i ./src -f '.*\\.ts$' -o ./docs -t ./deployment/apidoc-template",
         "doc:serve": "yarn doc:build && serve ./docs",
         "functions:set-env": "firebase functions:config:unset env && firebase functions:config:set env=\"$(cat ./env.json)\"",
