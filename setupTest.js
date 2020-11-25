@@ -11,6 +11,5 @@ afterEach(function (done) {
 });
 
 afterAll((done) => {
-    mongoose.disconnect();
     return done();
 });

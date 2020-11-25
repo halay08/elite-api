@@ -8,7 +8,7 @@ const TWILIO_API_KEY = env.twilio.API_KEY;
 const TWILIO_API_SECRET = env.twilio.API_SECRET;
 
 @injectable()
-export class Call {
+export class Twilio {
     public getToken(user: string, room: string, ttl?: number): CallToken {
         const AccessToken = twilio.jwt.AccessToken;
         const VideoGrant = AccessToken.VideoGrant;

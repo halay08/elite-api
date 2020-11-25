@@ -17,7 +17,7 @@ import {
 
 import { env } from '@/api/http/config/constants';
 import TYPES from '@/src/types';
-import { Call } from '@/infra/call/twillio';
+import { Twilio as Call } from '@/infra/call/twillio';
 import { Room } from '@/domain/index';
 import { RoomStatus } from '@/src/domain/types';
 import { RoomService } from '@/src/app/services';

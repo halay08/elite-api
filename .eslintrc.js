@@ -16,7 +16,7 @@ module.exports = {
         sourceType: 'module'
     },
     plugins: ['@typescript-eslint', 'import'],
-    ignorePatterns: ['*.json', '**/vendor/*.js', 'node_modules'],
+    ignorePatterns: ['*.json', 'setupTest.js', '**/vendor/*.js', 'node_modules'],
     rules: {
         '@typescript-eslint/adjacent-overload-signatures': 'error',
         '@typescript-eslint/no-empty-function': 'error',

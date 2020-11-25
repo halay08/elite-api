@@ -29,5 +29,5 @@
     },
     "compileOnSave": true,
     "include": ["src", ".eslintrc.js"],
-    "exclude": ["**/*.json.gpg", "jest.config.js"]
+    "exclude": ["**/*.json.gpg", "jest.config.js", "setupTest.js"]
 }

@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     admin.initializeApp({
         projectId: process.env.PROJECT_ID
     });

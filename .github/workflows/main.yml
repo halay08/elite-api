@@ -45,7 +45,8 @@ jobs:
 
       - name: Decrypt SA key for Staging
         run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./lib/serviceAccountKey.json ./deployment/sa-staging.json.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./dist/serviceAccountKey.json ./deployment/sa-staging.json.gpg &&
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./env.json ./deployment/env.json.gpg
 
       - name: Activate Staging Project
         uses: w9jds/firebase-action@master
@@ -114,7 +115,8 @@ jobs:
 
       - name: Decrypt SA key for Production
         run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./lib/serviceAccountKey.json ./deployment/sa-production.json.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./dist/serviceAccountKey.json ./deployment/sa-production.json.gpg &&
+          gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.SERVICE_ACCOUNT_SECRET_PASSPHRASE }}" --output ./env.json ./deployment/env.json.gpg
 
       - name: Activate Production Project
         uses: w9jds/firebase-action@master

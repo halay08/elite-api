@@ -26,7 +26,6 @@ import Category from './category';
 import Country from './country';
 import GlobalSettting from './globalSetting';
 import { Entity } from './entity';
-import { Call } from '../infra/call/twillio';
 
 export {
     // User ====== //
@@ -62,6 +61,5 @@ export {
     Category,
     Country,
     GlobalSettting,
-    Entity,
-    Call
+    Entity
 };
