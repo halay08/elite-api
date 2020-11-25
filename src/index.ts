@@ -2,13 +2,11 @@ require('dotenv').config();
 
 import './firebase.config';
 
+import TYPES from './types';
 import * as functions from 'firebase-functions';
-
-import { IServer } from '@/api/http/server';
-
 import Container from './container';
 
-import TYPES from './types';
+import { IServer } from '@/api/http/server';
 
 const region = functions.config().env.region;
 

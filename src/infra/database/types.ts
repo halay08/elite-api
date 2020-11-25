@@ -7,7 +7,7 @@ type IOrderBy<T> = {
 type IOperatorQuery<T, K> = {
     [K in keyof T]?: any;
 } & {
-    operator: K;
+    operator?: K;
 };
 
 type IQuery<T> = IOperatorQuery<T, any>;
@@ -22,4 +22,25 @@ type IQueryOption<T> = {
     orderBy: IOrderBy<T>;
 };
 
-export { IOrderBy, IOperatorQuery, IQuery, IQueryOption };
+// Firebase types
+type IDocumentReference = FirebaseFirestore.DocumentReference;
+
+type IDocumentData = FirebaseFirestore.DocumentData;
+
+type IDocumentSnapshot<T> = FirebaseFirestore.DocumentSnapshot<T>;
+
+type ICollectionReference<T> = FirebaseFirestore.CollectionReference<T>;
+
+type IWriteResult = FirebaseFirestore.WriteResult;
+
+export {
+    IQuery,
+    IOrderBy,
+    IWriteResult,
+    IDocumentData,
+    IQueryOption,
+    IOperatorQuery,
+    IDocumentSnapshot,
+    IDocumentReference,
+    ICollectionReference
+};

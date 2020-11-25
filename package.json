@@ -1,13 +1,15 @@
 {
     "name": "functions",
     "scripts": {
-        "clean": "rimraf lib",
+        "clean": "rimraf dist",
         "lint": "eslint 'src/**/*' --fix",
         "build": "tsc",
         "watch": "ENV_FILE=./.env tsc -w",
         "test": "ENV_FILE=./.env.test jest",
         "predev": "yarn functions:set-env",
+        "predevImport": "yarn functions:set-env",
         "dev": "yarn watch | yarn emulators:start",
+        "devImport": "yarn watch | yarn emulators:startImport",
         "doc:build": "rimraf ./docs && apidoc -i ./src -f '.*\\.ts$' -o ./docs -t ./deployment/apidoc-template",
         "doc:serve": "yarn doc:build && serve ./docs",
         "functions:set-env": "firebase functions:config:unset env && firebase functions:config:set env=\"$(cat ./env.json)\"",
@@ -15,7 +17,7 @@
         "serve": "npm run build && firebase functions:config:set api.version=v1 && firebase emulators:start --only functions",
         "shell": "npm run build && firebase functions:shell",
         "start": "npm run shell",
-        "decrypt:serviceAccountKey": "mkdir -p ./lib && gpg --batch --yes --decrypt --output ./lib/serviceAccountKey.json ./deployment/sa-staging.json.gpg",
+        "decrypt:serviceAccountKey": "mkdir -p ./dist && gpg --batch --yes --decrypt --output ./dist/serviceAccountKey.json ./deployment/sa-staging.json.gpg",
         "predeploy": "yarn clean && yarn functions:set-env && yarn build && yarn decrypt:serviceAccountKey",
         "deploy": "firebase deploy --only functions:api",
         "auth:start": "firebase emulators:start --only auth,pubsub",
@@ -25,7 +27,7 @@
         "emulators:start": "firebase emulators:start --only auth,pubsub,firestore,functions",
         "logs": "firebase functions:log"
     },
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "engines": {
         "node": "12"
     },
@@ -52,6 +54,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-validation": "^3.0.6",
+        "figlet": "^1.5.0",
         "firebase-admin": "^9.4.1",
         "firebase-functions": "^3.11.0",
         "helmet": "^4.1.1",
@@ -64,6 +67,7 @@
         "module-alias": "^2.2.2",
         "pino": "^6.7.0",
         "pino-pretty": "^4.3.0",
+        "ramda.isempty": "^0.26.1",
         "reflect-metadata": "^0.1.13",
         "twilio": "^3.50.0",
         "typesaurus": "^6.2.0"
@@ -97,12 +101,11 @@
     },
     "private": true,
     "_moduleAliases": {
-        "@/src": "lib",
-        "@/api/http": "lib/api/http",
-        "@/app": "lib/app",
-        "@/domain": "lib/domain",
-        "@/libs": "lib/libs",
-        "@/infra": "lib/infra",
-        "@/infra/repositories": "lib/infra/database/repositories"
+        "@/src": "dist",
+        "@/api/http": "dist/api/http",
+        "@/app": "dist/app",
+        "@/domain": "dist/domain",
+        "@/infra": "dist/infra",
+        "@/infra/repositories": "dist/infra/database/repositories"
     }
 }

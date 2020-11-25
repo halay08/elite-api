@@ -6,6 +6,8 @@ import { User } from '@/domain';
 export class UserMapper {
     public static toDomain(raw: any): User {
         return User.create({
+            id: raw.id,
+
             role: raw.role,
 
             email: raw.email,

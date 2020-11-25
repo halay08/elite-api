@@ -5,10 +5,10 @@
         "types": ["reflect-metadata", "jest"],
         "noImplicitReturns": true,
         "noUnusedLocals": true,
-        "outDir": "lib",
+        "outDir": "dist",
         "sourceMap": true,
         "strict": true,
-        "target": "es2018",
+        "target": "es2019",
         "resolveJsonModule": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
@@ -23,7 +23,6 @@
             "@/domain": ["domain"],
             "@/services/*": ["app/services/*"],
             "@/services": ["app/services"],
-            "@/libs/*": ["libs/*"],
             "@/infra/*": ["infra/*"],
             "@/infra/repositories/*": ["infra/database/repositories/*"]
         }

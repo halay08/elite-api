@@ -1,5 +1,4 @@
-import UserService from './user';
-import AuthService from './auth';
-import RoomService from './room';
-
-export { UserService, AuthService, RoomService };
+export * from './user';
+export * from './tutor';
+export * from './room';
+export * from './auth';

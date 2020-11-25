@@ -12,7 +12,7 @@ export * from './media';
 export * from './userMeta';
 export * from './session';
 export * from './tutor';
-export * from './tutorReview';
+export * from './tutorReviewer';
 export * from './tutorHappyUser';
 export * from './tutorFollower';
 export * from './student';
@@ -29,6 +29,4 @@ export * from './studentWalletTransaction';
 export * from './room';
 export * from './time';
 export * from './cost';
-
-import IEntity from './entity';
-export { IEntity };
+export * from './entity';

@@ -1,5 +1,4 @@
-import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimestamp } from '.';
-import IEntity from './entity';
+import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimestamp, IEntity } from '.';
 
 enum IBookingStatus {
     OPEN = 1,

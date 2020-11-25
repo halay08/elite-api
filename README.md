@@ -5,25 +5,27 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
 
 ![alt text](architecture.png 'Clean Architecture')
 
--   [Elite API](#elite-api)
-    -   [Getting Started](#getting-started)
-    -   [Project architecture](#project-architecture)
-    -   [Setup Development Environment](#setup-development-environment)
-        -   [Set firebase project alias](#set-firebase-project-alias)
-        -   [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
-        -   [Set environment configuration](#set-environment-configuration)
-        -   [Retrieve current environment configuration](#retrieve-current-environment-configuration)
-        -   [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
-        -   [Start the dev server](#start-the-dev-server)
-    -   [Using API](#using-api)
-        -   [Authorization](#authorization)
-        -   [Create an user](#create-an-user)
-        -   [List items](#list-items)
-        -   [List item by id](#list-item-by-id)
-        -   [Update User](#update-user)
-        -   [Delete User](#delete-user)
-    -   [VS Code](#vs-code)
-    -   [Troubleshooting](#troubleshooting)
+- [Elite API](#elite-api)
+  - [Getting Started](#getting-started)
+  - [Project architecture](#project-architecture)
+  - [Setup Development Environment](#setup-development-environment)
+    - [Set firebase project alias](#set-firebase-project-alias)
+    - [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
+    - [Set environment configuration](#set-environment-configuration)
+    - [Retrieve current environment configuration](#retrieve-current-environment-configuration)
+    - [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
+    - [Start the dev server](#start-the-dev-server)
+  - [API Documentation](#api-documentation)
+    - [VS Code snippet](#vs-code-snippet)
+  - [Using API](#using-api)
+    - [Authorization](#authorization)
+    - [Create an user](#create-an-user)
+    - [List items](#list-items)
+    - [List item by id](#list-item-by-id)
+    - [Update User](#update-user)
+    - [Delete User](#delete-user)
+  - [VS Code](#vs-code)
+  - [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
@@ -38,7 +40,7 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
         ├── app # Layer that composes application use cases
         ├── domain # Business domain classes and everything that composes domain model
         ├── infra # Communication with what is external of application
-        └── libs # Common functionalities
+        └── dist # Common functionalities
 
 ## Setup Development Environment
 
@@ -59,7 +61,7 @@ yarn decrypt:serviceAccountKey
 or you can run the long command below:
 
 ```sh
-mkdir -p ./lib && gpg --batch --yes --decrypt --output ./lib/serviceAccountKey.json ./deployment/sa-staging.json.gpg
+mkdir -p ./dist && gpg --batch --yes --decrypt --output ./dist/serviceAccountKey.json ./deployment/sa-staging.json.gpg
 ```
 
 _Note: You have install GPG Suit if it hasn't been installed on your PC yet. [Learn more](https://www.gnupg.org/download/)._

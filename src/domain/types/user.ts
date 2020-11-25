@@ -1,4 +1,6 @@
 import { ICountry, ILanguage, ICategory, IPolicy, IEntity, ITimestamp } from '.';
+import { IStudentEntity } from './student';
+import { ITutorEntity } from './tutor';
 
 type IEmbedViolation = Required<IEntity> & {
     date: Date;
@@ -18,7 +20,13 @@ enum UserRole {
     TUTOR = 'tutor'
 }
 
-type IEmbedUser = Required<IEntity> & Pick<IUserEntity, 'email' | 'phoneNumber' | 'name' | 'surname' | 'avatar'>;
+type IUserRelation = {
+    tutors?: ITutorEntity[];
+
+    students?: IStudentEntity[];
+};
+
+type IEmbedUser = Required<IEntity> & Pick<IUserEntity, 'email' | 'username' | 'name' | 'surname' | 'avatar'>;
 
 type IUserEntity = IEntity &
     ITimestamp & {
@@ -58,15 +66,15 @@ type IUserEntity = IEntity &
 
         timezone?: string;
 
-        country?: ICountry & Required<IEntity>;
+        country?: ICountry;
 
-        language?: ILanguage & Required<IEntity>;
+        language?: ILanguage;
 
-        category?: ICategory & Required<IEntity>;
+        category?: ICategory;
 
         violations?: IEmbedViolation[];
 
         status: UserStatus;
     };
 
-export { IEmbedViolation, UserStatus, UserRole, IEmbedUser, IUserEntity };
+export { IEmbedViolation, UserStatus, UserRole, IEmbedUser, IUserEntity, IUserRelation };

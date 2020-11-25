@@ -7,14 +7,19 @@ const TYPES = {
     Call: Symbol.for('Call'),
 
     UserRepository: Symbol.for('UserRepository'),
+    TutorRepository: Symbol.for('TutorRepository'),
+    CategoryRepository: Symbol.for('CategoryRepository'),
+
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
+    TutorService: Symbol.for('TutorService'),
 
     RoomService: Symbol.for('RoomService'),
     RoomRepository: Symbol.for('RoomRepository'),
 
     UserSeeding: Symbol.for('UserSeeding'),
-    TutorSeeding: Symbol.for('TutorSeeding')
+    TutorSeeding: Symbol.for('TutorSeeding'),
+    CategorySeeding: Symbol.for('CategorySeeding')
 };
 
 export default TYPES;

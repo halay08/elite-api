@@ -12,20 +12,20 @@ import Container from '../container';
 import TYPES from '@/src/types';
 import { ISeeding } from '@/src/infra/database/migration';
 
-type ISeedingType = 'UserSeeding' | 'TutorSeeding';
+type ISeedingType = 'UserSeeding' | 'TutorSeeding' | 'CategorySeeding';
 
 class Seeding {
-    #seedings: ISeedingType[] = ['UserSeeding', 'TutorSeeding'];
+    #seedings: ISeedingType[] = ['UserSeeding', 'TutorSeeding', 'CategorySeeding'];
 
     async runSingle(specifiedSeeding: ISeedingType) {
-        if (specifiedSeeding && this.#seedings.includes(specifiedSeeding)) {
+        if (specifiedSeeding) {
             const instance = Container.get<ISeeding>(TYPES[specifiedSeeding]);
             await instance.run();
         }
     }
 
     async run(specifiedSeeding?: ISeedingType) {
-        if (specifiedSeeding && this.#seedings.includes(specifiedSeeding)) {
+        if (specifiedSeeding) {
             return await this.runSingle(specifiedSeeding);
         }
 
