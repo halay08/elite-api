@@ -1,4 +1,4 @@
-import { IEmbedUser, INotificationType, IEntity, ITimstamp } from '.';
+import { IEmbedUser, INotificationType, IEntity, ITimestamp } from '.';
 
 type IUserNotification = {
     /**
@@ -17,6 +17,6 @@ type IUserNotification = {
 /**
  * User notification entity
  */
-type IUserNotificationEntity = IEntity & IUserNotification & ITimstamp;
+type IUserNotificationEntity = IEntity & IUserNotification & ITimestamp;
 
 export { IUserNotification, IUserNotificationEntity };

@@ -1,26 +1,23 @@
-import { IEntity, ITimstamp } from '.';
-enum IRoomStatus {
-    BUSY = 'busy',
+import { IEntity, ITimestamp } from '.';
+
+enum RoomStatus {
+    FINISHED = 'finished',
     AVAILABBLE = 'available'
 }
 
 type IRoom = {
-    /**
-     * Name  of room entity
-     */
-    name: string;
+    name?: string;
 
-    /**
-     * Alias  of room entity
-     */
-    slug: string;
+    studentId: string;
 
-    status: IRoomStatus;
+    teacherId: string;
+
+    status: RoomStatus;
 };
 
 /**
  * Room entity
  */
-type IRoomEntity = IEntity & Required<IRoom> & ITimstamp;
+type IRoomEntity = IEntity & Required<IRoom> & ITimestamp;
 
-export { IRoom, IRoomEntity };
+export { IRoom, IRoomEntity, RoomStatus };

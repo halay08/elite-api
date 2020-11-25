@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 type IGlobalSettting = {
     name: string;
@@ -12,6 +12,6 @@ type IGlobalSettting = {
 /**
  * GlobalSettting entity
  */
-type IGlobalSetttingEntity = IEntity & Required<IGlobalSettting> & ITimstamp;
+type IGlobalSetttingEntity = IEntity & Required<IGlobalSettting> & ITimestamp;
 
 export { IGlobalSettting, IGlobalSetttingEntity };

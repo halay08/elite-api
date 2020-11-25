@@ -1,3 +1,2 @@
-import { UserMapper } from '@/infra/database/mappers/user';
-
-export { UserMapper };
+export * from '@/infra/database/mappers/user';
+export * from '@/infra/database/mappers/room';

@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { IRoomEntity } from './types';
+import { IRoomEntity, RoomStatus } from './types';
 
 // Collection: rooms
 @injectable()
@@ -22,5 +22,9 @@ export default class Room extends Entity<IRoomEntity> {
 
     get id(): string {
         return this._id;
+    }
+
+    get status(): RoomStatus {
+        return this.props.status || RoomStatus.AVAILABBLE;
     }
 }

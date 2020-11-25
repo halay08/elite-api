@@ -10,6 +10,9 @@ const TYPES = {
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
 
+    RoomService: Symbol.for('RoomService'),
+    RoomRepository: Symbol.for('RoomRepository'),
+
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding')
 };

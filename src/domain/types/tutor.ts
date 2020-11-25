@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp, IEmbedUser, ICategory, IEducation, IExpertise, ICertificate, IContract } from '.';
+import { IEntity, ITimestamp, IEmbedUser, ICategory, IEducation, IExpertise, ICertificate, IContract } from '.';
 
 enum TutorStatus {
     INVISIBLE = 0,
@@ -46,6 +46,6 @@ type ITutor = {
 /**
  * Tutor entity
  */
-type ITutorEntity = IEntity & ITutor & ITimstamp;
+type ITutorEntity = IEntity & ITutor & ITimestamp;
 
 export { TutorStatus, ITutor, ITutorEntity };

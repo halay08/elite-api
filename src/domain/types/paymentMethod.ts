@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp, IGlobalSettting } from '.';
+import { IEntity, ITimestamp, IGlobalSettting } from '.';
 
 enum PaymentMethodStatus {
     INACTIVE = 0,
@@ -20,6 +20,6 @@ type IPaymentMethod = {
 /**
  * Payment method entity
  */
-type IPaymentMethodEntity = IEntity & IPaymentMethod & ITimstamp;
+type IPaymentMethodEntity = IEntity & IPaymentMethod & ITimestamp;
 
 export { PaymentMethodStatus, IPaymentMethod, IPaymentMethodEntity, IEmbedPaymentMethod };

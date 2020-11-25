@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp } from '.';
+import { IEmbedUser, IEntity, ITimestamp } from '.';
 
 type ITutorReviewer = {
     tutor: IEmbedUser;
@@ -26,6 +26,6 @@ type ITutorReviewer = {
 /**
  * StudentReviewer entity
  */
-type ITutorReviewerEntity = IEntity & ITutorReviewer & ITimstamp;
+type ITutorReviewerEntity = IEntity & ITutorReviewer & ITimestamp;
 
 export { ITutorReviewer, ITutorReviewerEntity };

@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 type ICategory = {
     /**
@@ -10,6 +10,6 @@ type ICategory = {
 /**
  * Category entity
  */
-type ICategoryEntity = IEntity & ICategory & ITimstamp;
+type ICategoryEntity = IEntity & ICategory & ITimestamp;
 
 export { ICategory, ICategoryEntity };

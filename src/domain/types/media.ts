@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 enum IMediaType {
     PHOTO = 'photo',
@@ -28,6 +28,6 @@ type IMedia = {
 /**
  * Media entity
  */
-type IMediaEntity = IEntity & IMedia & ITimstamp;
+type IMediaEntity = IEntity & IMedia & ITimestamp;
 
 export { IMedia, IMediaEntity, IMediaMeta, IMediaType };

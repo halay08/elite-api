@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 enum PunishmentType {
     CASH = 'cash',
@@ -27,6 +27,6 @@ type IPolicy = {
 /**
  * Policy entity
  */
-type IPolicyEntity = IEntity & IPolicy & ITimstamp;
+type IPolicyEntity = IEntity & IPolicy & ITimestamp;
 
 export { PunishmentType, IPolicy, IPolicyEntity };

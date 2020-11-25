@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp } from '.';
+import { IEmbedUser, IEntity, ITimestamp } from '.';
 
 type ITutorHappyUser = {
     tutor: IEmbedUser;
@@ -9,6 +9,6 @@ type ITutorHappyUser = {
 /**
  * Tutor follower entity
  */
-type ITutorHappyUserEntity = IEntity & Required<IEmbedUser> & ITimstamp;
+type ITutorHappyUserEntity = IEntity & Required<IEmbedUser> & ITimestamp;
 
 export { ITutorHappyUser, ITutorHappyUserEntity };

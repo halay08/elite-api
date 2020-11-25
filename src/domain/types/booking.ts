@@ -1,4 +1,4 @@
-import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimstamp } from '.';
+import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimestamp } from '.';
 import IEntity from './entity';
 
 enum IBookingStatus {
@@ -31,6 +31,6 @@ type IBooking = {
     status: IBookingStatus;
 };
 
-type IBookingEntity = IEntity & IBooking & ITimstamp;
+type IBookingEntity = IEntity & IBooking & ITimestamp;
 
 export { IBookingStatus, IBookingType, IEmbedBooking, IBooking, IBookingEntity };

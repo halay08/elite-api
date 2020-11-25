@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp } from '.';
+import { IEmbedUser, IEntity, ITimestamp } from '.';
 
 type ITutorWallet = {
     tutor: NonNullable<IEmbedUser>;
@@ -17,6 +17,6 @@ type ITutorWallet = {
  * Tutor wallet entity
  * TODO: This is the temporary model
  */
-type ITutorWalletEntity = IEntity & ITutorWallet & ITimstamp;
+type ITutorWalletEntity = IEntity & ITutorWallet & ITimestamp;
 
 export { ITutorWallet, ITutorWalletEntity };

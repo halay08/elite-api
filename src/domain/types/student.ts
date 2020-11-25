@@ -1,4 +1,4 @@
-import { IFollowing, IEmbedUser, IEntity, ITimstamp } from '.';
+import { IFollowing, IEmbedUser, IEntity, ITimestamp } from '.';
 
 type IStudent = {
     user: IEmbedUser;
@@ -17,6 +17,6 @@ type IStudent = {
 /**
  * Student entity
  */
-type IStudentEntity = IEntity & IStudent & ITimstamp;
+type IStudentEntity = IEntity & IStudent & ITimestamp;
 
 export { IStudent, IStudentEntity };

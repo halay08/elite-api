@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp, ILanguage, IEmbedSession } from '.';
+import { IEmbedUser, IEntity, ITimestamp, ILanguage, IEmbedSession } from '.';
 
 enum ICourseStatus {
     AVAILABLE = 0,
@@ -61,6 +61,6 @@ type ICourse = {
 /**
  * Course entity
  */
-type ICourseEntity = IEntity & ICourse & ITimstamp;
+type ICourseEntity = IEntity & ICourse & ITimestamp;
 
 export { ICourse, ICourseEntity, ICourseStatus, ICoursePolicy, IEmbedCourse };

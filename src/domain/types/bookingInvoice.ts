@@ -1,4 +1,4 @@
-import { IEntity, IEmbedBooking, ITimstamp } from '.';
+import { IEntity, IEmbedBooking, ITimestamp } from '.';
 
 type IBookingInvoice = {
     invoiceNumber: string;
@@ -11,6 +11,6 @@ type IBookingInvoice = {
 /**
  * Booking Invoice entity
  */
-type IBookingInvoiceEntity = IEntity & IBookingInvoice & ITimstamp;
+type IBookingInvoiceEntity = IEntity & IBookingInvoice & ITimestamp;
 
 export { IBookingInvoice, IBookingInvoiceEntity };

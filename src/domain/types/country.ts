@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 type ICountry = {
     /**
@@ -15,6 +15,6 @@ type ICountry = {
 /**
  * Country entity
  */
-type ICountryEntity = IEntity & Required<ICountry> & ITimstamp;
+type ICountryEntity = IEntity & Required<ICountry> & ITimestamp;
 
 export { ICountry, ICountryEntity };

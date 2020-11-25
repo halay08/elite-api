@@ -1,4 +1,4 @@
-import { IEntity, ITimstamp } from '.';
+import { IEntity, ITimestamp } from '.';
 
 type ILanguage = {
     /**
@@ -15,6 +15,6 @@ type ILanguage = {
 /**
  * Language entity
  */
-type ILanguageEntity = IEntity & ILanguage & ITimstamp;
+type ILanguageEntity = IEntity & ILanguage & ITimestamp;
 
 export { ILanguage, ILanguageEntity };

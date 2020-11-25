@@ -1,4 +1,4 @@
-import { IEmbedPaymentMethod, IEmbedBooking, IEntity, ITimstamp } from '.';
+import { IEmbedPaymentMethod, IEmbedBooking, IEntity, ITimestamp } from '.';
 
 type IBookingPayment = {
     booking: IEmbedBooking;
@@ -21,6 +21,6 @@ type IBookingPayment = {
 /**
  * Booking Payment entity
  */
-type IBookingPaymentEntity = IEntity & IBookingPayment & ITimstamp;
+type IBookingPaymentEntity = IEntity & IBookingPayment & ITimestamp;
 
 export { IBookingPayment, IBookingPaymentEntity };

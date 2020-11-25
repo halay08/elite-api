@@ -1,4 +1,4 @@
-import { ICountry, ILanguage, ICategory, IPolicy, IEntity, ITimstamp } from '.';
+import { ICountry, ILanguage, ICategory, IPolicy, IEntity, ITimestamp } from '.';
 
 type IEmbedViolation = Required<IEntity> & {
     date: Date;
@@ -21,7 +21,7 @@ enum UserRole {
 type IEmbedUser = Required<IEntity> & Pick<IUserEntity, 'email' | 'phoneNumber' | 'name' | 'surname' | 'avatar'>;
 
 type IUserEntity = IEntity &
-    ITimstamp & {
+    ITimestamp & {
         role: UserRole;
 
         /**

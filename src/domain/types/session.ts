@@ -1,4 +1,4 @@
-import { ICourse, IEntity, ITimstamp, ICostType } from '.';
+import { ICourse, IEntity, ITimestamp, ICostType } from '.';
 import { IEmbedBooking } from './booking';
 import { IMediaEntity } from './media';
 
@@ -59,6 +59,6 @@ type ISession = {
 /**
  * Session entity
  */
-type ISessionEntity = IEntity & ISession & ITimstamp;
+type ISessionEntity = IEntity & ISession & ITimestamp;
 
 export { ISessionMedia, ISessionStatus, ISession, ISessionEntity, IEmbedSession };

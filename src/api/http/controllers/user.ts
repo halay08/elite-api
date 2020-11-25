@@ -77,13 +77,13 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   Unauthorized
      */
     @httpGet('/')
-    public async all(@response() res: Response): Promise<User[] | void> {
+    public async all(@response() res: Response) {
         try {
             const data = await this.userService.getAll();
 
-            return data;
+            return res.status(HttpStatus.CREATED).json(data);
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
     }
 
@@ -124,14 +124,14 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   Unauthorized
      */
     @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
-    public async get(@requestParam('id') id: string, @response() res: Response): Promise<User | void> {
+    public async get(@requestParam('id') id: string, @response() res: Response) {
         try {
             const data = await this.userService.getById(id);
             console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
 
-            return data;
+            return res.status(HttpStatus.CREATED).json(data);
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
     }
 
@@ -159,7 +159,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpPost('/', validate(UserValidation.create))
-    public async create(@requestBody() req: NewUserPayload, @response() res: Response): Promise<void> {
+    public async create(@requestBody() req: NewUserPayload, @response() res: Response) {
         try {
             const role: UserRole = (<any>UserRole)[req.role.toUpperCase()];
             const user = User.create({
@@ -169,9 +169,10 @@ export class UserController extends BaseHttpController implements interfaces.Con
             });
             const data = await this.userService.create(user);
             await this.authService.setCustomUserClaims(req.uid, { role: req.role });
-            res.status(HttpStatus.CREATED).json({ data });
+
+            return res.status(HttpStatus.CREATED).json(data);
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
     }
 
@@ -203,17 +204,13 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpPut('/:id', validate(UserValidation.create))
-    public async update(
-        @requestParam('id') id: string,
-        @requestBody() user: User,
-        @response() res: Response
-    ): Promise<User | void> {
+    public async update(@requestParam('id') id: string, @requestBody() user: User, @response() res: Response) {
         try {
             const data = await this.userService.update(id, user);
 
-            return data;
+            return res.status(HttpStatus.OK).json(data);
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
     }
 
@@ -237,13 +234,13 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   }
      */
     @httpDelete('/:id')
-    public async delete(@requestParam('id') id: string, @response() res: Response): Promise<number | void> {
+    public async delete(@requestParam('id') id: string, @response() res: Response) {
         try {
             const data = await this.userService.delete(id);
 
-            return data;
+            return res.status(HttpStatus.OK).json(data);
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
     }
 }

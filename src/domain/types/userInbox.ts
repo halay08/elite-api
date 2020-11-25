@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp } from '.';
+import { IEmbedUser, IEntity, ITimestamp } from '.';
 
 type IUserInbox = {
     sender: IEmbedUser;
@@ -13,6 +13,6 @@ type IUserInbox = {
 /**
  * User inbox entity
  */
-type IUserInboxEntity = IEntity & IUserInbox & ITimstamp;
+type IUserInboxEntity = IEntity & IUserInbox & ITimestamp;
 
 export { IUserInbox, IUserInboxEntity };

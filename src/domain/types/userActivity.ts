@@ -1,4 +1,4 @@
-import { IEmbedUser, IEntity, ITimstamp } from '.';
+import { IEmbedUser, IEntity, ITimestamp } from '.';
 
 type IUserActivity = {
     user: IEmbedUser & Required<IEntity>;
@@ -15,6 +15,6 @@ type IUserActivity = {
 /**
  * User activity entity
  */
-type IUserActivityEntity = IEntity & IUserActivity & ITimstamp;
+type IUserActivityEntity = IEntity & IUserActivity & ITimestamp;
 
 export { IUserActivity, IUserActivityEntity };
