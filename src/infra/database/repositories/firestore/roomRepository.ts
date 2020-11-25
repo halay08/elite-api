@@ -8,6 +8,8 @@ import { IQueryOption } from '@/infra/database/types';
 import { IFirestoreQuery } from '../../firestore/types';
 import { HttpsError } from 'firebase-functions/lib/providers/https';
 import { NotFoundError } from '@/app/errors';
+import { COLLECTIONS } from '../../config/collection';
+import { IRoomEntity } from '@/src/domain/types';
 
 @provide(TYPES.RoomRepository)
 export class RoomRepository extends BaseRepository<Room> implements IRoomRepository {
@@ -16,7 +18,25 @@ export class RoomRepository extends BaseRepository<Room> implements IRoomReposit
      * @returns
      */
     getCollection() {
-        return 'rooms';
+        return COLLECTIONS.ROOM;
+    }
+
+    /**
+     * Map fields to domain entity
+     * @param room Entity raw field
+     * @returns domain
+     */
+    protected toDomain(room: Room): Room {
+        return RoomMapper.toDomain(room);
+    }
+
+    /**
+     * Serialize domain entity
+     * @param data Entity object
+     * @returns serialize
+     */
+    protected serialize(data: Room): IRoomEntity {
+        return data.serialize();
     }
 
     /**

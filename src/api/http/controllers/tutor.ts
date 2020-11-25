@@ -1,19 +1,30 @@
 import { Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
-import { BaseHttpController, controller, httpGet, interfaces, response, queryParam } from 'inversify-express-utils';
-import { TutorService } from '@/src/app/services';
+import {
+    BaseHttpController,
+    controller,
+    httpGet,
+    interfaces,
+    response,
+    queryParam,
+    requestParam
+} from 'inversify-express-utils';
+import { TutorService, UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
-import { ITutorQuery, TutorFilterStatus } from '../requests';
-import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
+import { ITutorQuery } from '../requests';
 import { Tutor } from '@/src/domain';
-import { TutorStatus, ITutorEntity } from '@/domain/types';
 import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
+import { getOperatorQueries } from '../helpers/tutor';
+import { NotFoundError } from '@/app/errors/notFound';
 
 @controller(`/tutors`)
 export class TutorController extends BaseHttpController implements interfaces.Controller {
-    constructor(@inject(TYPES.TutorService) private tutorService: TutorService) {
+    constructor(
+        @inject(TYPES.TutorService) private tutorService: TutorService,
+        @inject(TYPES.UserService) private userService: UserService
+    ) {
         super();
     }
 
@@ -58,7 +69,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             queryOption.limit = pagination.limit;
             queryOption.startAt = pagination.offset;
 
-            const operatorQueries = this._getOperatorQueries(queries);
+            const operatorQueries = getOperatorQueries(queries);
             const items = await this.tutorService.query(operatorQueries, queryOption);
             const data = {
                 pagination: {
@@ -83,30 +94,57 @@ export class TutorController extends BaseHttpController implements interfaces.Co
     }
 
     /**
-     * Get operator queries for tutor list
-     * @param queries
+     *
+     * @api {GET} /tutors Get info of tutor. No authentication required
+     * @apiGroup Tutor
+     * @apiVersion  1.0.0
+     *
+     * @apiSuccess (200) {Object} Info of tutor
+     * @apiSuccessExample {Array} Success-Response:
+     * {
+     *      "_id": "Ygfec8d3BfVk7E7OeDPm",
+     *      "user": {
+     *          "id": "yZGFDF6fGC3DdfgLgh69",
+     *          "email": "test@example.com"
+     *      },
+     *      "category": {
+     *          "id": "z6N89Oisw3ojJHGF23FS",
+     *          "name": "English"
+     *      },
+     *      "status": "online"
+     * }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "something went wrong"
+     *   }
      */
-    private _getOperatorQueries(queries: ITutorQuery): IFirestoreQuery<Tutor>[] {
-        const operatorQueries: IFirestoreQuery<Tutor>[] = [];
+    @httpGet('/:username')
+    public async getBySlug(@requestParam('username') slug: string, @response() res: Response) {
+        try {
+            // Get user by username
+            // It will be used to get tutor by user reference
+            const [user] = await this.userService.findBy('username', slug);
 
-        const { category, expertise, status } = queries;
+            if (typeof user === 'undefined') {
+                throw new NotFoundError('User not found');
+            }
 
-        if (status === TutorFilterStatus.ONLINE) {
-            operatorQueries.push({ activeStatus: TutorStatus.ACTIVE });
+            const userEntity = user.serialize();
+            const userRef = this.tutorService.getDocumentRef(`users/${userEntity.id}`);
+
+            // Get tutor by user reference
+            const [tutor] = await this.tutorService.findBy('user', userRef);
+
+            if (typeof tutor === 'undefined') {
+                throw new NotFoundError('Tutor not found');
+            }
+
+            return res.status(HttpStatus.OK).json(tutor.serialize());
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ error });
         }
-
-        if (category) {
-            const key = 'category.slug' as keyof ITutorEntity;
-            operatorQueries.push({ [key]: queries.category });
-        }
-
-        if (expertise) {
-            operatorQueries.push({
-                expertises: queries.expertise,
-                operator: 'array-contains'
-            });
-        }
-
-        return operatorQueries;
     }
 }

@@ -5,4 +5,4 @@ const httpContext = (req: express.Request): interfaces.HttpContext => {
     return Reflect.getMetadata('inversify-express-utils:httpcontext', req);
 };
 
-export default httpContext;
+export { httpContext };

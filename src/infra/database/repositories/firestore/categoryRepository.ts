@@ -7,6 +7,8 @@ import BaseRepository from './baseRepository';
 import { IQueryOption } from '@/infra/database/types';
 import { IFirestoreQuery } from '../../firestore/types';
 import { NotFoundError } from '@/app/errors';
+import { COLLECTIONS } from '../../config/collection';
+import { ICategoryEntity } from '@/src/domain/types';
 
 @provide(TYPES.CategoryRepository)
 export class CategoryRepository extends BaseRepository<Category> implements ICategoryRepository {
@@ -15,7 +17,25 @@ export class CategoryRepository extends BaseRepository<Category> implements ICat
      * @returns
      */
     getCollection() {
-        return 'categories';
+        return COLLECTIONS.CATEGORY;
+    }
+
+    /**
+     * Map fields to domain entity
+     * @param category Entity raw field
+     * @returns domain
+     */
+    protected toDomain(category: Category): Category {
+        return CategoryMapper.toDomain(category);
+    }
+
+    /**
+     * Serialize domain entity
+     * @param data Entity object
+     * @returns serialize
+     */
+    protected serialize(data: Category): ICategoryEntity {
+        return data.serialize();
     }
 
     /**

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import httpContext from '@/api/http/helpers/httpContext';
+import { httpContext } from '@/api/http/helpers';
 import { fireauth } from '@/infra/auth/firebase/types';
 import HttpStatus from 'http-status-codes';
 

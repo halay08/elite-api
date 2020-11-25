@@ -4,7 +4,7 @@ import { User } from '@/domain';
  * User mapper
  */
 export class UserMapper {
-    public static toDomain(raw: any): User {
+    static toDomain(raw: any): User {
         return User.create({
             id: raw.id,
 
