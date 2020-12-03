@@ -2,4 +2,4 @@ type IEntity = {
     id?: string;
 };
 
-export default IEntity;
+export { IEntity };

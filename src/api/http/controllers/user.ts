@@ -25,8 +25,15 @@ const UserValidation = {
     create: {
         body: Joi.object({
             role: Joi.string().required(),
-            email: Joi.string().email().required(),
-            uid: Joi.string().required()
+            email: Joi.string().email().required()
+        })
+    },
+    update: {
+        body: Joi.object({
+            role: Joi.string(),
+            email: Joi.string().email(),
+            firstName: Joi.string(),
+            lastName: Joi.string()
         })
     }
 };
@@ -56,11 +63,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
      * @apiSuccessExample {Array} Success-Response:
      * [
      *      {
-     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
-     *          "props": {
-     *              "name": "test123",
-     *              "email": "test@gmail.com"
-     *          }
+     *          "id": "Ygfec8d3BfVk7E7OeDPm",
+     *          "name": "test123",
+     *          "email": "test@gmail.com"
      *      }
      * ]
      *
@@ -104,11 +109,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
      * @apiSuccess (200) {Object} User data
      * @apiSuccessExample {Object} Success-Response:
      *      {
-     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
-     *          "props": {
-     *              "name": "test123",
-     *              "email": "test@gmail.com"
-     *          }
+     *          "id": "Ygfec8d3BfVk7E7OeDPm",
+     *          "name": "test123",
+     *          "email": "test@gmail.com"
      *      }
      *
      * @apiError BAD_REQUEST Return Error Message.
@@ -203,9 +206,19 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *     "error": "Something went wrong"
      *   }
      */
-    @httpPut('/:id', validate(UserValidation.create))
-    public async update(@requestParam('id') id: string, @requestBody() user: User, @response() res: Response) {
+    @httpPut('/:id', validate(UserValidation.update))
+    public async update(@requestParam('id') id: string, @requestBody() payload: User, @response() res: Response) {
         try {
+            let user: User = User.create(payload);
+
+            if (payload.role) {
+                const role: UserRole = (<any>UserRole)[payload.role.toUpperCase()];
+                user = {
+                    ...user,
+                    role
+                } as User;
+            }
+
             const data = await this.userService.update(id, user);
 
             return res.status(HttpStatus.OK).json(data);

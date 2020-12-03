@@ -7,7 +7,7 @@ import TYPES from '@/src/types';
 import { NotFoundError } from '@/app/errors/notFound';
 
 @provide(TYPES.RoomService)
-export default class RoomService {
+export class RoomService {
     constructor(
         @inject(TYPES.RoomRepository)
         private readonly roomRepository: IRoomRepository

@@ -17,7 +17,7 @@ import TYPES from './types';
 import FireAuth from '@/infra/auth/firebase/auth';
 
 const container = new Container();
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && process.env.ENABLE_LOGGER) {
     const logger = makeLoggerMiddleware();
     container.applyMiddleware(logger);
 }

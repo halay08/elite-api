@@ -1,4 +1,5 @@
-import { IEntity, ITimestamp, IEmbedUser, ICategory, IEducation, IExpertise, ICertificate, IContract } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IEntity, ITimestamp, IEducation, ICertificate, IContract } from '.';
 
 enum TutorStatus {
     INVISIBLE = 0,
@@ -8,15 +9,15 @@ enum TutorStatus {
 }
 
 type ITutor = {
-    user: NonNullable<IEmbedUser>;
+    user: IDocumentReference;
 
-    category: ICategory & Required<IEntity>;
+    category: IDocumentReference;
 
-    educations: IEducation[];
+    educations?: IEducation[];
 
-    expertises: IExpertise[];
+    expertises?: string[];
 
-    certificates: ICertificate[];
+    certificates?: ICertificate[];
 
     contracts?: IContract[];
 

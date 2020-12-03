@@ -1,5 +1,10 @@
 import { IMedia, IEntity, IEmbedUser } from '.';
 
+enum CertificateStatus {
+    VERIFIED = 'verified',
+    PENDING = 'pending'
+}
+
 type IEducationMedia = Required<IEntity> & Pick<IMedia, 'name' | 'slug' | 'url' | 'metas'>;
 
 type IEducation = {
@@ -32,7 +37,7 @@ type ICertificate = {
     /**
      * Status: approved or not
      */
-    status: NonNullable<boolean>;
+    status: CertificateStatus;
 };
 
 type IContract = {
@@ -53,4 +58,4 @@ type IFollowing = Required<IEntity> & {
     tutor: IEmbedUser;
 };
 
-export { IEducationMedia, IEducation, IExpertise, ICertificate, IContract, IFollowing };
+export { IEducationMedia, IEducation, IExpertise, ICertificate, IContract, IFollowing, CertificateStatus };

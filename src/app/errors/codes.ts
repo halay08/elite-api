@@ -1,4 +1,4 @@
-export enum ErrorCode {
+enum ErrorCode {
     OK = 'ok',
     CANCELLED = 'cancelled',
     UNKNOWN = 'unknown',
@@ -17,3 +17,5 @@ export enum ErrorCode {
     DATA_LOSS = 'data-loss',
     UNAUTHENTICATED = 'unauthenticated'
 }
+
+export { ErrorCode };

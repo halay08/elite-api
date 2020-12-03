@@ -5,7 +5,7 @@ import { fireauth } from '@/infra/auth/firebase/types';
 import { inject } from 'inversify';
 
 @provide(TYPES.AuthService)
-export default class AuthService {
+export class AuthService {
     /**
      * Creates an instance of auth service.
      * @param _auth

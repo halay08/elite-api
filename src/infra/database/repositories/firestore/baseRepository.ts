@@ -3,7 +3,8 @@ import { inject, injectable } from 'inversify';
 import { FirestoreData, FirestoreCollection } from '@/src/infra/database/firestore';
 import TYPES from '@/src/types';
 import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
-import { IQueryOption } from '@/src/infra/database/types';
+import { IDocumentReference, IQueryOption } from '@/src/infra/database/types';
+import { admin } from '@/src/firebase.config';
 
 @injectable()
 export default abstract class BaseRepository<T> {
@@ -46,5 +47,14 @@ export default abstract class BaseRepository<T> {
             }
         ];
         return this.query(queries);
+    }
+
+    /**
+     * Get reference document by path
+     * @param path Path of reference document, ex: users/tygD3iFGr42DfZs4sz
+     * @returns IDocumentReference
+     */
+    getDocumentRef(path: string): IDocumentReference {
+        return admin.firestore().doc(path);
     }
 }

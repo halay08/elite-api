@@ -1,6 +1,6 @@
-import UserRepository from './firestore/userRepository';
-import IUserRepository from './userRepositoryInterface';
-import RoomRepository from './firestore/roomRepository';
-import IRoomRepository from './roomRepositoryInterface';
-
-export { UserRepository, IUserRepository, RoomRepository, IRoomRepository };
+export * from './firestore';
+export * from './repositoryInterface';
+export * from './roomRepositoryInterface';
+export * from './tutorRepositoryInterface';
+export * from './userRepositoryInterface';
+export * from './categoryRepositoryInterface';

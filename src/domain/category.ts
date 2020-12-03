@@ -21,4 +21,8 @@ export default class Category extends Entity<ICategoryEntity> {
     get id(): string {
         return this._id;
     }
+
+    get name(): string {
+        return this.props.name;
+    }
 }

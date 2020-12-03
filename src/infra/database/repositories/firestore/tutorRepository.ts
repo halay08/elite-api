@@ -1,42 +1,42 @@
 import { provide } from 'inversify-binding-decorators';
-import { User } from '@/domain';
-import { UserMapper } from '@/infra/database/mappers';
+import { Tutor } from '@/domain';
+import { TutorMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-import { IUserRepository } from '../userRepositoryInterface';
+import { ITutorRepository } from '../tutorRepositoryInterface';
 import BaseRepository from './baseRepository';
 import { IQueryOption } from '@/infra/database/types';
 import { IFirestoreQuery } from '../../firestore/types';
 import { NotFoundError } from '@/app/errors';
 
-@provide(TYPES.UserRepository)
-export default class UserRepository extends BaseRepository<User> implements IUserRepository {
+@provide(TYPES.TutorRepository)
+export class TutorRepository extends BaseRepository<Tutor> implements ITutorRepository {
     /**
      * Gets collection
      * @returns
      */
     getCollection() {
-        return 'users';
+        return 'tutors';
     }
 
     /**
-     * Querys user records
-     * @template User
+     * Querys tutor records
+     * @template Tutor
      * @param [queries]
      * @param [options]
      * @returns query
      */
-    async query(queries: IFirestoreQuery<User>[] = [], options: Partial<IQueryOption<User>> = {}): Promise<User[]> {
+    async query(queries: IFirestoreQuery<Tutor>[] = [], options: Partial<IQueryOption<Tutor>> = {}): Promise<Tutor[]> {
         const docs = await this.collection.query(queries, options);
-        return docs.map((item) => UserMapper.toDomain(item));
+        return docs.map((item) => TutorMapper.toDomain(item));
     }
 
     /**
      * Finds all
      * @returns all
      */
-    async findAll(): Promise<User[]> {
-        const users = await this.collection.findAll();
-        return users.map((item) => UserMapper.toDomain(item));
+    async findAll(): Promise<Tutor[]> {
+        const tutors = await this.collection.findAll();
+        return tutors.map((item) => TutorMapper.toDomain(item));
     }
 
     /**
@@ -44,22 +44,22 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @param id
      * @returns by id
      */
-    async findById(id: string): Promise<User> {
-        const user = await this.collection.findById(id);
-        if (!user) {
-            throw new NotFoundError('User not found');
+    async findById(id: string): Promise<Tutor> {
+        const tutor = await this.collection.findById(id);
+        if (!tutor) {
+            throw new NotFoundError('Tutor not found');
         }
 
-        return UserMapper.toDomain(user);
+        return TutorMapper.toDomain(tutor);
     }
 
     /**
-     * Creates user record
-     * @param user
+     * Creates tutor record
+     * @param tutor
      * @returns create
      */
-    async create(userModel: User): Promise<User> {
-        const dto = userModel.serialize();
+    async create(tutorModel: Tutor): Promise<Tutor> {
+        const dto = tutorModel.serialize();
         const { id } = dto;
 
         if (id) {
@@ -72,20 +72,20 @@ export default class UserRepository extends BaseRepository<User> implements IUse
     }
 
     /**
-     * Updates user record
+     * Updates tutor record
      * @param id
      * @param user
      * @returns update
      */
-    async update(id: string, user: User): Promise<User> {
-        const dto = user.serialize();
+    async update(id: string, tutor: Tutor): Promise<Tutor> {
+        const dto = tutor.serialize();
         await this.collection.update(id, dto);
 
         return this.findById(id);
     }
 
     /**
-     * Deletes user record
+     * Deletes tutor record
      * @param id
      * @returns delete
      */

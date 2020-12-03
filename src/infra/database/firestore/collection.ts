@@ -1,6 +1,13 @@
 import { time } from '@/app/helpers';
 import { admin } from '@/src/firebase.config';
-import { IQueryOption } from '@/infra/database/types';
+import {
+    IDocumentReference,
+    ICollectionReference,
+    IDocumentData,
+    IDocumentSnapshot,
+    IQueryOption,
+    IWriteResult
+} from '@/infra/database/types';
 import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
 import { IEntity } from '@/src/domain/types';
 
@@ -14,7 +21,7 @@ export default class FirestoreCollection<T extends IEntity> {
     /**
      * Collection  of firestore repository
      */
-    protected _collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+    protected _collection: ICollectionReference<IDocumentData>;
 
     /**
      * Creates an instance of firestore repository.
@@ -26,14 +33,24 @@ export default class FirestoreCollection<T extends IEntity> {
     }
 
     /**
-     * Map Firestore document reference and data to entity T
-     * @param doc Document snapshot
-     * @returns T
+     * Determines whether document reference is
+     * @param doc
+     * @returns document reference
      */
-    private _mapDocReference(doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>): T {
+    private _isDocumentReference(doc: any): doc is IDocumentReference {
+        return (<IDocumentReference>doc)?.id !== undefined;
+    }
+
+    /**
+     * Maps doc field: doc entity fields, timestamp and reference id
+     * @param doc Document snapshot
+     * @param [data] Document entity fields
+     * @returns
+     */
+    private _mapDocField(doc: IDocumentSnapshot<IDocumentData>, data: object = {}) {
         return doc.exists
             ? {
-                  ...doc.data(),
+                  ...Object.assign(doc.data(), data),
                   id: doc.ref.id,
                   createdAt: doc.createTime,
                   updatedAt: doc.updateTime
@@ -41,7 +58,26 @@ export default class FirestoreCollection<T extends IEntity> {
             : (null as any);
     }
 
-    getQueryCollection(): FirebaseFirestore.Query<FirebaseFirestore.DocumentData> {
+    /**
+     * Map Firestore document reference and data to entity T
+     * @param doc Document snapshot
+     * @returns T
+     */
+    private async _mapDocReference(doc: IDocumentSnapshot<IDocumentData>): Promise<T> {
+        const data = doc.data() || {};
+
+        for (const key in data) {
+            if (this._isDocumentReference(data[key])) {
+                const ref = <IDocumentReference>data[key];
+                const refDoc = await ref.get();
+                data[key] = this._mapDocField(refDoc);
+            }
+        }
+
+        return this._mapDocField(doc, data);
+    }
+
+    getQueryCollection(): FirebaseFirestore.Query<IDocumentData> {
         return admin.firestore().collection(this.#collectionName);
     }
 
@@ -50,7 +86,7 @@ export default class FirestoreCollection<T extends IEntity> {
      * @returns string
      */
     genId(): string {
-        const ref: FirebaseFirestore.DocumentReference = admin
+        const ref: IDocumentReference = admin
             .firestore()
             .collection(this.#collectionName)
             .doc();
@@ -58,10 +94,28 @@ export default class FirestoreCollection<T extends IEntity> {
         return ref.id;
     }
 
+    /**
+     * Get reference document by path
+     * @param path
+     * @returns ref
+     */
+    getDocumentRef(path: string): IDocumentReference {
+        return admin.firestore().doc(path);
+    }
+
+    /**
+     * Finds all
+     * @returns all
+     */
     async findAll(): Promise<T[]> {
         return this.query([]);
     }
 
+    /**
+     * Finds by id
+     * @param id
+     * @returns by id
+     */
     async findById(id: string): Promise<T> {
         const doc = await this._collection.doc(id).get();
 
@@ -74,10 +128,9 @@ export default class FirestoreCollection<T extends IEntity> {
      * @param data Document data
      * @returns create
      */
-    async set(id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
+    async set(id: string, data: Partial<T>): Promise<IWriteResult> {
         const dataModel = {
-            ...data,
-            createdAt: time.getCurrentUTCDate()
+            ...data
         };
 
         // Not allow to write field `id` to database
@@ -111,7 +164,7 @@ export default class FirestoreCollection<T extends IEntity> {
      * @param data
      * @returns update
      */
-    async update(id: string, data: Partial<T>): Promise<FirebaseFirestore.WriteResult> {
+    async update(id: string, data: Partial<T>): Promise<IWriteResult> {
         // Not allow to write field `id` to database
         delete data.id;
 
@@ -124,8 +177,8 @@ export default class FirestoreCollection<T extends IEntity> {
      * @softDelete Only update deletedAt field to the document
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<FirebaseFirestore.WriteResult> {
-        let result: FirebaseFirestore.WriteResult;
+    async delete(id: string, softDelete: boolean = true): Promise<IWriteResult> {
+        let result: IWriteResult;
 
         if (softDelete) {
             // Add deleteAt value
@@ -163,7 +216,7 @@ export default class FirestoreCollection<T extends IEntity> {
                     throw new Error('Query field is invalid');
                 }
 
-                query = query.where(field, q.operator, q[field as keyof T]);
+                query = query.where(field, q.operator || '==', q[field as keyof T]);
             });
         }
 
@@ -181,6 +234,6 @@ export default class FirestoreCollection<T extends IEntity> {
 
         const documentData = await query.get();
 
-        return documentData.docs.map((doc) => this._mapDocReference(doc));
+        return Promise.all(documentData.docs.map((doc) => this._mapDocReference(doc)));
     }
 }

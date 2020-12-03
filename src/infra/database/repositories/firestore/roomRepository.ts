@@ -2,15 +2,15 @@ import { provide } from 'inversify-binding-decorators';
 import { Room } from '@/domain';
 import { RoomMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-import IRoomRepository from '../roomRepositoryInterface';
+import { IRoomRepository } from '../roomRepositoryInterface';
 import BaseRepository from './baseRepository';
 import { IQueryOption } from '@/infra/database/types';
 import { IFirestoreQuery } from '../../firestore/types';
 import { HttpsError } from 'firebase-functions/lib/providers/https';
-import { NotFoundError } from '@/app/errors/notFound';
+import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.RoomRepository)
-export default class RoomRepository extends BaseRepository<Room> implements IRoomRepository {
+export class RoomRepository extends BaseRepository<Room> implements IRoomRepository {
     /**
      * Gets collection
      * @returns
