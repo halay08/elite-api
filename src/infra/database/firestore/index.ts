@@ -3,7 +3,7 @@
 
 import { injectable } from 'inversify';
 import FirestoreCollection from './collection';
-import User from '@/domain/user';
+import { User } from '@/domain/user';
 import * as types from './types';
 
 @injectable()

@@ -1,7 +1,7 @@
 //@ts-ignore
 import * as isEmpty from 'ramda.isempty';
 import { provide } from 'inversify-binding-decorators';
-import User from '@/domain/user';
+import { User } from '@/domain/user';
 import { IRepository, IUserRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import { ErrorCode, HttpsError } from '@/app/errors';

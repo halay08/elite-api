@@ -5,6 +5,7 @@ export default {
     FireAuth: Symbol.for('FireAuth'),
 
     Call: Symbol.for('Call'),
+    PaymentByMomo: Symbol.for('PaymentByMomo'),
 
     // Do not remove the next line, it's using for code generator
     // SYMBOL //

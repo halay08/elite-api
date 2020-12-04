@@ -86,7 +86,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
         try {
             const data = await this.userService.getAll();
 
-            return res.status(HttpStatus.CREATED).json(data.map((u) => u.serialize()));
+            return res.status(HttpStatus.OK).json(data.map((u) => u.serialize()));
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
@@ -132,7 +132,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
             const data = await this.userService.getById(id);
             console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
 
-            return res.status(HttpStatus.CREATED).json(data.serialize());
+            return res.status(HttpStatus.OK).json(data.serialize());
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }

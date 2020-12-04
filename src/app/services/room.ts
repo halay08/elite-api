@@ -1,6 +1,6 @@
 import { provide } from 'inversify-binding-decorators';
 
-import Room from '@/domain/room';
+import { Room } from '@/domain/room';
 import TYPES from '@/src/types';
 import { NotFoundError } from '@/app/errors/notFound';
 import { BaseService } from './base';

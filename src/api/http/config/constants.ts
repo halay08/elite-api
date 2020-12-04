@@ -4,4 +4,11 @@ const apiVersion = functions.config().env.api.version;
 
 const env = functions.config().env;
 
-export { env, apiVersion };
+const momoURL = env.momo.TEST_ENV === 'true' ? 'https://test-payment.momo.vn' : 'https://payment.momo.vn';
+const paymentConfig = {
+    returnUrl: 'https://dev.elites.work',
+    notifyUrl: `https://asia-east2-elites-work-staging.cloudfunctions.net/api/${apiVersion}/payments/ipn`,
+    transactionURL: `${momoURL}/gw_payment/transactionProcessor`
+};
+
+export { env, apiVersion, paymentConfig };

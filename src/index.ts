@@ -10,10 +10,14 @@ import { IServer } from '@/api/http/server';
 
 const region = functions.config().env.region;
 
+let APIFunction;
+
 try {
     const server = Container.get<IServer>(TYPES.Server);
-    exports.api = functions.region(region).https.onRequest(server.start());
+    APIFunction = functions.region(region).https.onRequest(server.start());
 } catch (e) {
-    if (e instanceof Error) console.log(e.message);
+    if (e instanceof Error) functions.logger.log(e.message);
     else throw e;
 }
+
+exports.api = APIFunction;
