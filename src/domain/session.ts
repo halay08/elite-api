@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+import { IDocumentReference } from '../infra/database/types';
 
 import { Entity } from './entity';
 import { ISessionEntity } from './types';
@@ -20,6 +21,18 @@ export class Session extends Entity<ISessionEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
+    }
+
+    get name(): string {
+        return this._props.name;
+    }
+
+    get slug(): string {
+        return this._props.slug;
+    }
+
+    get course(): IDocumentReference {
+        return this._props.course;
     }
 }

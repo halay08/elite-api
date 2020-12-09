@@ -5,11 +5,11 @@ import TYPES from '@/src/types';
 import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
 import { IDocumentReference, IQueryOption } from '@/src/infra/database/types';
 import { admin } from '@/src/firebase.config';
-import { NotFoundError } from '@/app/errors/notFound';
+import { NotFoundError } from '@/app/errors';
 import { IEntity } from '@/src/domain/types';
 
 @injectable()
-export default abstract class BaseRepository<T extends IEntity> {
+export abstract class BaseRepository<T extends IEntity> {
     // Use for current collection, it's shorter to call,
     // ex., this.collection.find() instead of this.database.{collection_name}.find()
     protected collection: FirestoreCollection<T>;
@@ -78,19 +78,20 @@ export default abstract class BaseRepository<T extends IEntity> {
 
     /**
      * Finds all
-     * @returns all
+     * @param [options] Sort, limit, offet
+     * @returns T[]
      */
-    async findAll(): Promise<T[]> {
-        const items = await this.collection.findAll();
+    async findAll(options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
+        const items = await this.collection.findAll(options);
         return items.map((item) => this.toDomain(item));
     }
 
     /**
      * Query documents
-     * @template User
-     * @param [queries]
-     * @param [options]
-     * @returns query
+     * @template T
+     * @param [queries] Filter data
+     * @param [options] Sort, limit, offet
+     * @returns T[]
      */
     async query(queries: IFirestoreQuery<T>[] = [], options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
         const docs = await this.collection.query(queries, options);

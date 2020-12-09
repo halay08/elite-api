@@ -1,9 +1,11 @@
-import { IEntity, IEmbedBooking, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IEntity, ITimestamp } from '.';
 
 type IBookingInvoice = {
     invoiceNumber: string;
 
-    booking: IEmbedBooking;
+    // Booking reference document
+    booking: IDocumentReference;
 
     amount: number;
 };

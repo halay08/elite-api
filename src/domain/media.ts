@@ -19,6 +19,6 @@ export class Media extends Entity<IMediaEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

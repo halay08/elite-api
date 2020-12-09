@@ -19,7 +19,7 @@ export class Category extends Entity<ICategoryEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     get name(): string {

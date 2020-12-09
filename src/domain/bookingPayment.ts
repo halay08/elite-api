@@ -21,6 +21,6 @@ export class BookingPayment extends Entity<IBookingPaymentEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

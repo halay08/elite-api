@@ -21,7 +21,7 @@ export class UserNotification extends Entity<IUserNotificationEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     /**

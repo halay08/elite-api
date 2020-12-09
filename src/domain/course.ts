@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+import { IDocumentReference } from '../infra/database/types';
 import { Entity } from './entity';
 import { ICourseEntity } from './types';
 
@@ -18,7 +19,31 @@ export class Course extends Entity<ICourseEntity> {
         return instance;
     }
 
+    /**
+     * Gets id
+     */
     get id(): string {
-        return this._id;
+        return this._props.id || '';
+    }
+
+    /**
+     * Gets name
+     */
+    get name(): string {
+        return this._props.name;
+    }
+
+    /**
+     * Gets slug
+     */
+    get slug(): string {
+        return this._props.slug;
+    }
+
+    /**
+     * Gets tutor reference
+     */
+    get tutor(): IDocumentReference {
+        return this._props.tutor;
     }
 }

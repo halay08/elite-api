@@ -21,6 +21,6 @@ export class UserActivity extends Entity<IUserActivityEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

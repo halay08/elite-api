@@ -22,7 +22,7 @@ export class Tutor extends Entity<ITutorEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     get user(): IDocumentReference {

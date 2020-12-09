@@ -20,6 +20,6 @@ export class StudentWallet extends Entity<IStudentWalletEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

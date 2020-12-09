@@ -2,12 +2,13 @@ import { inject } from 'inversify';
 import TYPES from '@/src/types';
 import { ICategoryRepository, ITutorRepository, IUserRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
-import ISeeding from './seedingInterface';
+import { ISeeding } from '.';
 import { Category, User, Tutor } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
 import { ITutorEntity, TutorStatus, CertificateStatus, UserRole } from '@/domain/types';
 import { time } from '@/app/helpers';
 import { IDocumentReference } from '../../types';
+import { COLLECTIONS } from '../../config/collection';
 
 @provide(TYPES.TutorSeeding)
 class TutorSeeding implements ISeeding {
@@ -21,9 +22,9 @@ class TutorSeeding implements ISeeding {
     ) {}
 
     /**
-     * Get the first category to embed to tutor
+     * Get the category to embed to the tutor
      */
-    private async _getCategory(): Promise<Category> {
+    private async getCategory(): Promise<Category> {
         const categories = await this._categoryRepository.query([], { limit: 1 });
 
         if (categories.length === 0) {
@@ -34,9 +35,9 @@ class TutorSeeding implements ISeeding {
     }
 
     /**
-     * Get the first user to embed to tutor
+     * Get the user to embed to tutor
      */
-    private async _getUser(): Promise<User[]> {
+    private async getUsers(): Promise<User[]> {
         const users = await this._userRepository.query([{ role: UserRole.TUTOR, operator: '==' }], { limit: 10 });
 
         if (users.length === 0) {
@@ -47,19 +48,19 @@ class TutorSeeding implements ISeeding {
     }
 
     async run() {
-        const users: User[] = await this._getUser();
-        const category: Category = await this._getCategory();
+        const users: User[] = await this.getUsers();
+        const category: Category = await this.getCategory();
 
         const userReferences: IDocumentReference[] = [];
 
         for (const user of users) {
             const userEntity = user.serialize();
-            const userRef = this._tutorRepository.getDocumentRef(`users/${userEntity.id}`);
+            const userRef = this._tutorRepository.getDocumentRef(`${COLLECTIONS.User}/${userEntity.id}`);
             userReferences.push(userRef);
         }
 
         const categoryEntity = category.serialize();
-        const categoryRef = this._categoryRepository.getDocumentRef(`categories/${categoryEntity.id}`);
+        const categoryRef = this._categoryRepository.getDocumentRef(`${COLLECTIONS.Category}/${categoryEntity.id}`);
 
         const tutors: ITutorEntity[] = [
             {
@@ -217,7 +218,8 @@ class TutorSeeding implements ISeeding {
         ];
 
         for (const tutor of tutors) {
-            const existedTutor = await this._tutorRepository.findBy('user.id', tutor.user.id);
+            const userRef = this._userRepository.getDocumentRef(`users/${tutor.user.id}`);
+            const existedTutor = await this._tutorRepository.findBy('user', userRef);
             if (existedTutor.length > 0) {
                 console.log(`Tutor with user ${tutor.user.id} already existed in the database`);
                 continue;

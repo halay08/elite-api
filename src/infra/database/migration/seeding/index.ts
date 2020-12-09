@@ -1,6 +1,7 @@
-import UserSeeding from './userSeeding';
-import ISeeding from './seedingInterface';
-import CategorySeeding from './categorySeeding';
-import TutorSeeding from './tutorSeeding';
-
-export { UserSeeding, CategorySeeding, TutorSeeding, ISeeding };
+export * from './seedingInterface';
+export * from './userSeeding';
+export * from './seedingInterface';
+export * from './categorySeeding';
+export * from './tutorSeeding';
+export * from './courseSeeding';
+export * from './sessionSeeding';

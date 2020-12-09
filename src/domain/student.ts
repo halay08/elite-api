@@ -21,6 +21,6 @@ export class Student extends Entity<IStudentEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

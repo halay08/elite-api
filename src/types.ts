@@ -11,17 +11,22 @@ export default {
     // SYMBOL //
 
     UserRepository: Symbol.for('UserRepository'),
+    RoomRepository: Symbol.for('RoomRepository'),
     TutorRepository: Symbol.for('TutorRepository'),
+    CourseRepository: Symbol.for('CourseRepository'),
+    SessionRepository: Symbol.for('SessionRepository'),
     CategoryRepository: Symbol.for('CategoryRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
-    TutorService: Symbol.for('TutorService'),
-
     RoomService: Symbol.for('RoomService'),
-    RoomRepository: Symbol.for('RoomRepository'),
+    TutorService: Symbol.for('TutorService'),
+    CourseService: Symbol.for('CourseService'),
+    SessionService: Symbol.for('SessionService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),
+    CourseSeeding: Symbol.for('CourseSeeding'),
+    SessionSeeding: Symbol.for('SessionSeeding'),
     CategorySeeding: Symbol.for('CategorySeeding')
 };

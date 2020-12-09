@@ -3,7 +3,7 @@ import { Tutor } from '@/domain';
 import { TutorMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
 import { ITutorRepository } from '../interfaces';
-import BaseRepository from './base';
+import { BaseRepository } from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { ITutorEntity } from '@/domain/types';
 
@@ -28,10 +28,10 @@ export class TutorRepository extends BaseRepository<Tutor> implements ITutorRepo
 
     /**
      * Serialize domain entity
-     * @param data Entity object
+     * @param tutor Entity object
      * @returns serialize
      */
-    protected serialize(data: Tutor): ITutorEntity {
-        return data.serialize();
+    protected serialize(tutor: Tutor): ITutorEntity {
+        return tutor.serialize();
     }
 }

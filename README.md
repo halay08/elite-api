@@ -81,7 +81,7 @@ yarn functions:export-env
 ### Start firestore for database (emulators)
 
 ```sh
-yarn firestore:start
+yarn firestore
 ```
 
 ### Start the dev server

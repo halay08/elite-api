@@ -21,6 +21,6 @@ export class TutorFollower extends Entity<ITutorFollowerEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

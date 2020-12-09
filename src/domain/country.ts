@@ -21,6 +21,6 @@ export class Country extends Entity<ICountryEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

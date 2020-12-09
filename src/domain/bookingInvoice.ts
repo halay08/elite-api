@@ -21,6 +21,6 @@ export class BookingInvoice extends Entity<IBookingInvoiceEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

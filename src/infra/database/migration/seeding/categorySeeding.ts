@@ -2,7 +2,7 @@ import { inject } from 'inversify';
 import TYPES from '@/src/types';
 import { ICategoryRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
-import ISeeding from './seedingInterface';
+import { ISeeding } from '.';
 import { Category } from '@/domain';
 
 @provide(TYPES.CategorySeeding)

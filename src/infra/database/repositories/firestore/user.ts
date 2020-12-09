@@ -3,7 +3,7 @@ import { User } from '@/domain';
 import { UserMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
 import { IUserRepository } from '../interfaces';
-import BaseRepository from './base';
+import { BaseRepository } from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { IUserEntity } from '@/src/domain/types';
 
@@ -28,10 +28,10 @@ export default class UserRepository extends BaseRepository<User> implements IUse
 
     /**
      * Serialize domain entity
-     * @param data Entity object
+     * @param user Entity object
      * @returns serialize
      */
-    protected serialize(data: User): IUserEntity {
-        return data.serialize();
+    protected serialize(user: User): IUserEntity {
+        return user.serialize();
     }
 }

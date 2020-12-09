@@ -3,7 +3,7 @@ import TYPES from '@/src/types';
 import { IUserRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { UserStatus, UserRole } from '@/domain/types';
-import ISeeding from './seedingInterface';
+import { ISeeding } from './seedingInterface';
 import { User } from '@/domain';
 
 @provide(TYPES.UserSeeding)

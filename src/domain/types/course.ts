@@ -1,6 +1,7 @@
-import { IEmbedUser, IEntity, ITimestamp, ILanguage, IEmbedSession } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IEntity, ITimestamp, ILanguage } from '.';
 
-enum ICourseStatus {
+enum CourseStatus {
     AVAILABLE = 0,
     BOOKED = 1, // UNAVAILABLE
     CANCELLED = 2,
@@ -32,8 +33,6 @@ type ICoursePolicy = {
     cancelSessionInProgress: ICoursePolicyCondition;
 };
 
-type IEmbedCourse = Required<IEntity> & Pick<ICourse, 'name' | 'slug' | 'tutor' | 'sessions'>;
-
 type ICourse = {
     name: string;
 
@@ -41,21 +40,21 @@ type ICourse = {
 
     presentationLanguage: Pick<ILanguage, 'code' | 'name'>;
 
-    description: string;
+    description?: string;
 
     benefits: string[];
 
     detailContent: string;
 
-    requirements: string[];
+    requirements?: string[];
 
     policy: ICoursePolicy;
 
-    tutor: NonNullable<IEmbedUser>;
+    tutor: IDocumentReference;
 
-    sessions: IEmbedSession[];
+    sessions?: IDocumentReference[];
 
-    status: ICourseStatus;
+    status: CourseStatus;
 };
 
 /**
@@ -63,4 +62,4 @@ type ICourse = {
  */
 type ICourseEntity = IEntity & ICourse & ITimestamp;
 
-export { ICourse, ICourseEntity, ICourseStatus, ICoursePolicy, IEmbedCourse };
+export { ICourse, ICourseEntity, CourseStatus, ICoursePolicy };

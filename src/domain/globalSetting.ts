@@ -21,6 +21,6 @@ export class GlobalSettting extends Entity<IGlobalSetttingEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

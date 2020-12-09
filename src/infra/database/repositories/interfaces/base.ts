@@ -2,7 +2,7 @@ import { IDocumentReference, IQuery, IQueryOption } from '@/src/infra/database/t
 
 export interface IRepository<T> {
     genId(): string;
-    findAll(): Promise<T[]>;
+    findAll(options?: Partial<IQueryOption<T>>): Promise<T[]>;
     findById(id: string): Promise<T>;
     findBy(field: string, value: any, operator?: any): Promise<T[]>;
     create(entity: Partial<T>): Promise<T>;

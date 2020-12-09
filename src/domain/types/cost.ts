@@ -1,4 +1,4 @@
-export enum ICostType {
+export enum CostType {
     CASH = 'cash',
-    COINT = 'coin'
+    COIN = 'coin'
 }

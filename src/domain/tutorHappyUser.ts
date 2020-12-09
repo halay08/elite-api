@@ -21,6 +21,6 @@ export class TutorHappyUser extends Entity<ITutorHappyUserEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

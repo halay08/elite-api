@@ -10,7 +10,6 @@ import {
     queryParam,
     requestParam
 } from 'inversify-express-utils';
-import { TutorService, UserService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { ITutorQuery } from '../requests';
 import { Tutor } from '@/src/domain';
@@ -18,12 +17,16 @@ import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
 import { NotFoundError } from '@/app/errors/notFound';
+import { TutorService, UserService, CourseService } from '@/src/app/services';
+import { authorize } from '@/api/http/middlewares';
 
-@controller(`/tutors`)
+// Required login
+@controller(`/tutors`, authorize({ roles: ['admin', 'student', 'tutor'] }))
 export class TutorController extends BaseHttpController implements interfaces.Controller {
     constructor(
         @inject(TYPES.TutorService) private tutorService: TutorService,
-        @inject(TYPES.UserService) private userService: UserService
+        @inject(TYPES.UserService) private userService: UserService,
+        @inject(TYPES.CourseService) private courseService: CourseService
     ) {
         super();
     }
@@ -95,31 +98,8 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
     /**
      *
-     * @api {GET} /tutors Get info of tutor. No authentication required
-     * @apiGroup Tutor
-     * @apiVersion  1.0.0
-     *
-     * @apiSuccess (200) {Object} Info of tutor
-     * @apiSuccessExample {Array} Success-Response:
-     * {
-     *      "_id": "Ygfec8d3BfVk7E7OeDPm",
-     *      "user": {
-     *          "id": "yZGFDF6fGC3DdfgLgh69",
-     *          "email": "test@example.com"
-     *      },
-     *      "category": {
-     *          "id": "z6N89Oisw3ojJHGF23FS",
-     *          "name": "English"
-     *      },
-     *      "status": "online"
-     * }
-     *
-     * @apiError BAD_REQUEST Return Error Message.
-     * @apiErrorExample {Object} Error-Response:
-     *   Error 400: Bad Request
-     *   {
-     *     "error": "something went wrong"
-     *   }
+     * Get info of tutor. No authentication required
+     * Postman API document: https://elitework.postman.co
      */
     @httpGet('/:username')
     public async getBySlug(@requestParam('username') slug: string, @response() res: Response) {
@@ -143,6 +123,24 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             }
 
             return res.status(HttpStatus.OK).json(tutor.serialize());
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ error });
+        }
+    }
+
+    /**
+     * Https get course by tutor id
+     * Postman API document: https://elitework.postman.co
+     * @param id
+     * @param res
+     * @returns
+     */
+    @httpGet('/:id/courses')
+    public async getCourses(@requestParam('id') id: string, @response() res: Response) {
+        try {
+            const courses = await this.courseService.getCourseByTutor(id);
+
+            return res.status(HttpStatus.OK).json(courses.map((c) => c.serialize()));
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error });
         }

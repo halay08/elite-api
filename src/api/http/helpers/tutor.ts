@@ -1,14 +1,14 @@
 import { Tutor } from '@/src/domain';
-import { IFirestoreQuery } from '@/src/infra/database/firestore/types';
 import { ITutorQuery, TutorFilterStatus } from '../requests';
 import { TutorStatus, ITutorEntity } from '@/domain/types';
+import { IDocumentQuery } from '@/src/infra/database/types';
 
 /**
  * Get operator queries for tutor list
  * @param queries
  */
-const getOperatorQueries = (queries: ITutorQuery): IFirestoreQuery<Tutor>[] => {
-    const operatorQueries: IFirestoreQuery<Tutor>[] = [];
+const getOperatorQueries = (queries: ITutorQuery): IDocumentQuery<Tutor>[] => {
+    const operatorQueries: IDocumentQuery<Tutor>[] = [];
 
     const { category, expertise, status } = queries;
 

@@ -21,7 +21,7 @@ export class User extends Entity<IUserEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     get role(): UserRole {

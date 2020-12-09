@@ -1,8 +1,9 @@
 import { IEntity, ITimestamp } from '.';
 
-enum IMediaType {
+enum MediaType {
     PHOTO = 'photo',
-    VIDEO = 'video'
+    VIDEO = 'video',
+    FILE = 'file'
 }
 
 type IMediaMeta = {
@@ -19,7 +20,7 @@ type IMedia = {
 
     url: string;
 
-    type: IMediaType;
+    type: MediaType;
 
     // Alt text, description, title of photos, video resolution,...
     metas?: IMediaMeta[];
@@ -30,4 +31,4 @@ type IMedia = {
  */
 type IMediaEntity = IEntity & IMedia & ITimestamp;
 
-export { IMedia, IMediaEntity, IMediaMeta, IMediaType };
+export { IMedia, IMediaEntity, IMediaMeta, MediaType };

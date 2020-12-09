@@ -1,4 +1,5 @@
-import { IEmbedSession, IEmbedCourse, IEmbedUser, IBookingPaymentEntity, ITimestamp, IEntity } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { ITimestamp, IEntity } from '.';
 
 enum IBookingStatus {
     OPEN = 1,
@@ -11,25 +12,25 @@ enum IBookingType {
     SESSION = 'session'
 }
 
-type IEmbedBooking = Required<IEntity> &
-    Pick<IBookingEntity, 'type' | 'object' | 'student' | 'bookingNumber' | 'bookedAt'>;
-
 type IBooking = {
     type: IBookingType;
 
-    object: IEmbedSession | IEmbedCourse;
+    // Course or session reference
+    object: IDocumentReference;
 
-    student: IEmbedUser;
+    // User reference
+    student: IDocumentReference;
 
     bookingNumber: string;
 
     bookedAt: Date;
 
-    payment: Pick<IBookingPaymentEntity, 'id' | 'paymentMethod' | 'orderId' | 'transactionId'>;
+    // Payment reference
+    payment: IDocumentReference;
 
     status: IBookingStatus;
 };
 
 type IBookingEntity = IEntity & IBooking & ITimestamp;
 
-export { IBookingStatus, IBookingType, IEmbedBooking, IBooking, IBookingEntity };
+export { IBookingStatus, IBookingType, IBooking, IBookingEntity };

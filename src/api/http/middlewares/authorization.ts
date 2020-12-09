@@ -31,7 +31,7 @@ function authorizationFactory() {
 
             // If role is defined but not have authorization.
             if (config.roles) {
-                res.status(HttpStatus.UNAUTHORIZED).end('Unauthorized');
+                return res.status(HttpStatus.UNAUTHORIZED).end('Unauthorized');
             }
 
             next();

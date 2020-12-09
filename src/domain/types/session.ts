@@ -1,8 +1,5 @@
-import { ICourse, IEntity, ITimestamp, ICostType } from '.';
-import { IEmbedBooking } from './booking';
-import { IMediaEntity } from './media';
-
-type ISessionMedia = Pick<IMediaEntity, 'name' | 'slug' | 'url' | 'metas'>;
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IEntity, ITimestamp, CostType, IMedia } from '.';
 
 enum ISessionStatus {
     AVAILABLE = 0,
@@ -12,7 +9,7 @@ enum ISessionStatus {
     COMPLETED = 4
 }
 
-type IEmbedSession = Required<IEntity> & Pick<ISession, 'name' | 'slug' | 'cost' | 'costType' | 'course'>;
+type ISessionMedia = Pick<IMedia, 'name' | 'slug' | 'url' | 'metas'>;
 
 type ISession = {
     // Topic name
@@ -21,7 +18,7 @@ type ISession = {
     // URL path
     slug: string;
 
-    course: Required<IEntity> & Pick<ICourse, 'name' | 'tutor' | 'status'>;
+    course: IDocumentReference;
 
     startTime: Date;
 
@@ -38,7 +35,7 @@ type ISession = {
     /**
      * We might consider to use credit-coin to sell the session
      */
-    costType: ICostType;
+    costType: CostType;
 
     content: string;
 
@@ -48,12 +45,12 @@ type ISession = {
 
     referenceDocuments: ISessionMedia[];
 
-    status: ISessionStatus;
-
     /**
      * The booking from student
      */
-    booking: IEmbedBooking[];
+    booking?: IDocumentReference[];
+
+    status: ISessionStatus;
 };
 
 /**
@@ -61,4 +58,4 @@ type ISession = {
  */
 type ISessionEntity = IEntity & ISession & ITimestamp;
 
-export { ISessionMedia, ISessionStatus, ISession, ISessionEntity, IEmbedSession };
+export { ISessionStatus, ISession, ISessionEntity, ISessionMedia };

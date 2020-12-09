@@ -21,6 +21,6 @@ export class PaymentMethod extends Entity<IPaymentMethodEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

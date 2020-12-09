@@ -1,7 +1,8 @@
-import { IEmbedPaymentMethod, IEmbedBooking, IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IEmbedPaymentMethod, IEntity, ITimestamp } from '.';
 
 type IBookingPayment = {
-    booking: IEmbedBooking;
+    booking: IDocumentReference;
 
     paymentMethod: IEmbedPaymentMethod;
 

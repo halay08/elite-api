@@ -21,7 +21,7 @@ export class Room extends Entity<IRoomEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     get status(): RoomStatus {

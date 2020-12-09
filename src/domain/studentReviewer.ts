@@ -21,6 +21,6 @@ export class StudentReviewer extends Entity<IStudentReviewerEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }

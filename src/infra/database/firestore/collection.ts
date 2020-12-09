@@ -32,6 +32,10 @@ export default class FirestoreCollection<T extends IEntity> {
         this.#collectionName = collectionName;
     }
 
+    get collectionName(): string {
+        return this.#collectionName;
+    }
+
     /**
      * Determines whether document reference is
      * @param doc
@@ -61,16 +65,22 @@ export default class FirestoreCollection<T extends IEntity> {
     /**
      * Map Firestore document reference and data to entity T
      * @param doc Document snapshot
+     * @param recursive Continue applying recursive or not
      * @returns T
      */
-    private async _mapDocReference(doc: IDocumentSnapshot<IDocumentData>): Promise<T> {
+    private async _mapDocReference(doc: IDocumentSnapshot<IDocumentData>, recursive: boolean = true): Promise<T> {
         const data = doc.data() || {};
 
         for (const key in data) {
             if (this._isDocumentReference(data[key])) {
                 const ref = <IDocumentReference>data[key];
                 const refDoc = await ref.get();
-                data[key] = this._mapDocField(refDoc);
+                if (recursive) {
+                    // Map reference for level 1 and 2 only
+                    data[key] = await this._mapDocReference(refDoc, false);
+                } else {
+                    data[key] = ref.id;
+                }
             }
         }
 
@@ -107,8 +117,8 @@ export default class FirestoreCollection<T extends IEntity> {
      * Finds all
      * @returns all
      */
-    async findAll(): Promise<T[]> {
-        return this.query([]);
+    async findAll(options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
+        return this.query([], options);
     }
 
     /**
@@ -130,7 +140,8 @@ export default class FirestoreCollection<T extends IEntity> {
      */
     async set(id: string, data: Partial<T>): Promise<IWriteResult> {
         const dataModel = {
-            ...data
+            ...data,
+            deletedAt: null
         };
 
         // Not allow to write field `id` to database

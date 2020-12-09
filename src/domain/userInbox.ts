@@ -21,7 +21,7 @@ export class UserInbox extends Entity<IUserInboxEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 
     /**

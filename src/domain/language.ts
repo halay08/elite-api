@@ -21,6 +21,6 @@ export class Language extends Entity<ILanguageEntity> {
     }
 
     get id(): string {
-        return this._id;
+        return this._props.id || '';
     }
 }
