@@ -2,8 +2,8 @@ import { provide } from 'inversify-binding-decorators';
 import { User } from '@/domain';
 import { UserMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-import { IUserRepository } from '../userRepositoryInterface';
-import BaseRepository from './baseRepository';
+import { IUserRepository } from '../interfaces';
+import BaseRepository from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { IUserEntity } from '@/src/domain/types';
 

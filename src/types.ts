@@ -20,6 +20,9 @@ const TYPES = {
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),
     CategorySeeding: Symbol.for('CategorySeeding')
+
+    //Repository: Symbol.for('//Repository'),
+    //Service: Symbol.for('//Service'),
 };
 
 export default TYPES;

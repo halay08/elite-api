@@ -6,3 +6,5 @@ dist
 docs
 deployment
 jest.config.js
+templates
+generate.js

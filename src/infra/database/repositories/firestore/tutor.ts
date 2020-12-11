@@ -2,8 +2,8 @@ import { provide } from 'inversify-binding-decorators';
 import { Tutor } from '@/domain';
 import { TutorMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-import { ITutorRepository } from '../tutorRepositoryInterface';
-import BaseRepository from './baseRepository';
+import { ITutorRepository } from '../interfaces';
+import BaseRepository from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { ITutorEntity } from '@/domain/types';
 

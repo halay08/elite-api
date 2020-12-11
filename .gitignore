@@ -12,6 +12,7 @@ typings/
 node_modules/
 .runtimeconfig.json
 
+!generate.js
 !.eslintrc.js
 !*.config.js
 !.prettierrc.js
