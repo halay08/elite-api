@@ -6,7 +6,7 @@ import { #### } from '@/domain';
 export class ####Mapper {
     public static toDomain(raw: any): #### {
         return ####.create({
-            id: raw.id,
+            name: raw.name,
 
             createdAt: raw.createdAt,
 

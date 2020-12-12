@@ -1,7 +1,7 @@
 import { ITimestamp, IEntity } from './index';
 
 type I#### = {
-    id: string;
+    name: string;
 };
 
 type I####Entity = IEntity & I#### & ITimestamp;

@@ -6,7 +6,8 @@ export default {
 
     Call: Symbol.for('Call'),
 
-    //SYMBOL//
+    // Do not remove the next line, it's using for code generator
+    // SYMBOL //
 
     UserRepository: Symbol.for('UserRepository'),
     TutorRepository: Symbol.for('TutorRepository'),

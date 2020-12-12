@@ -1,4 +1,4 @@
-import Tutor from '@/domain/tutor';
+import { Tutor } from '@/domain/tutor';
 
 import { IRepository } from './base';
 

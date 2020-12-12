@@ -7,7 +7,8 @@ import {
     httpGet,
     httpPost,
     response,
-    requestBody
+    requestBody,
+    interfaces
 } from 'inversify-express-utils';
 import { ####Service } from '@/src/app/services';
 import TYPES from '@/src/types';
@@ -16,9 +17,7 @@ import { #### } from '@/src/domain';
 
 @controller(`/FFFFs`)
 export class ####Controller extends BaseHttpController implements interfaces.Controller {
-    constructor(
-        @inject(TYPES.####Service) private FFFFService: ####Service
-    ) {
+    constructor(@inject(TYPES.####Service) private FFFFService: ####Service) {
         super();
     }
 
@@ -49,9 +48,9 @@ export class ####Controller extends BaseHttpController implements interfaces.Con
     @httpGet('/')
     public async index(@response() res: Response) {
         try {
-          const data = await this.FFFFService.getAll();
+            const data = await this.FFFFService.getAll();
 
-          return res.status(HttpStatus.OK).json(data.map((u) => u.serialize()));
+            return res.status(HttpStatus.OK).json(data.map((u) => u.serialize()));
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json(error);
         }

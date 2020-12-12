@@ -18,7 +18,7 @@ export class RoomRepository extends BaseRepository<Room> implements IRoomReposit
      * @returns
      */
     getCollection() {
-        return COLLECTIONS.ROOM;
+        return COLLECTIONS.Room;
     }
 
     /**

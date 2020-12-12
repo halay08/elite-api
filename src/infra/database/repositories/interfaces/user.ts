@@ -1,4 +1,4 @@
-import User from '@/domain/user';
+import { User } from '@/domain/user';
 
 import { IRepository } from './base';
 

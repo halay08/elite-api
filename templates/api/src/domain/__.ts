@@ -5,7 +5,7 @@ import { I####Entity } from './types';
 
 // Collection: booking
 @injectable()
-export default class #### extends Entity<I####Entity> {
+export class #### extends Entity<I####Entity> {
     constructor(props: I####Entity) {
         super(props);
     }

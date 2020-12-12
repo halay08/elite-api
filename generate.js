@@ -16,7 +16,7 @@ const QUESTIONS = [
   {
     name: 'entity-name',
     type: 'input',
-    message: 'Entity name (PascalCase):',
+    message: 'Entity name (PascalCase & singular) | example: Booking or BookingPayment :',
     validate: function (input) {
       if (/^([A-Za-z\-\_\d])+$/.test(input)) return true;
       else return 'Entity name may only include letters, numbers, underscores and hashes.';
@@ -25,7 +25,7 @@ const QUESTIONS = [
   {
     name: 'file-name',
     type: 'input',
-    message: 'File name (camelCase):',
+    message: 'File name (camelCase & singular) | example: booking or bookingPayment :',
     validate: function (input) {
       if (/^([A-Za-z\-\_\d])+$/.test(input)) return true;
       else return 'Entity name may only include letters, numbers, underscores and hashes.';
@@ -34,6 +34,7 @@ const QUESTIONS = [
 ];
 
 const CURR_DIR = process.cwd();
+const SPACING = `    `;
 
 inquirer.prompt(QUESTIONS)
   .then(answers => {
@@ -44,6 +45,7 @@ inquirer.prompt(QUESTIONS)
 
     createDirectoryContents(templatePath, fileName, entityName, apiChoice);
     addNewTypes(entityName);
+    addNewCollection(entityName, fileName);
   });
 
 function addNewTypes(entityName){
@@ -52,8 +54,21 @@ function addNewTypes(entityName){
 
   if (stats.isFile()) {
     const content = fs.readFileSync(typesPath, 'utf8');
-    const symbol = "//SYMBOL//";
-    const newTypes = `${symbol}\n\t${entityName}Service: Symbol.for('${entityName}Service'),\n\t${entityName}Repository: Symbol.for('${entityName}Repository'),\n`
+    const symbol = "// SYMBOL //";
+    const newTypes = `${symbol}\n${SPACING}${entityName}Service: Symbol.for('${entityName}Service'),\n${SPACING}${entityName}Repository: Symbol.for('${entityName}Repository'),`
+    const newContent = content.replace(symbol, newTypes);
+    fs.writeFileSync(typesPath, newContent, 'utf8');
+  }  
+}
+
+function addNewCollection(entityName, fileName){
+  const typesPath = `${CURR_DIR}/src/infra/database/config/collection.ts`
+  const stats = fs.statSync(typesPath);
+
+  if (stats.isFile()) {
+    const content = fs.readFileSync(typesPath, 'utf8');
+    const symbol = "// COLLECTIONS //";
+    const newTypes = `${symbol}\n${SPACING}${entityName}: '${fileName}s',`
     const newContent = content.replace(symbol, newTypes);
     fs.writeFileSync(typesPath, newContent, 'utf8');
   }  

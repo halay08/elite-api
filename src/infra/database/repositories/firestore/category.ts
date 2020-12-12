@@ -17,7 +17,7 @@ export class CategoryRepository extends BaseRepository<Category> implements ICat
      * @returns
      */
     getCollection() {
-        return COLLECTIONS.CATEGORY;
+        return COLLECTIONS.Category;
     }
 
     /**

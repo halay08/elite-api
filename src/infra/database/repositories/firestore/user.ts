@@ -14,7 +14,7 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * @returns
      */
     getCollection() {
-        return COLLECTIONS.USER;
+        return COLLECTIONS.User;
     }
 
     /**

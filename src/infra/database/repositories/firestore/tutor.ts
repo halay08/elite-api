@@ -14,7 +14,7 @@ export class TutorRepository extends BaseRepository<Tutor> implements ITutorRepo
      * @returns
      */
     getCollection() {
-        return COLLECTIONS.TUTOR;
+        return COLLECTIONS.Tutor;
     }
 
     /**
