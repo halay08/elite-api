@@ -43,12 +43,25 @@ inquirer.prompt(QUESTIONS)
     const templatePath = `${__dirname}/templates/${apiChoice}`;
 
     createDirectoryContents(templatePath, fileName, entityName, apiChoice);
+    addNewTypes(entityName);
   });
 
+function addNewTypes(entityName){
+  const typesPath = `${CURR_DIR}/src/types.ts`
+  const stats = fs.statSync(typesPath);
+
+  if (stats.isFile()) {
+    const content = fs.readFileSync(typesPath, 'utf8');
+    const symbol = "//SYMBOL//";
+    const newTypes = `${symbol}\n\t${entityName}Service: Symbol.for('${entityName}Service'),\n\t${entityName}Repository: Symbol.for('${entityName}Repository'),\n`
+    const newContent = content.replace(symbol, newTypes);
+    fs.writeFileSync(typesPath, newContent, 'utf8');
+  }  
+}
+
 function exportNewFile(originPath, fileName) {
-  fs.appendFile(`${originPath}/index.ts`, `export * from './${fileName}';`, function (err) {
+  fs.appendFile(`${originPath}/index.ts`, `export * from './${fileName}';\n`, function (err) {
     if (err) throw err;
-    console.log('Saved!');
   });  
 }
 
@@ -60,7 +73,7 @@ function rename(originFile, fileName) {
   exportNewFile(originPath, fileName);
   
   fs.rename(originFile, originPath + '/' + newName, function(err) {
-    console.log(err);
+    if(err) throw err
     console.log(originPath + '/' + newName);
   });
 }
@@ -91,7 +104,7 @@ function createDirectoryContents (templatePath, fileName, entityName, apiChoice)
       rename(writePath, fileName);
     } else if (stats.isDirectory()) {
       mkdirp(`${originPath}/${file}`, {}, function(err) {
-        console.log(err);
+        if(err) throw err
       });
 
       // recursive call

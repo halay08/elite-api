@@ -1,10 +1,12 @@
-const TYPES = {
+export default {
     Server: Symbol.for('Server'),
     Logger: Symbol.for('Logger'),
     Database: Symbol.for('Database'),
     FireAuth: Symbol.for('FireAuth'),
 
     Call: Symbol.for('Call'),
+
+    //SYMBOL//
 
     UserRepository: Symbol.for('UserRepository'),
     TutorRepository: Symbol.for('TutorRepository'),
@@ -20,9 +22,4 @@ const TYPES = {
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),
     CategorySeeding: Symbol.for('CategorySeeding')
-
-    //Repository: Symbol.for('//Repository'),
-    //Service: Symbol.for('//Service'),
 };
-
-export default TYPES;
