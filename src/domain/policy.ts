@@ -5,7 +5,7 @@ import { IPolicyEntity } from './types';
 
 // Collection: policies
 @injectable()
-export default class Policy extends Entity<IPolicyEntity> {
+export class Policy extends Entity<IPolicyEntity> {
     constructor(props: IPolicyEntity) {
         super(props);
     }

@@ -5,7 +5,7 @@ import { IUserActivityEntity } from './types';
 
 // Collection user_activities
 @injectable()
-export default class UserActivity extends Entity<IUserActivityEntity> {
+export class UserActivity extends Entity<IUserActivityEntity> {
     constructor(props: IUserActivityEntity) {
         super(props);
     }

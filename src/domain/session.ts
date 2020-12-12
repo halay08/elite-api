@@ -4,7 +4,7 @@ import { Entity } from './entity';
 import { ISessionEntity } from './types';
 
 @injectable()
-export default class Session extends Entity<ISessionEntity> {
+export class Session extends Entity<ISessionEntity> {
     constructor(props: ISessionEntity) {
         super(props);
     }

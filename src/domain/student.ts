@@ -5,7 +5,7 @@ import { IStudentEntity } from './types';
 
 // Collection: students
 @injectable()
-export default class Student extends Entity<IStudentEntity> {
+export class Student extends Entity<IStudentEntity> {
     constructor(props: IStudentEntity) {
         super(props);
     }

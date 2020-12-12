@@ -5,7 +5,7 @@ import { IBookingPaymentEntity } from './types';
 
 // Collection: booking_payment
 @injectable()
-export default class BookingPayment extends Entity<IBookingPaymentEntity> {
+export class BookingPayment extends Entity<IBookingPaymentEntity> {
     constructor(props: IBookingPaymentEntity) {
         super(props);
     }

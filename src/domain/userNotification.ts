@@ -5,7 +5,7 @@ import { IUserNotificationEntity, INotificationType, IEmbedUser } from './types'
 
 // Collection: user_notificationns
 @injectable()
-export default class UserNotification extends Entity<IUserNotificationEntity> {
+export class UserNotification extends Entity<IUserNotificationEntity> {
     constructor(props: IUserNotificationEntity) {
         super(props);
     }

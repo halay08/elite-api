@@ -5,7 +5,7 @@ import { IUserEntity, UserRole, ICountry, ILanguage, ICategory, IEmbedViolation,
 
 // Collection: users
 @injectable()
-export default class User extends Entity<IUserEntity> {
+export class User extends Entity<IUserEntity> {
     constructor(props: IUserEntity) {
         super(props);
     }

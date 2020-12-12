@@ -3,7 +3,7 @@ import { Entity } from './entity';
 import { ITutorWalletEntity } from './types';
 
 @injectable()
-export default class TutorWallet extends Entity<ITutorWalletEntity> {
+export class TutorWallet extends Entity<ITutorWalletEntity> {
     constructor(props: ITutorWalletEntity) {
         super(props);
     }

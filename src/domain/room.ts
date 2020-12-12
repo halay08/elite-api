@@ -5,7 +5,7 @@ import { IRoomEntity, RoomStatus } from './types';
 
 // Collection: rooms
 @injectable()
-export default class Room extends Entity<IRoomEntity> {
+export class Room extends Entity<IRoomEntity> {
     constructor(props: IRoomEntity) {
         super(props);
     }

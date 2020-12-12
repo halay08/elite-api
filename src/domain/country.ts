@@ -5,7 +5,7 @@ import { ICountryEntity } from './types';
 
 // Collection: countries
 @injectable()
-export default class Country extends Entity<ICountryEntity> {
+export class Country extends Entity<ICountryEntity> {
     constructor(props: ICountryEntity) {
         super(props);
     }

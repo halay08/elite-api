@@ -6,7 +6,7 @@ import { ITutorEntity, IEducation, ICertificate, IContract, TutorStatus } from '
 
 // Collection: tutors
 @injectable()
-export default class Tutor extends Entity<ITutorEntity> {
+export class Tutor extends Entity<ITutorEntity> {
     constructor(props: ITutorEntity) {
         super(props);
     }

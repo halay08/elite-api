@@ -3,7 +3,7 @@ import { Entity } from './entity';
 import { IMediaEntity } from './types';
 
 @injectable()
-export default class Media extends Entity<IMediaEntity> {
+export class Media extends Entity<IMediaEntity> {
     constructor(props: IMediaEntity) {
         super(props);
     }

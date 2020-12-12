@@ -4,7 +4,7 @@ import { IStudentWalletEntity } from './types';
 
 // Collection: student_wallet
 @injectable()
-export default class StudentWallet extends Entity<IStudentWalletEntity> {
+export class StudentWallet extends Entity<IStudentWalletEntity> {
     constructor(props: IStudentWalletEntity) {
         super(props);
     }

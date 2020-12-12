@@ -5,7 +5,7 @@ import { ITutorReviewerEntity } from './types';
 
 // Collection: tutor_reviewers
 @injectable()
-export default class TutorReviewer extends Entity<ITutorReviewerEntity> {
+export class TutorReviewer extends Entity<ITutorReviewerEntity> {
     constructor(props: ITutorReviewerEntity) {
         super(props);
     }

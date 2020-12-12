@@ -5,7 +5,7 @@ import { IUserInboxEntity, IEmbedUser } from './types';
 
 // Collection: user_inbox
 @injectable()
-export default class UserInbox extends Entity<IUserInboxEntity> {
+export class UserInbox extends Entity<IUserInboxEntity> {
     constructor(props: IUserInboxEntity) {
         super(props);
     }
