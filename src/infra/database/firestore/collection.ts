@@ -76,10 +76,10 @@ export default class FirestoreCollection<T extends IEntity> {
                 const ref = <IDocumentReference>data[key];
                 const refDoc = await ref.get();
                 if (recursive) {
-                    // Map reference for level 1 and 2 only
-                    data[key] = await this._mapDocReference(refDoc, false);
+                    // Map reference for ALL levels
+                    data[key] = await this._mapDocReference(refDoc);
                 } else {
-                    data[key] = ref.id;
+                    data[key] = ref;
                 }
             }
         }
@@ -124,12 +124,13 @@ export default class FirestoreCollection<T extends IEntity> {
     /**
      * Finds by id
      * @param id
+     * @param recursive Continue applying recursive or not
      * @returns by id
      */
-    async findById(id: string): Promise<T> {
+    async findById(id: string, recursive: boolean = true): Promise<T> {
         const doc = await this._collection.doc(id).get();
 
-        return this._mapDocReference(doc);
+        return this._mapDocReference(doc, recursive);
     }
 
     /**
@@ -153,9 +154,10 @@ export default class FirestoreCollection<T extends IEntity> {
     /**
      * Creates firestore repository
      * @param data
+     * @param recursive Continue applying recursive or not
      * @returns create
      */
-    async create(data: Partial<T>): Promise<T> {
+    async create(data: Partial<T>, recursive: boolean = true): Promise<T> {
         // Add createdAt value
         const dataModel = {
             ...data,
@@ -167,7 +169,7 @@ export default class FirestoreCollection<T extends IEntity> {
 
         const doc = await this._collection.add(dataModel);
 
-        return this._mapDocReference(await doc.get());
+        return this._mapDocReference(await doc.get(), recursive);
     }
 
     /**
@@ -209,9 +211,15 @@ export default class FirestoreCollection<T extends IEntity> {
      * Query firestore repository
      * @template T
      * @param queries
+     * @param options
+     * @param recursive Continue applying recursive or not
      * @returns query
      */
-    async query(queries: IFirestoreQuery<T>[] = [], options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
+    async query(
+        queries: IFirestoreQuery<T>[] = [],
+        options: Partial<IQueryOption<T>> = {},
+        recursive: boolean = true
+    ): Promise<T[]> {
         let query = this.getQueryCollection();
 
         // Not include trashed documents
@@ -245,6 +253,6 @@ export default class FirestoreCollection<T extends IEntity> {
 
         const documentData = await query.get();
 
-        return Promise.all(documentData.docs.map((doc) => this._mapDocReference(doc)));
+        return Promise.all(documentData.docs.map((doc) => this._mapDocReference(doc, recursive)));
     }
 }
