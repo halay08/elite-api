@@ -8,5 +8,6 @@ export const COLLECTIONS = {
     Room: 'rooms',
     Course: 'courses',
     Session: 'sessions',
-    Student: 'students'
+    Student: 'students',
+    Booking: 'bookings'
 };

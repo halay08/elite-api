@@ -1,5 +1,5 @@
-import { IDocumentReference } from '@/src/infra/database/types';
 import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/infra/database/types';
 
 type IBookingInvoice = {
     invoiceNumber: string;

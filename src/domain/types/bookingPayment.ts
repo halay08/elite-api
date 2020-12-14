@@ -1,20 +1,12 @@
-import { IDocumentReference } from '@/src/infra/database/types';
-import { IEmbedPaymentMethod, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/infra/database/types';
 
 type IBookingPayment = {
     booking: IDocumentReference;
 
-    paymentMethod: IEmbedPaymentMethod;
+    paymentMethod: 'momo' | 'vnpay';
 
-    /**
-     * Momo/VNPAY order id
-     */
     orderId: string;
-
-    /**
-     * Momo/VNPAY transaction id
-     */
-    transactionId: string;
 
     amount: number;
 };

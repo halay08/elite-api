@@ -1,53 +1,39 @@
-import { IDocumentReference } from '@/src/infra/database/types';
-import { ITimestamp, IEntity } from '.';
-import { ISession } from './session';
+import { ITimestamp, IEntity } from './index';
+import { IDocumentReference } from '@/infra/database/types';
 
 enum IBookingStatus {
-    OPEN = 1,
-    REVIEWING = 2,
-    APPROVED = 3
+    AVAILABLE = 'available',
+    ONHOLD = 'onhold',
+    PROCESSING = 'processing',
+    BOOKED = 'booked'
 }
 
-enum IBookingType {
-    COURSE = 'course',
-    SESSION = 'session'
-}
+export const BOOKING_TYPES = ['course', 'session'] as const;
+export const BOOKING_PAYMENT_METHOD = ['momo', 'vnpay'] as const;
 
-enum ILearningStatus {
-    BOOKED = 'booked',
-    STARTED = 'started',
-    CANCELLED = 'cancelled',
-    REVIEWING = 'reviewing',
-    COMPLETED = 'completed'
-}
-
-type IBookingSession = Pick<ISession, 'startTime' | 'duration' | 'cost' | 'costType'>;
+type IBookingType = typeof BOOKING_TYPES[number];
+type IBookingPaymentMethod = typeof BOOKING_PAYMENT_METHOD[number];
 
 type IBooking = {
-    // Student reference
-    // The reference point to student collection
+    paymentMethod: IBookingPaymentMethod;
+
+    orderId: string;
+
+    coupon: IDocumentReference;
+
+    amount: number;
+
+    type: IBookingType;
+
+    object: any;
+
     student: IDocumentReference;
 
-    // Origin session reference. It's origin because the session may be re-scheduled by tutor.
-    // The reference point to session collection
-    originSession: IDocumentReference;
-
-    // The data use to store booked session histories.
-    bookingSession: IBookingSession;
-
-    // Status of learning, it will be used to report and history feature.
-    learningStatus: ILearningStatus;
-
-    bookingNumber: string;
-
-    bookedAt: Date;
-
-    // Payment reference
-    payment: IDocumentReference;
+    bookedDate: Date;
 
     status: IBookingStatus;
 };
 
 type IBookingEntity = IEntity & IBooking & ITimestamp;
 
-export { IBookingStatus, IBookingType, IBooking, IBookingEntity };
+export { IBookingStatus, IBookingType, IBookingPaymentMethod, IBooking, IBookingEntity };
