@@ -3,7 +3,7 @@ import TYPES from '@/src/types';
 import { ICourseRepository, ITutorRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
-import { CourseStatus, ICoursePolicy } from '@/domain/types';
+import { CourseStatus, ICoursePolicy, CourseType } from '@/domain/types';
 import { Course, Tutor } from '@/domain';
 import { NotFoundError } from '@/app/errors';
 import { IDocumentReference } from '../../types';
@@ -73,6 +73,7 @@ class CourseSeeding implements ISeeding {
 
         return [
             Course.create({
+                type: CourseType.FULL,
                 name: 'Intensive Spoken English for Beginners',
                 slug: 'intensive-english-course-for-beginners',
                 presentationLanguage: { code: 'en', name: 'English' },
@@ -88,6 +89,7 @@ class CourseSeeding implements ISeeding {
                 status: CourseStatus.AVAILABLE
             }),
             Course.create({
+                type: CourseType.FULL,
                 name: 'Building Your English Brain',
                 slug: 'building-your-english-brain',
                 presentationLanguage: { code: 'en', name: 'English' },

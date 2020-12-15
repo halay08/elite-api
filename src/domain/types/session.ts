@@ -1,15 +1,17 @@
 import { IDocumentReference } from '@/src/infra/database/types';
 import { IEntity, ITimestamp, CostType, IMedia } from '.';
 
-enum ISessionStatus {
-    AVAILABLE = 0,
-    BOOKED = 1, // UNAVAILABLE
-    CANCELLED = 2,
-    PENDING = 3,
-    COMPLETED = 4
+enum SessionStatus {
+    AVAILABLE = 'available',
+    BOOKED = 'booked'
 }
 
 type ISessionMedia = Pick<IMedia, 'name' | 'slug' | 'url' | 'metas'>;
+
+type IRecurrenceSession = {
+    type: 'daily' | 'weekly' | 'every_weekday' | 'monthly';
+    endAt: Date;
+};
 
 type ISession = {
     // Topic name
@@ -21,6 +23,11 @@ type ISession = {
     course: IDocumentReference;
 
     startTime: Date;
+
+    isRecurrence?: boolean;
+
+    // Daily, weekly,...
+    recurrences?: IRecurrenceSession;
 
     /**
      * Time for the session (minute)
@@ -37,20 +44,20 @@ type ISession = {
      */
     costType: CostType;
 
-    content: string;
+    content?: string;
 
     photos?: ISessionMedia[];
 
     videos?: ISessionMedia[];
 
-    referenceDocuments: ISessionMedia[];
+    referenceDocuments?: ISessionMedia[];
 
     /**
      * The booking from student
      */
     booking?: IDocumentReference[];
 
-    status: ISessionStatus;
+    status: SessionStatus;
 };
 
 /**
@@ -58,4 +65,4 @@ type ISession = {
  */
 type ISessionEntity = IEntity & ISession & ITimestamp;
 
-export { ISessionStatus, ISession, ISessionEntity, ISessionMedia };
+export { SessionStatus, ISession, ISessionEntity, ISessionMedia };

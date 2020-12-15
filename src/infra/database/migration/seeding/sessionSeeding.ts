@@ -5,7 +5,7 @@ import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { Session, Course } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
-import { CostType, ISessionMedia, ISessionStatus } from '@/domain/types';
+import { CostType, ISessionMedia, SessionStatus } from '@/domain/types';
 import { time } from '@/app/helpers';
 import { IDocumentReference } from '../../types';
 import { COLLECTIONS } from '../../config/collection';
@@ -92,12 +92,18 @@ class SessionSeeding implements ISeeding {
             courseReferences.push(courseRef);
         }
 
+        const startTime: Date[] = [
+            time.getCustomTime({ date: 20, month: 12, hour: 8, minute: 30, second: 0 }),
+            time.getCustomTime({ date: 20, month: 12, hour: 9, minute: 30, second: 0 }),
+            time.getCustomTime({ date: 21, month: 12, hour: 9, minute: 30, second: 0 })
+        ];
+
         return [
             Session.create({
                 name: 'Intensive English lesson 1',
                 slug: 'intensive-english-lesson-1',
                 course: courseReferences[0],
-                startTime: time.getCustomTime({ date: 20, month: 12, hour: 8, minute: 30, second: 0 }),
+                startTime: startTime[0],
                 duration: 60,
                 cost: 250,
                 costType: CostType.CASH,
@@ -105,14 +111,16 @@ class SessionSeeding implements ISeeding {
                 photos: this.getPhotos(),
                 videos: this.getVideos(),
                 referenceDocuments: [],
+                isRecurrence: false,
+                recurrences: null as any,
                 booking: [],
-                status: ISessionStatus.AVAILABLE
+                status: SessionStatus.AVAILABLE
             }),
             Session.create({
                 name: 'Intensive English lesson 2',
                 slug: 'intensive-english-lesson-2',
                 course: courseReferences[0],
-                startTime: time.getCustomTime({ date: 20, month: 12, hour: 9, minute: 30, second: 0 }),
+                startTime: startTime[1],
                 duration: 60,
                 cost: 250,
                 costType: CostType.CASH,
@@ -120,14 +128,16 @@ class SessionSeeding implements ISeeding {
                 photos: this.getPhotos(),
                 videos: this.getVideos(),
                 referenceDocuments: [],
+                isRecurrence: false,
+                recurrences: null as any,
                 booking: [],
-                status: ISessionStatus.AVAILABLE
+                status: SessionStatus.AVAILABLE
             }),
             Session.create({
                 name: 'Building Your English Brain lesson 1',
                 slug: 'building-your-english-brain-lesson-1',
                 course: courseReferences[1],
-                startTime: time.getCustomTime({ date: 21, month: 12, hour: 9, minute: 30, second: 0 }),
+                startTime: startTime[2],
                 duration: 60,
                 cost: 250,
                 costType: CostType.CASH,
@@ -135,8 +145,10 @@ class SessionSeeding implements ISeeding {
                 photos: this.getPhotos(),
                 videos: this.getVideos(),
                 referenceDocuments: [],
+                isRecurrence: false,
+                recurrences: null as any,
                 booking: [],
-                status: ISessionStatus.AVAILABLE
+                status: SessionStatus.AVAILABLE
             })
         ];
     }

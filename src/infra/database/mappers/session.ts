@@ -41,9 +41,6 @@ export class SessionMapper {
 
             referenceDocuments: raw.referenceDocuments,
 
-            /**
-             * The booking from student
-             */
             booking: raw.booking,
 
             status: raw.status,

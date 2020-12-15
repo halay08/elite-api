@@ -9,6 +9,11 @@ enum CourseStatus {
     COMPLETED = 4
 }
 
+enum CourseType {
+    FULL = 'full',
+    FREEDOM = 'freedom'
+}
+
 type ICoursePolicyCondition = {
     allow: boolean;
 
@@ -34,6 +39,8 @@ type ICoursePolicy = {
 };
 
 type ICourse = {
+    type: CourseType;
+
     name: string;
 
     slug: string;
@@ -62,4 +69,4 @@ type ICourse = {
  */
 type ICourseEntity = IEntity & ICourse & ITimestamp;
 
-export { ICourse, ICourseEntity, CourseStatus, ICoursePolicy };
+export { ICourse, ICourseEntity, CourseStatus, ICoursePolicy, CourseType };

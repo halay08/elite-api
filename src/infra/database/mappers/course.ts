@@ -8,6 +8,8 @@ export class CourseMapper {
         return Course.create({
             id: raw.id,
 
+            type: raw.type,
+
             name: raw.name,
 
             slug: raw.slug,
