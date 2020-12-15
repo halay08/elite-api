@@ -1,11 +1,11 @@
 import { provide } from 'inversify-binding-decorators';
 import { Student } from '@/domain';
+import { StudentMapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
-import { IStudentRepository } from '../interfaces/student';
+import { IStudentRepository } from '../interfaces';
 import { BaseRepository } from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { IStudentEntity } from '@/domain/types';
-import { StudentMapper } from '../../mappers/student';
 
 @provide(TYPES.StudentRepository)
 export class StudentRepository extends BaseRepository<Student> implements IStudentRepository {
@@ -19,19 +19,19 @@ export class StudentRepository extends BaseRepository<Student> implements IStude
 
     /**
      * Map fields to domain entity
-     * @param student Entity raw field
+     * @param value Entity raw field
      * @returns domain
      */
-    protected toDomain(student: Student): Student {
-        return StudentMapper.toDomain(student);
+    protected toDomain(value: Student): Student {
+        return StudentMapper.toDomain(value);
     }
 
     /**
      * Serialize domain entity
-     * @param data Entity object
+     * @param value Entity object
      * @returns serialize
      */
-    protected serialize(data: Student): IStudentEntity {
-        return data.serialize();
+    protected serialize(value: Student): IStudentEntity {
+        return value.serialize();
     }
 }

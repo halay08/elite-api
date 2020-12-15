@@ -1,14 +1,14 @@
 export const COLLECTIONS = {
     // Do not remove the next line, it's using for code generator
     // COLLECTIONS //
-    Coupon: 'coupons',
-
-    Tutor: 'tutors',
     User: 'users',
-    Category: 'categories',
     Room: 'rooms',
+    Tutor: 'tutors',
+    Coupon: 'coupons',
     Course: 'courses',
+    Booking: 'booking',
     Session: 'sessions',
     Student: 'students',
-    Booking: 'bookings'
+    Category: 'categories',
+    LearningStack: 'learning_stacks'
 };

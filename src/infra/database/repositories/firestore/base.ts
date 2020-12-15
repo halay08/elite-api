@@ -151,4 +151,13 @@ export abstract class BaseRepository<T extends IEntity> {
     async delete(id: string, softDelete: boolean = true): Promise<number> {
         return (await this.collection.delete(id, softDelete)).writeTime.seconds;
     }
+
+    /**
+     * Extracts reference to document entity
+     * @param ref Reference to a collection
+     * @returns T
+     */
+    async extractReference(ref: IDocumentReference): Promise<T> {
+        return this.collection.extractReference(ref);
+    }
 }

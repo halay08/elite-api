@@ -35,4 +35,20 @@ export class Session extends Entity<ISessionEntity> {
     get course(): IDocumentReference {
         return this._props.course;
     }
+
+    get startTime(): Date {
+        return this._props.startTime;
+    }
+
+    get duration(): number {
+        return this._props.duration;
+    }
+
+    get cost(): number {
+        return this._props.cost;
+    }
+
+    get costType(): string {
+        return this._props.costType;
+    }
 }

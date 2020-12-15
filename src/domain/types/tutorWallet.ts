@@ -1,7 +1,8 @@
-import { IEmbedUser, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type ITutorWallet = {
-    tutor: NonNullable<IEmbedUser>;
+    tutor: IDocumentReference;
 
     totalAmount: number;
 

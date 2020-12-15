@@ -1,11 +1,8 @@
-import { IEmbedUser, IEntity } from '.';
-
-type IEmbedTutorWallet = Required<IEntity> & {
-    tutor: IEmbedUser;
-};
+import { IEntity } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type ITutorWalletTransaction = {
-    wallet: NonNullable<IEmbedTutorWallet>;
+    wallet: IDocumentReference;
 
     in_amount: number;
 

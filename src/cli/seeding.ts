@@ -13,21 +13,21 @@ import TYPES from '@/src/types';
 import { ISeeding } from '@/src/infra/database/migration';
 
 type ISeedingType =
-    | 'UserSeeding'
     | 'CategorySeeding'
     | 'TutorSeeding'
-    | 'StudentSeeding'
     | 'CourseSeeding'
-    | 'SessionSeeding';
+    | 'SessionSeeding'
+    | 'StudentSeeding'
+    | 'BookingSeeding';
 
 class Seeding {
     #seedings: ISeedingType[] = [
-        'UserSeeding',
         'CategorySeeding',
         'TutorSeeding',
-        'StudentSeeding',
         'CourseSeeding',
-        'SessionSeeding'
+        'SessionSeeding',
+        'StudentSeeding',
+        'BookingSeeding'
     ];
 
     async runSingle(specifiedSeeding: ISeedingType) {
@@ -39,6 +39,11 @@ class Seeding {
 
     async run(specifiedSeeding?: ISeedingType) {
         if (specifiedSeeding) {
+            if (!this.#seedings.includes(specifiedSeeding)) {
+                throw new Error(
+                    `Couldn't run seeding ${specifiedSeeding} via CLI. Please use firebase functions:shell instead.`
+                );
+            }
             return await this.runSingle(specifiedSeeding);
         }
 

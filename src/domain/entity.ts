@@ -17,16 +17,6 @@ export abstract class Entity<T extends IEntity> {
     }
 
     /**
-     * Serializes entity
-     * @returns serialize
-     */
-    public serialize(): T {
-        return {
-            ...this._props
-        };
-    }
-
-    /**
      * Props getter
      */
     get props(): T {
@@ -34,11 +24,21 @@ export abstract class Entity<T extends IEntity> {
     }
 
     /**
+     * Serializes entity
+     * @returns serialize
+     */
+    serialize(): T {
+        return {
+            ...this._props
+        };
+    }
+
+    /**
      * Equals entity
      * @param [object]
      * @returns boolean
      */
-    public equals(object?: Entity<T>): boolean {
+    equals(object?: Entity<T>): boolean {
         if (object === null || object === undefined) {
             return false;
         }

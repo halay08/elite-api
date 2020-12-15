@@ -13,19 +13,22 @@ export class BaseAuth {
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace fireauth {
     // eslint-disable-next-line
-    interface IDecodedIdToken extends admin.auth.DecodedIdToken { }
+    interface IDecodedIdToken extends admin.auth.DecodedIdToken {}
 
     // eslint-disable-next-line
-    interface IUserRecord extends admin.auth.UserRecord { }
+    interface IUserRecord extends admin.auth.UserRecord {}
 
     // eslint-disable-next-line
-    interface IGetUsersResult extends admin.auth.GetUsersResult { }
+    interface IGetUsersResult extends admin.auth.GetUsersResult {}
 
     // eslint-disable-next-line
-    interface IListUsersResult extends admin.auth.ListUsersResult { }
+    interface IListUsersResult extends admin.auth.ListUsersResult {}
 
     // eslint-disable-next-line
-    interface IUpdateRequest extends admin.auth.UpdateRequest { }
+    interface IUpdateRequest extends admin.auth.UpdateRequest {}
+
+    // eslint-disable-next-line
+    interface ICreateRequest extends admin.auth.CreateRequest {}
 
     interface IPrincipal extends interfaces.Principal {
         /**
@@ -51,6 +54,38 @@ export declare namespace fireauth {
      * Iauth
      */
     interface IAuth {
+        /**
+         * Creates a new Firebase custom token (JWT) that can be sent back to a client
+         * device to use to sign in with the client SDKs' `signInWithCustomToken()`
+         * methods. (Tenant-aware instances will also embed the tenant ID in the
+         * token.)
+         *
+         * See [Create Custom Tokens](/docs/auth/admin/create-custom-tokens) for code
+         * samples and detailed documentation.
+         *
+         * @param uid The `uid` to use as the custom token's subject.
+         * @param developerClaims Optional additional claims to include
+         *   in the custom token's payload.
+         *
+         * @return A promise fulfilled with a custom token for the
+         *   provided `uid` and payload.
+         */
+        createCustomToken(uid: string, developerClaims?: object): Promise<string>;
+
+        /**
+         * Creates a new user.
+         *
+         * See [Create a user](/docs/auth/admin/manage-users#create_a_user) for code
+         * samples and detailed documentation.
+         *
+         * @param properties The properties to set on the
+         *   new user record to be created.
+         *
+         * @return A promise fulfilled with the user
+         *   data corresponding to the newly created user.
+         */
+        createUser(properties: fireauth.ICreateRequest): Promise<fireauth.IUserRecord>;
+
         /**
          * Gets the user data for the user corresponding to a given email.
          *

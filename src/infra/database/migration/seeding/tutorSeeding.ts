@@ -11,7 +11,7 @@ import { IDocumentReference } from '../../types';
 import { COLLECTIONS } from '../../config/collection';
 
 @provide(TYPES.TutorSeeding)
-class TutorSeeding implements ISeeding {
+export class TutorSeeding implements ISeeding {
     constructor(
         @inject(TYPES.CategoryRepository)
         private readonly _categoryRepository: ICategoryRepository,
@@ -233,5 +233,3 @@ class TutorSeeding implements ISeeding {
         console.log('DONE!');
     }
 }
-
-export default TutorSeeding;

@@ -1,7 +1,8 @@
-import { IEmbedUser, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type IStudentWallet = {
-    student: NonNullable<IEmbedUser>;
+    student: IDocumentReference;
 
     totalCoin?: number;
 };

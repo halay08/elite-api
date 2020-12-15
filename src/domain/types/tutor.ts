@@ -2,10 +2,10 @@ import { IDocumentReference } from '@/src/infra/database/types';
 import { IEntity, ITimestamp, IEducation, ICertificate, IContract } from '.';
 
 enum TutorStatus {
-    INVISIBLE = 0,
-    ACTIVE = 1,
-    AWAY = 2,
-    BUSY = 3
+    INVISIBLE = 'invisible',
+    ACTIVE = 'active',
+    AWAY = 'away',
+    BUSY = 'busy'
 }
 
 type ITutor = {

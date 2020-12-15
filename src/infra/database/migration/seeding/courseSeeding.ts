@@ -10,7 +10,7 @@ import { IDocumentReference } from '../../types';
 import { COLLECTIONS } from '../../config/collection';
 
 @provide(TYPES.CourseSeeding)
-class CourseSeeding implements ISeeding {
+export class CourseSeeding implements ISeeding {
     constructor(
         @inject(TYPES.CourseRepository)
         private readonly _courseRepository: ICourseRepository,
@@ -127,5 +127,3 @@ class CourseSeeding implements ISeeding {
         console.log('DONE!');
     }
 }
-
-export default CourseSeeding;

@@ -1,8 +1,8 @@
 import { IEntity, ITimestamp, IGlobalSettting } from '.';
 
 enum PaymentMethodStatus {
-    INACTIVE = 0,
-    ACTIVE = 1
+    INACTIVE = 'inactive',
+    ACTIVE = 'active'
 }
 
 type IPaymentMethod = {

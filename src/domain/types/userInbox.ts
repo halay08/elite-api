@@ -1,9 +1,10 @@
-import { IEmbedUser, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type IUserInbox = {
-    sender: IEmbedUser;
+    sender: IDocumentReference;
 
-    receiver: IEmbedUser;
+    receiver: IDocumentReference;
 
     subject: string;
 
