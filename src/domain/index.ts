@@ -18,8 +18,6 @@ export * from './room';
 export * from './policy';
 export * from './paymentMethod';
 export * from './booking';
-export * from './bookingPayment';
-export * from './bookingInvoice';
 export * from './learningStack';
 export * from './media';
 export * from './language';

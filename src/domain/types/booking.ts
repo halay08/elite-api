@@ -19,6 +19,8 @@ type IBooking = {
 
     orderId: string;
 
+    transactionId?: string;
+
     coupon?: IEmbedCoupon | null;
 
     // student reference

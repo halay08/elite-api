@@ -1,11 +1,20 @@
 import { Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
-import { BaseHttpController, controller, httpGet, interfaces, response, requestParam } from 'inversify-express-utils';
+import {
+    BaseHttpController,
+    controller,
+    httpGet,
+    interfaces,
+    response,
+    requestParam,
+    queryParam
+} from 'inversify-express-utils';
 import TYPES from '@/src/types';
 import { SessionService, CourseService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
-import { NotFoundError } from '@/app/errors/notFound';
+import { NotFoundError } from '@/app/errors';
+import { ISessionQueryParam } from '../requests';
 
 // Required login
 @controller(`/courses`, authorize({ roles: ['admin', 'student', 'tutor'] }))
@@ -20,13 +29,18 @@ export class CourseController extends BaseHttpController implements interfaces.C
      * Https get sessions by course id
      * Postman API document: https://elitework.postman.co
      * @param id
+     * @param queries Query string to filter session.
      * @param res
      * @returns
      */
     @httpGet('/:id/sessions')
-    public async getSessions(@requestParam('id') id: string, @response() res: Response) {
+    public async getSessions(
+        @requestParam('id') id: string,
+        @queryParam() queries: ISessionQueryParam,
+        @response() res: Response
+    ) {
         try {
-            const sessions = await this.sessionService.getByCourses(id);
+            const sessions = await this.sessionService.getByCourses(id, queries);
 
             return res.status(HttpStatus.OK).json(sessions.map((s) => s.serialize()));
         } catch (error) {
