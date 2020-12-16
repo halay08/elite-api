@@ -1,6 +1,6 @@
 import { Joi, validate } from 'express-validation';
 
-export type createTransaction = {
+export type momoWalletDTO = {
     requestId: string;
     amount: string;
     orderId: string;
