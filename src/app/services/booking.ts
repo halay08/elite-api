@@ -3,7 +3,7 @@ import { fireauth } from '@/infra/auth/firebase/types';
 import { provide } from 'inversify-binding-decorators';
 import { Booking } from '@/domain';
 import { IBookingStatus } from '@/domain/types';
-import { sendMail } from '@/src/infra/mail/gmail';
+import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
 import { IRepository, IBookingRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import Container from '@/src/container';
@@ -42,16 +42,12 @@ export class BookingService extends BaseService<Booking> {
 
         await this.create(booking);
 
-        await sendMail({
-            template: 'booking',
-            message: {
-                to: user.email
-            },
-            locals: {
-                name: user.displayName,
-                orderId
-            }
-        });
+        const data = {
+            name: user.displayName,
+            orderId
+        };
+        const notification = new EmailAdapter(user.email as string, TemplateType.BOOKING, data, Vendor.GMAIL);
+        await notification.send();
 
         return orderId;
     }
