@@ -19,19 +19,19 @@ export class BookingRepository extends BaseRepository<Booking> implements IBooki
 
     /**
      * Map fields to domain entity
-     * @param category Entity raw field
+     * @param booking Entity raw field
      * @returns domain
      */
-    protected toDomain(category: Booking): Booking {
-        return BookingMapper.toDomain(category);
+    protected toDomain(booking: Booking): Booking {
+        return BookingMapper.toDomain(booking);
     }
 
     /**
      * Serialize domain entity
-     * @param category Entity object
+     * @param booking Entity object
      * @returns serialize
      */
-    protected serialize(category: Booking): IBookingEntity {
-        return category.serialize();
+    protected serialize(booking: Booking): IBookingEntity {
+        return booking.serialize();
     }
 }

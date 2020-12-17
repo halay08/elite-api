@@ -1,4 +1,4 @@
-import { ITimestamp, IEntity } from './index';
+import { ITimestamp, IEntity, IEmbedCoupon } from './index';
 import { IDocumentReference } from '@/infra/database/types';
 
 enum IBookingStatus {
@@ -19,7 +19,7 @@ type IBooking = {
 
     orderId: string;
 
-    coupon: IDocumentReference;
+    coupon: IEmbedCoupon | null;
 
     amount: number;
 

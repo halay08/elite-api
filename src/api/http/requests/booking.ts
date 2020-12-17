@@ -21,7 +21,7 @@ const BookingValidation = {
             paymentMethod: Joi.string()
                 .valid(...Object.values(BOOKING_PAYMENT_METHOD))
                 .required(),
-            coupon: Joi.string().email().optional(),
+            coupon: Joi.string().optional(),
             amount: Joi.number().required(),
             type: Joi.string()
                 .valid(...Object.values(BOOKING_TYPES))

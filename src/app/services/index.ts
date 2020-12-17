@@ -7,3 +7,4 @@ export * from './course';
 export * from './session';
 export * from './student';
 export * from './booking';
+export * from './coupon';

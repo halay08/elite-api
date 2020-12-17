@@ -53,8 +53,8 @@ export abstract class BaseService<T> {
      * @param field The query field
      * @param value The query value
      */
-    async findBy(field: string, value: any): Promise<T[]> {
-        const query = await this.baseRepository.findBy(field, value);
+    async findBy(field: string, value: any, operator?: any): Promise<T[]> {
+        const query = await this.baseRepository.findBy(field, value, operator);
         return query;
     }
 

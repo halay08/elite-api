@@ -13,17 +13,17 @@ export class Gmail implements EmailNotification {
         this.data = data;
     }
 
-    public async send() {
-        try {
-            await mailer.send({
+    public send() {
+        mailer
+            .send({
                 template: path.join(__dirname, 'templates', this.template),
                 message: {
                     to: this.to
                 },
                 locals: this.data
+            })
+            .catch((error) => {
+                throw new Error(error.message);
             });
-        } catch (error) {
-            throw new Error(error.message);
-        }
     }
 }

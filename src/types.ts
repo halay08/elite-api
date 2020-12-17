@@ -9,6 +9,8 @@ export default {
 
     // Do not remove the next line, it's using for code generator
     // SYMBOL //
+    CouponService: Symbol.for('CouponService'),
+    CouponRepository: Symbol.for('CouponRepository'),
 
     UserRepository: Symbol.for('UserRepository'),
     RoomRepository: Symbol.for('RoomRepository'),

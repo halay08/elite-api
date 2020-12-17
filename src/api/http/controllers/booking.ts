@@ -42,7 +42,7 @@ export class BookingController extends BaseHttpController implements interfaces.
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpPost('/', authorize({ roles: ['student'] }), bookingValidationMiddleWare)
+    @httpPost('/', authorize({ roles: ['admin', 'student'] }), bookingValidationMiddleWare)
     public async index(@requestBody() payload: BookingDTO, @response() res: Response) {
         try {
             const { user }: { user: fireauth.IUserRecord } = this.httpContext.user.details;

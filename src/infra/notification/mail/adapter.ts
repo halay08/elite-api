@@ -14,14 +14,14 @@ export class EmailAdapter implements EmailNotification {
         this.type = type;
     }
 
-    public async send() {
+    public send() {
         try {
             switch (this.type) {
                 case Vendor.GMAIL:
                     const gmail = new Gmail(this.to, this.template, this.data);
-                    await gmail.send();
+                    gmail.send();
                     break;
-                case Vendor.SENTRY:
+                case Vendor.SENDGRID:
                     // TBD
                     break;
                 default:

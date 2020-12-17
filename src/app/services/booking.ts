@@ -1,17 +1,21 @@
+//@ts-ignore
+import * as isEmpty from 'ramda.isempty';
 import * as cuid from 'cuid';
+import { inject } from 'inversify';
 import { fireauth } from '@/infra/auth/firebase/types';
 import { provide } from 'inversify-binding-decorators';
-import { Booking } from '@/domain';
+import { Booking, Coupon } from '@/domain';
 import { IBookingStatus } from '@/domain/types';
 import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
 import { IRepository, IBookingRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import Container from '@/src/container';
 import { BookingDTO } from '@/api/http/requests';
-import { BaseService } from './index';
+import { BaseService, CouponService } from './index';
 
 @provide(TYPES.BookingService)
 export class BookingService extends BaseService<Booking> {
+    @inject(TYPES.CouponService) private readonly couponService: CouponService;
     /**
      * Create tutor repository instance
      * @returns IRepository<T>
@@ -26,11 +30,14 @@ export class BookingService extends BaseService<Booking> {
     ): Promise<string> {
         const orderId = cuid();
         const userRef = this.getDocumentRef(`users/${user.uid}`);
-        const couponRef = this.getDocumentRef(`coupons/${coupon}`);
+
+        const getCoupon = coupon ? await this.couponService.verifyCoupon(coupon) : null;
+        // TODO: Need to calculate amount here based on coupon.
+        // There are two types of coupon: percentage & subtract amount
 
         const booking = Booking.create({
             orderId,
-            coupon: couponRef,
+            coupon: getCoupon,
             student: userRef,
             amount,
             type,
@@ -47,7 +54,7 @@ export class BookingService extends BaseService<Booking> {
             orderId
         };
         const notification = new EmailAdapter(user.email as string, TemplateType.BOOKING, data, Vendor.GMAIL);
-        await notification.send();
+        notification.send();
 
         return orderId;
     }

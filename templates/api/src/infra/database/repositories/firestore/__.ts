@@ -3,7 +3,7 @@ import { #### } from '@/domain';
 import { ####Mapper } from '@/infra/database/mappers';
 import TYPES from '@/src/types';
 import { I####Repository } from '../interfaces';
-import BaseRepository from './base';
+import { BaseRepository } from './base';
 import { COLLECTIONS } from '../../config/collection';
 import { I####Entity } from '@/domain/types';
 

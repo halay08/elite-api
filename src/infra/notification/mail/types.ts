@@ -1,6 +1,6 @@
 export enum Vendor {
     GMAIL,
-    SENTRY
+    SENDGRID
 }
 
 export enum TemplateType {

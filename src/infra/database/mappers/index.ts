@@ -5,3 +5,4 @@ export * from '@/infra/database/mappers/course';
 export * from '@/infra/database/mappers/session';
 export * from '@/infra/database/mappers/category';
 export * from '@/infra/database/mappers/booking';
+export * from './coupon';

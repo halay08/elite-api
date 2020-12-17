@@ -27,6 +27,13 @@ export class ####Controller extends BaseHttpController implements interfaces.Con
      * @apiGroup ####
      * @apiVersion  1.0.0
      *
+     *
+     * @apiHeader {String} Authorization User's access key.
+     * @apiHeaderExample {json} Header-Example:
+     * {
+     *   "Authorization": "Bearer: dsfsdkfhjks2904820493204930-sdflskjd"
+     * }    
+     * 
      * @apiSuccess (200) {Array} List of FFFFs
      * @apiSuccessExample {Array} Success-Response:
      * [
