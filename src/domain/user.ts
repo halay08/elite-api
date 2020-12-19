@@ -24,7 +24,7 @@ export class User extends Entity<IUserEntity> {
         return this._props.id || '';
     }
 
-    get role(): UserRole {
+    get role(): UserRole | undefined {
         return this.props.role;
     }
 

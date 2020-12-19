@@ -11,7 +11,7 @@ enum TutorStatus {
 type ITutor = {
     user: IDocumentReference;
 
-    category: IDocumentReference;
+    category?: IDocumentReference;
 
     educations?: IEducation[];
 

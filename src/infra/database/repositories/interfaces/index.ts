@@ -5,3 +5,4 @@ export * from './user';
 export * from './course';
 export * from './session';
 export * from './category';
+export * from './student';

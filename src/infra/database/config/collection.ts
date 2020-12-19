@@ -7,5 +7,6 @@ export const COLLECTIONS = {
     Category: 'categories',
     Room: 'rooms',
     Course: 'courses',
-    Session: 'sessions'
+    Session: 'sessions',
+    Student: 'students'
 };

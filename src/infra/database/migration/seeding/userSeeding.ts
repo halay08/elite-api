@@ -118,6 +118,28 @@ class UserSeeding implements ISeeding {
                     code: 'vn',
                     name: 'Vietnam'
                 }
+            },
+            {
+                id: 'FczXcOMojxRLA43VMKMMpXhu9ny2',
+                role: UserRole.STUDENT,
+                email: 'thagdet96@gmail.com',
+                status: UserStatus.ACTIVE,
+                name: 'Khanh Hoa',
+                phoneNumber: '0123456789',
+                username: 'khanhhoa',
+                avatar: 'https://ca.slack-edge.com/T018R4JFELS-U01B4GWNZ52-8d56e6c00be1-512',
+                shortIntro:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+                videoIntro: 'https://www.youtube.com/watch?v=gXadLSFfRLk',
+                timezone: '+7',
+                country: {
+                    code: 'vn',
+                    name: 'Vietnam'
+                },
+                language: {
+                    code: 'vn',
+                    name: 'Vietnam'
+                }
             }
         ];
 
