@@ -16,11 +16,14 @@ export default {
     CourseRepository: Symbol.for('CourseRepository'),
     SessionRepository: Symbol.for('SessionRepository'),
     CategoryRepository: Symbol.for('CategoryRepository'),
+    StudentRepository: Symbol.for('StudentRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
-    RoomService: Symbol.for('RoomService'),
     TutorService: Symbol.for('TutorService'),
+    StudentService: Symbol.for('StudentService'),
+
+    RoomService: Symbol.for('RoomService'),
     CourseService: Symbol.for('CourseService'),
     SessionService: Symbol.for('SessionService'),
 
@@ -28,5 +31,6 @@ export default {
     TutorSeeding: Symbol.for('TutorSeeding'),
     CourseSeeding: Symbol.for('CourseSeeding'),
     SessionSeeding: Symbol.for('SessionSeeding'),
-    CategorySeeding: Symbol.for('CategorySeeding')
+    CategorySeeding: Symbol.for('CategorySeeding'),
+    StudentSeeding: Symbol.for('StudentSeeding')
 };

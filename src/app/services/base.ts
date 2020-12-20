@@ -1,5 +1,3 @@
-//@ts-ignore
-import * as isEmpty from 'ramda.isempty';
 import { injectable } from 'inversify';
 import { IRepository } from '@/src/infra/database/repositories';
 import { IDocumentReference, IQuery, IQueryOption } from '@/src/infra/database/types';
@@ -63,36 +61,41 @@ export abstract class BaseService<T> {
     /**
      * Get by id.
      *
-     * @param id The tutor id
-     * @returns `Tutor` object
+     * @param id The document id
+     * @returns `document` object
      */
-    async getById(id: string): Promise<T> {
-        return await this.baseRepository.findById(id);
+    async getById(id: string): Promise<T | null> {
+        try {
+            const document = await this.baseRepository.findById(id);
+            return document;
+        } catch (error) {
+            return null;
+        }
     }
 
     /**
-     * Creates tutor service
-     * @param tutor
+     * Creates document service
+     * @param document
      * @returns create
      */
-    async create(tutor: T): Promise<T> {
-        const inserted = await this.baseRepository.create(tutor);
+    async create(document: T): Promise<T> {
+        const inserted = await this.baseRepository.create(document);
         return inserted;
     }
 
     /**
-     * Updates tutor service
+     * Updates document service
      * @param id
-     * @param tutor
+     * @param document
      * @returns update
      */
-    async update(id: string, tutor: T): Promise<T> {
-        const updated = await this.baseRepository.update(id, tutor);
+    async update(id: string, document: T): Promise<T> {
+        const updated = await this.baseRepository.update(id, document);
         return updated;
     }
 
     /**
-     * Deletes tutor service
+     * Deletes document service
      * @param id
      * @param [softDelete]
      * @returns delete

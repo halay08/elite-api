@@ -1,7 +1,8 @@
-import { IFollowing, IEmbedUser, IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
+import { IFollowing, IEntity, ITimestamp } from '.';
 
 type IStudent = {
-    user: IEmbedUser;
+    user: IDocumentReference;
 
     studyTitle?: string;
 

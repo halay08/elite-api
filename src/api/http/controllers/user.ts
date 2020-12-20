@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { Joi, validate } from 'express-validation';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
 import {
@@ -15,34 +14,20 @@ import {
     response
 } from 'inversify-express-utils';
 import { User } from '@/domain/index';
-import { UserService, AuthService } from '@/src/app/services';
+import { UserService, AuthService, StudentService, TutorService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
-import { NewUserPayload } from '@/api/http/requests/user';
+import { NewUserPayload, validateCreate, validateUpdate } from '@/api/http/requests/user';
 import { UserRole, UserStatus } from '@/src/domain/types';
-
-const UserValidation = {
-    create: {
-        body: Joi.object({
-            role: Joi.string().required(),
-            email: Joi.string().email().required()
-        })
-    },
-    update: {
-        body: Joi.object({
-            role: Joi.string(),
-            email: Joi.string().email(),
-            firstName: Joi.string(),
-            lastName: Joi.string()
-        })
-    }
-};
+import { NotFoundError } from '@/src/app/errors';
 
 @controller(`/users`)
 export class UserController extends BaseHttpController implements interfaces.Controller {
     constructor(
         @inject(TYPES.UserService) private userService: UserService,
-        @inject(TYPES.AuthService) private authService: AuthService
+        @inject(TYPES.AuthService) private authService: AuthService,
+        @inject(TYPES.StudentService) private studentService: StudentService,
+        @inject(TYPES.TutorService) private tutorService: TutorService
     ) {
         super();
     }
@@ -130,7 +115,9 @@ export class UserController extends BaseHttpController implements interfaces.Con
     public async get(@requestParam('id') id: string, @response() res: Response) {
         try {
             const data = await this.userService.getById(id);
-            console.log('User information and Decoded Id Token: ', this.httpContext.user.details);
+            if (!data) {
+                throw new NotFoundError(`User/${id} not found`);
+            }
 
             return res.status(HttpStatus.OK).json(data.serialize());
         } catch (error) {
@@ -161,19 +148,29 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *     "error": "Something went wrong"
      *   }
      */
-    @httpPost('/', validate(UserValidation.create))
+    @httpPost('/', validateCreate)
     public async create(@requestBody() req: NewUserPayload, @response() res: Response) {
         try {
-            const role: UserRole = (<any>UserRole)[req.role.toUpperCase()];
-            const user = User.create({
-                role: role,
+            const id = req.id;
+            const existed = await this.userService.getById(id);
+            if (existed) {
+                return res.status(HttpStatus.OK).json(existed.serialize());
+            }
+
+            const role: UserRole | undefined = req.role ? (<any>UserRole)[req.role.toUpperCase()] : undefined;
+            let user = User.create({
+                id,
                 email: req.email,
                 status: UserStatus.ACTIVE
             });
-            const data = await this.userService.create(user);
-            await this.authService.setCustomUserClaims(req.uid, { role: req.role });
+            if (role) {
+                user = { ...user, role } as User;
+            }
 
-            return res.status(HttpStatus.CREATED).json(data);
+            const data = await this.userService.create(user);
+            await this.setRole(id, role);
+
+            return res.status(HttpStatus.CREATED).json(data.serialize());
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
@@ -206,22 +203,16 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *     "error": "Something went wrong"
      *   }
      */
-    @httpPut('/:id', validate(UserValidation.update))
+    @httpPut('/:id', validateUpdate)
     public async update(@requestParam('id') id: string, @requestBody() payload: User, @response() res: Response) {
         try {
-            let user: User = User.create(payload);
-
             if (payload.role) {
                 const role: UserRole = (<any>UserRole)[payload.role.toUpperCase()];
-                user = {
-                    ...user,
-                    role
-                } as User;
+                await this.setRole(id, role);
             }
 
-            const data = await this.userService.update(id, user);
-
-            return res.status(HttpStatus.OK).json(data);
+            const data = await this.userService.updateFields(id, payload);
+            return res.status(HttpStatus.OK).json(data.serialize());
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
         }
@@ -254,6 +245,23 @@ export class UserController extends BaseHttpController implements interfaces.Con
             return res.status(HttpStatus.OK).json(data);
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+        }
+    }
+
+    private async setRole(id: string, role?: UserRole): Promise<void> {
+        if (!role) return;
+
+        await this.authService.setCustomUserClaims(id, { role });
+
+        switch (role) {
+            case UserRole.STUDENT:
+                await this.studentService.createByUserId(id);
+                break;
+            case UserRole.TUTOR:
+                await this.tutorService.createByUserId(id);
+                break;
+            default:
+                break;
         }
     }
 }

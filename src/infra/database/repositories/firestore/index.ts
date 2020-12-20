@@ -4,3 +4,5 @@ export * from './tutor';
 export * from './user';
 export * from './course';
 export * from './session';
+export * from './base';
+export * from './student';

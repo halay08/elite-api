@@ -29,7 +29,7 @@ export class Tutor extends Entity<ITutorEntity> {
         return this.props.user;
     }
 
-    get category(): IDocumentReference {
+    get category(): IDocumentReference | undefined {
         return this.props.category;
     }
 

@@ -30,7 +30,7 @@ type IEmbedUser = Required<IEntity> & Pick<IUserEntity, 'email' | 'username' | '
 
 type IUserEntity = IEntity &
     ITimestamp & {
-        role: UserRole;
+        role?: UserRole;
 
         /**
          * Email  of user entity

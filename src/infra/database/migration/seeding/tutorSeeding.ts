@@ -218,8 +218,7 @@ class TutorSeeding implements ISeeding {
         ];
 
         for (const tutor of tutors) {
-            const userRef = this._userRepository.getDocumentRef(`users/${tutor.user.id}`);
-            const existedTutor = await this._tutorRepository.findBy('user', userRef);
+            const existedTutor = await this._tutorRepository.findBy('user', tutor.user);
             if (existedTutor.length > 0) {
                 console.log(`Tutor with user ${tutor.user.id} already existed in the database`);
                 continue;

@@ -1,12 +1,10 @@
-//@ts-ignore
-import * as isEmpty from 'ramda.isempty';
 import { provide } from 'inversify-binding-decorators';
 import { User } from '@/domain';
 import { IRepository, IUserRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
-import { ErrorCode, HttpsError } from '@/app/errors';
 import { BaseService } from './base';
 import Container from '@/src/container';
+import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.UserService)
 export class UserService extends BaseService<User> {
@@ -19,21 +17,19 @@ export class UserService extends BaseService<User> {
     }
 
     /**
-     * Updates user service
+     * Updates fields document
      * @param id
-     * @param user
+     * @param object fields of document
      * @returns update
      */
-    async update(id: string, user: User): Promise<User> {
-        const users = await this.findBy('email', user.email);
-        if (users.length > 0) {
-            throw new HttpsError(
-                ErrorCode.ALREADY_EXISTS,
-                'The email address has already been associated with another account.'
-            );
+    async updateFields(id: string, { ...args }): Promise<User> {
+        const user = await this.getById(id);
+        if (!user) {
+            throw new NotFoundError(`User/${id} not found`);
         }
 
-        const updated = await this.baseRepository.update(id, user);
-        return updated;
+        const userEntity = user.serialize();
+        const userData = User.create({ ...userEntity, ...args });
+        return this.update(id, userData);
     }
 }
