@@ -30,3 +30,4 @@ export * from './room';
 export * from './time';
 export * from './cost';
 export * from './entity';
+export * from './coupon';

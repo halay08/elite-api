@@ -1,6 +1,7 @@
 export const COLLECTIONS = {
     // Do not remove the next line, it's using for code generator
     // COLLECTIONS //
+    Coupon: 'coupons',
 
     Tutor: 'tutors',
     User: 'users',
@@ -8,5 +9,6 @@ export const COLLECTIONS = {
     Room: 'rooms',
     Course: 'courses',
     Session: 'sessions',
-    Student: 'students'
+    Student: 'students',
+    Booking: 'bookings'
 };

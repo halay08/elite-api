@@ -9,6 +9,8 @@ export default {
 
     // Do not remove the next line, it's using for code generator
     // SYMBOL //
+    CouponService: Symbol.for('CouponService'),
+    CouponRepository: Symbol.for('CouponRepository'),
 
     UserRepository: Symbol.for('UserRepository'),
     RoomRepository: Symbol.for('RoomRepository'),
@@ -17,11 +19,13 @@ export default {
     SessionRepository: Symbol.for('SessionRepository'),
     CategoryRepository: Symbol.for('CategoryRepository'),
     StudentRepository: Symbol.for('StudentRepository'),
+    BookingRepository: Symbol.for('BookingRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
     TutorService: Symbol.for('TutorService'),
     StudentService: Symbol.for('StudentService'),
+    BookingService: Symbol.for('BookingService'),
 
     RoomService: Symbol.for('RoomService'),
     CourseService: Symbol.for('CourseService'),

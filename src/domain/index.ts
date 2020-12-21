@@ -26,3 +26,4 @@ export * from './category';
 export * from './country';
 export * from './globalSetting';
 export * from './entity';
+export * from './coupon';

@@ -5,8 +5,6 @@ enum PaymentMethodStatus {
     ACTIVE = 1
 }
 
-type IEmbedPaymentMethod = Required<IEntity> & Pick<IPaymentMethod, 'name' | 'configuration'>;
-
 type IPaymentMethod = {
     name: string;
 
@@ -22,4 +20,4 @@ type IPaymentMethod = {
  */
 type IPaymentMethodEntity = IEntity & IPaymentMethod & ITimestamp;
 
-export { PaymentMethodStatus, IPaymentMethod, IPaymentMethodEntity, IEmbedPaymentMethod };
+export { PaymentMethodStatus, IPaymentMethod, IPaymentMethodEntity };
