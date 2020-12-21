@@ -111,7 +111,7 @@ export class UserController extends BaseHttpController implements interfaces.Con
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpGet('/:id', authorize({ roles: ['admin', 'student'] }))
+    @httpGet('/:id', authorize({ roles: [UserRole.ADMIN, UserRole.STUDENT, UserRole.TUTOR] }))
     public async get(@requestParam('id') id: string, @response() res: Response) {
         try {
             const data = await this.userService.getById(id);
@@ -171,8 +171,8 @@ export class UserController extends BaseHttpController implements interfaces.Con
             await this.setRole(id, role);
 
             return res.status(HttpStatus.CREATED).json(data.serialize());
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 
@@ -213,8 +213,8 @@ export class UserController extends BaseHttpController implements interfaces.Con
 
             const data = await this.userService.updateFields(id, payload);
             return res.status(HttpStatus.OK).json(data.serialize());
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 
@@ -243,8 +243,8 @@ export class UserController extends BaseHttpController implements interfaces.Con
             const data = await this.userService.delete(id);
 
             return res.status(HttpStatus.OK).json(data);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 

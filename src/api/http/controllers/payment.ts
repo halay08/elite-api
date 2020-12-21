@@ -1,3 +1,5 @@
+//@ts-ignore
+import * as isEmpty from 'ramda.isempty';
 import { Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { inject } from 'inversify';
@@ -5,14 +7,16 @@ import { BaseHttpController, controller, httpPost, interfaces, response, request
 
 import TYPES from '@/src/types';
 import { momoWalletDTO, validateMomoTransaction } from '@/api/http/requests/payment';
+import { PaymentService } from '@/app/services';
 import { paymentConfig } from '@/api/http/config/constants';
-import { Momo, MomoFields, MomoWalletResponse, MomoIPNRequest } from '@/infra/payments/momo';
-
+import { Momo, MomoCaptureWallet, MomoWalletResponse, MomoIPNRequest } from '@/infra/payments/momo';
+import { UserRole } from '@/src/domain/types';
 import { authorize } from '@/api/http/middlewares';
 
 @controller(`/payments`)
 export class PaymentController extends BaseHttpController implements interfaces.Controller {
     @inject(TYPES.PaymentByMomo) private paymentByMomo: Momo;
+    @inject(TYPES.PaymentService) private paymentService: PaymentService;
 
     /**
      *
@@ -68,13 +72,14 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpPost('/momo', authorize({ roles: ['admin', 'student'] }), validateMomoTransaction)
+    @httpPost('/momo', authorize({ roles: [UserRole.STUDENT, UserRole.ADMIN] }), validateMomoTransaction)
     public async momo(@requestBody() body: momoWalletDTO, @response() res: Response) {
         try {
-            const payload: MomoFields = {
-                requestId: body.requestId,
+            const orderId = this.paymentService.generateOrderId();
+            const payload: MomoCaptureWallet = {
+                requestId: orderId,
                 amount: body.amount,
-                orderId: body.orderId,
+                orderId: orderId,
                 orderInfo: body.orderInfo,
                 returnUrl: paymentConfig.returnUrl,
                 notifyUrl: paymentConfig.notifyUrl,
@@ -84,8 +89,8 @@ export class PaymentController extends BaseHttpController implements interfaces.
             const httpStatus = data.errorCode === 0 ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
 
             return res.status(httpStatus).json(data);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json(error).end();
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send(message);
         }
     }
 
@@ -110,8 +115,6 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *
      * @apiParamExample  {type} Request-Example:
      * {
-     *   "partnerCode": "MOMOTUEN20190312",
-     *   "accessKey": "ZjF6taKUohp7iN8l",
      *   "requestId": "1555383430",
      *   "orderId": "1555383430",
      *   "orderInfo":" ",
@@ -122,7 +125,7 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *   "localMessage": "Th%C3%A0nh%20c%C3%B4ng",
      *   "payType": "qr",
      *   "responseTime": "2019-04-09%2014%3A53%3A38",
-     *   "extraData": "Nothing",
+     *   "extraData": "{"sessionId":123}",
      *   "signature": "e1da7982cdbc732c172e4f2909d6f70c5e2a5d2dde7e8c02dce866c6b35c9461",
      *   "amount": "300000"
      * }
@@ -131,13 +134,13 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *
      * @apiSuccessExample {json} Success-Response:
      * {
-     *     "partnerCode": "MOMO0BZ920200928",
-     *     "accessKey": "jPOqN2LPcAGhigwF",
-     *     "requestId": "123",
-     *     "orderId": "123",
+     *     "partnerCode": "MOMO0BZ920200323",
+     *     "accessKey": "jPOqN2LPcAGhiqWe",
+     *     "requestId": "1555383430",
+     *     "orderId": "1555383430",
      *     "responseTime": "2020-12-18 21:57:41",
-     *     "extraData": "Here you go",
-     *     "signature": "6e18d62f76ea83e59ad61bb902327631f71ee43a3ef8db0ef16267b370abdb75"
+     *     "extraData": "{"sessionId":123}",
+     *     "signature": "e1da7982cdbc732c172e4f2909d6f70c5e2a5d2dde7e8c02dce866c6b35c9461"
      * }
      *
      * @apiError BAD_REQUEST Return Error Message.
@@ -155,10 +158,14 @@ export class PaymentController extends BaseHttpController implements interfaces.
     @httpPost('/momo/ipn')
     public async momoIPN(@requestBody() payload: MomoIPNRequest, @response() res: Response) {
         try {
-            const data = await this.paymentByMomo.ipnResponse(payload);
-            return res.status(HttpStatus.OK).json(data);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json(error).end();
+            const ipnResponse = await this.paymentByMomo.handleIncomingIPN(payload);
+
+            const data = JSON.parse(payload.extraData);
+            await this.paymentService.onSuccessTransaction(data);
+
+            return res.status(HttpStatus.OK).json(ipnResponse);
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 }

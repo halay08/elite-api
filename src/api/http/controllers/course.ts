@@ -15,9 +15,10 @@ import { SessionService, CourseService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
 import { NotFoundError } from '@/app/errors';
 import { ISessionQueryParam } from '../requests';
+import { UserRole } from '@/src/domain/types';
 
 // Required login
-@controller(`/courses`, authorize({ roles: ['admin', 'student', 'tutor'] }))
+@controller(`/courses`, authorize({ roles: [UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT] }))
 export class CourseController extends BaseHttpController implements interfaces.Controller {
     constructor(
         @inject(TYPES.SessionService) private sessionService: SessionService,
@@ -43,8 +44,8 @@ export class CourseController extends BaseHttpController implements interfaces.C
             const sessions = await this.sessionService.getByCourses(id, queries);
 
             return res.status(HttpStatus.OK).json(sessions.map((s) => s.serialize()));
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 

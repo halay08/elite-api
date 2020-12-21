@@ -35,7 +35,8 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged",
+            "pre-push": "yarn test"
         }
     },
     "lint-staged": {
@@ -73,6 +74,7 @@
         "nanoid": "^3.1.20",
         "nodemailer": "^6.4.17",
         "nodemailer-smtp-transport": "^2.7.4",
+        "nanoid": "^3.1.20",
         "pino": "^6.7.0",
         "pino-pretty": "^4.3.0",
         "ramda.isempty": "^0.26.1",

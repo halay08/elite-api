@@ -1,14 +1,17 @@
+//@ts-ignore
+import * as isEmpty from 'ramda.isempty';
 import got from 'got';
 import { injectable } from 'inversify';
 import * as crypto from 'crypto';
 import * as querystring from 'querystring';
 import {
-    MomoFields,
+    MomoCaptureWallet,
     MomoCredentials,
     MomoWallet,
     MomoWalletResponse,
     MomoIPNSignature,
-    MomoIPNResponse
+    MomoIPNResponse,
+    MomoIPNRequest
 } from './types';
 import { env, paymentConfig } from '@/api/http/config/constants';
 
@@ -22,10 +25,10 @@ export class Momo {
     }
 
     /**
-     * Create signature
+     * Create signature for capture wallet
      * @see https://developers.momo.vn/#/?id=ch%e1%bb%af-k%c3%bd-%c4%91i%e1%bb%87n-t%e1%bb%ad
      */
-    private createSignature(payload: MomoFields | MomoIPNSignature): string {
+    private createSignature(payload: MomoCaptureWallet | MomoIPNSignature): string {
         const MOMO_SECRET_KEY = env.momo.SECRET_KEY;
 
         const credentials: MomoCredentials = this.businessCredentials;
@@ -34,6 +37,15 @@ export class Momo {
         });
 
         return crypto.createHmac('sha256', MOMO_SECRET_KEY).update(objectToQueryString).digest('hex');
+    }
+
+    /**
+     * Verify signature when Momo send payload via IPN
+     * @see https://developers.momo.vn/#/docs/aio/?id=ki%e1%bb%83m-tra-to%c3%a0n-v%e1%ba%b9n-d%e1%bb%af-li%e1%bb%87u
+     */
+    private verifySignature(momoSignature: string, payload: MomoIPNSignature): boolean {
+        const ourGeneratedSignature = this.createSignature(payload);
+        return momoSignature === ourGeneratedSignature;
     }
 
     /**
@@ -51,10 +63,26 @@ export class Momo {
     }
 
     /**
+     * Check Extradata payload is valid JSON format
+     *
+     * @private
+     * @param {string} extraData
+     * @returns {boolean}
+     * @memberof Momo
+     */
+    private isValidJsonFormat(extraData: string): boolean {
+        try {
+            return JSON.parse(extraData);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
      * Capture Momo wallet
      * @see https://developers.momo.vn/#/docs/aio/?id=ph%c6%b0%c6%a1ng-th%e1%bb%a9c-thanh-to%c3%a1n
      */
-    public async captureMoMoWallet(payload: MomoFields): Promise<MomoWalletResponse> {
+    public async captureMoMoWallet(payload: MomoCaptureWallet): Promise<MomoWalletResponse> {
         const credentials: MomoCredentials = this.businessCredentials;
         const signature = this.createSignature(payload);
         const fullPayload: MomoWallet = {
@@ -76,23 +104,34 @@ export class Momo {
      * Capture Momo Response for IPN
      * @see https://developers.momo.vn/#/docs/aio/?id=ph%c6%b0%c6%a1ng-th%e1%bb%a9c-thanh-to%c3%a1n
      */
-    public async ipnResponse(payload: MomoIPNResponse): Promise<MomoIPNResponse> {
+    public async handleIncomingIPN({
+        requestId,
+        orderId,
+        errorCode,
+        message,
+        extraData,
+        signature
+    }: MomoIPNRequest): Promise<MomoIPNResponse> {
+        if (errorCode !== 0) throw new Error('Transaction failed!');
+        if (!this.isValidJsonFormat(extraData)) throw new Error('Invalid data!');
+
         const credentials: MomoCredentials = this.businessCredentials;
         const responseTime = this.getResponseTime();
 
-        const signaturePayload: MomoIPNSignature = {
+        const ipnPayloadForSignature: MomoIPNSignature = {
             ...credentials,
             ...{
-                requestId: payload.requestId,
-                orderId: payload.orderId,
-                errorCode: payload.errorCode,
-                message: payload.message,
-                responseTime,
-                extraData: payload.extraData
+                requestId,
+                orderId,
+                errorCode,
+                message,
+                extraData
             }
         };
-        const signature = this.createSignature(signaturePayload);
+        const isValidSignature: boolean = this.verifySignature(signature, ipnPayloadForSignature);
 
-        return { ...signaturePayload, signature };
+        if (!isValidSignature) throw new Error('Signature is not valid!');
+
+        return { ...ipnPayloadForSignature, responseTime, signature: signature };
     }
 }

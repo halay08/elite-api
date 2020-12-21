@@ -6,7 +6,7 @@ import { CouponService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { CouponDTO, couponValidationMiddleWare } from '../requests';
 import { Coupon } from '@/src/domain';
-import { CouponStatus } from '@/src/domain/types';
+import { CouponStatus, UserRole } from '@/src/domain/types';
 import { authorize } from '@/api/http/middlewares';
 
 @controller(`/coupons`)
@@ -42,7 +42,7 @@ export class CouponController extends BaseHttpController implements interfaces.C
      *    "error": "Something went wrong"
      * }
      */
-    @httpPost('/', authorize({ roles: ['admin'] }), couponValidationMiddleWare)
+    @httpPost('/', authorize({ roles: [UserRole.ADMIN] }), couponValidationMiddleWare)
     public async create(@requestBody() req: CouponDTO, @response() res: Response) {
         try {
             const coupon = Coupon.create({

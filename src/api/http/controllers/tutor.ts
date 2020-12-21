@@ -13,6 +13,7 @@ import {
 import TYPES from '@/src/types';
 import { ITutorQuery } from '../requests';
 import { Tutor } from '@/src/domain';
+import { UserRole } from '@/src/domain/types';
 import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
@@ -21,7 +22,7 @@ import { TutorService, UserService, CourseService, LearningStackService } from '
 import { authorize } from '@/api/http/middlewares';
 
 // Required login
-@controller(`/tutors`, authorize({ roles: ['admin', 'student', 'tutor'] }))
+@controller(`/tutors`, authorize({ roles: [UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT] }))
 export class TutorController extends BaseHttpController implements interfaces.Controller {
     constructor(
         @inject(TYPES.TutorService) private tutorService: TutorService,
@@ -93,7 +94,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
             return res.status(HttpStatus.OK).json(data);
         } catch ({ message }) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message });
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 

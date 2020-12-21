@@ -11,9 +11,7 @@ export type momoWalletDTO = {
 const Validation = {
     momo: {
         body: Joi.object({
-            requestId: Joi.string().required(),
             amount: Joi.string().required(),
-            orderId: Joi.string().required(),
             orderInfo: Joi.string().required(),
             extraData: Joi.string().required()
         })
