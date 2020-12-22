@@ -93,8 +93,13 @@ export default class FirestoreCollection<T extends IEntity> {
                 const refDoc = await ref.get();
                 // Deep 3 levels.
                 if (recursive < 3) {
-                    // Map reference for ALL levels
-                    data[key] = await this._mapDocReference(refDoc, recursive + 1);
+                    if (doc.id !== ref.id) {
+                        // Map reference for ALL levels
+                        data[key] = await this._mapDocReference(refDoc, recursive + 1);
+                    } else {
+                        // Avoid loop mapping, ex. tutor -> user -> tutor -> user...
+                        data[key] = this._mapDocField(refDoc, refDoc.data());
+                    }
                 } else {
                     data[key] = ref;
                 }
@@ -260,14 +265,22 @@ export default class FirestoreCollection<T extends IEntity> {
         }
 
         if (queries.length > 0) {
-            queries.forEach((q) => {
+            queries.forEach(async (q) => {
                 const field = Object.keys(q).filter((k) => k !== 'operator')[0];
 
                 if (!field) {
                     throw new Error('Query field is invalid');
                 }
 
-                query = query.where(field, q.operator || '==', q[field as keyof T]);
+                if (field === 'id') {
+                    query = query.where(
+                        admin.firestore.FieldPath.documentId(),
+                        q.operator || '==',
+                        q[field as keyof T]
+                    );
+                } else {
+                    query = query.where(field, q.operator || '==', q[field as keyof T]);
+                }
             });
         }
 
@@ -279,8 +292,11 @@ export default class FirestoreCollection<T extends IEntity> {
             query = query.limit(options.limit);
         }
 
-        if (options.orderBy) {
-            query = query.orderBy(options.orderBy.field as any, options.orderBy.order);
+        if (options.orderBy && options.orderBy.length > 0) {
+            options.orderBy.reduce((acc, cur) => {
+                query = acc.orderBy(cur.field as any, cur.order);
+                return query;
+            }, query);
         }
 
         const documentData = await query.get();

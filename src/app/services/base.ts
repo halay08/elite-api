@@ -72,13 +72,13 @@ export abstract class BaseService<T> {
      * @param id The document id
      * @returns `document` object
      */
-    async getById(id: string): Promise<T | null> {
+    async getById(id: string): Promise<T> {
         try {
             const document = await this.baseRepository.findById(id);
             return document;
         } catch (error) {
             if (error instanceof NotFoundError) {
-                return null;
+                return null as any;
             }
             throw error;
         }
@@ -95,11 +95,11 @@ export abstract class BaseService<T> {
 
     /**
      * Updates document service
-     * @param id
-     * @param document
-     * @returns update
+     * @param id ID of document
+     * @param document Partial<T>
+     * @returns T
      */
-    async update(id: string, document: T): Promise<T> {
+    async update(id: string, document: Partial<T>): Promise<T> {
         return this.baseRepository.update(id, document);
     }
 

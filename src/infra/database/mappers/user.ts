@@ -42,6 +42,8 @@ export class UserMapper {
 
             status: raw.status,
 
+            metadata: raw.metadata,
+
             createdAt: raw.createdAt,
 
             updatedAt: raw.updatedAt,

@@ -1,6 +1,7 @@
 import { ICountry, ILanguage, ICategory, IPolicy, IEntity, ITimestamp } from '.';
 import { IStudentEntity } from './student';
 import { ITutorEntity } from './tutor';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type IEmbedViolation = Required<IEntity> & {
     date: Date;
@@ -75,6 +76,9 @@ type IUserEntity = IEntity &
         violations?: IEmbedViolation[];
 
         status: UserStatus;
+
+        // Tutor or student
+        metadata?: IDocumentReference;
     };
 
 export { IEmbedViolation, UserStatus, UserRole, IEmbedUser, IUserEntity, IUserRelation };

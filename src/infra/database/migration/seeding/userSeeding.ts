@@ -37,7 +37,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 role: UserRole.STUDENT,
@@ -57,7 +58,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 role: UserRole.TUTOR,
@@ -78,7 +80,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 role: UserRole.TUTOR,
@@ -99,7 +102,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 role: UserRole.TUTOR,
@@ -120,7 +124,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 role: UserRole.TUTOR,
@@ -141,7 +146,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             },
             {
                 id: 'FczXcOMojxRLA43VMKMMpXhu9ny2',
@@ -163,7 +169,8 @@ export class UserSeeding implements ISeeding {
                 language: {
                     code: 'vn',
                     name: 'Vietnam'
-                }
+                },
+                metadata: null as any
             }
         ];
     }

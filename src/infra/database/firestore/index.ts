@@ -17,7 +17,7 @@ class FirestoreData {
     public static students: FirestoreCollection<Student> = new FirestoreCollection(COLLECTIONS.Student);
     public static bookings: FirestoreCollection<Booking> = new FirestoreCollection(COLLECTIONS.Booking);
     public static categories: FirestoreCollection<Category> = new FirestoreCollection(COLLECTIONS.Category);
-    public static learningStacks: FirestoreCollection<LearningStack> = new FirestoreCollection(
+    public static sessionStacks: FirestoreCollection<LearningStack> = new FirestoreCollection(
         COLLECTIONS.LearningStack
     );
 }

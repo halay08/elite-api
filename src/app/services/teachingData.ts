@@ -5,7 +5,7 @@ import TYPES from '@/src/types';
 import { BaseService } from './base';
 import { IRepository, ITeachingDataRepository, ITutorRepository } from '@/src/infra/database/repositories';
 import Container from '@/src/container';
-import { IDocumentReference } from '@/infra/database/types';
+import { IDocumentReference, IQueryOption } from '@/infra/database/types';
 import { inject } from 'inversify';
 
 @provide(TYPES.TeachingDataService)
@@ -36,5 +36,27 @@ export class TeachingDataService extends BaseService<TeachingData> {
         const [record] = (await this.findBy('tutor', tutor)) || [];
 
         return record;
+    }
+
+    /**
+     * Gets elite tutor data.
+     * It will be used to recommend tutors and courses for new student which just registers new account.
+     * @returns TeachingData[]
+     */
+    async getElites(limit: number = 10): Promise<TeachingData[]> {
+        const options: Partial<IQueryOption<TeachingData>> = {
+            orderBy: [
+                {
+                    field: 'completedMinute',
+                    order: 'desc'
+                },
+                {
+                    field: 'totalEarnedAmount',
+                    order: 'desc'
+                }
+            ],
+            limit
+        };
+        return this.query([], options);
     }
 }

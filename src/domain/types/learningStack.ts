@@ -1,5 +1,5 @@
 import { IDocumentReference } from '@/src/infra/database/types';
-import { ITimestamp, IEntity } from '.';
+import { IEntity } from '.';
 
 enum LearningStatus {
     BOOKED = 'booked',
@@ -29,6 +29,6 @@ type ILearningStack = {
     earnedAmount: number; // Teaching amount
 };
 
-type ILearningStackEntity = IEntity & ILearningStack & ITimestamp;
+type ILearningStackEntity = IEntity & ILearningStack;
 
 export { ILearningStackEntity, LearningStatus };
