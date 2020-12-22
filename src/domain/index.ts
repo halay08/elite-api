@@ -18,7 +18,7 @@ export * from './room';
 export * from './policy';
 export * from './paymentMethod';
 export * from './booking';
-export * from './sessionStack';
+export * from './learningStack';
 export * from './media';
 export * from './language';
 export * from './category';

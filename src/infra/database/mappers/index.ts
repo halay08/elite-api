@@ -7,5 +7,5 @@ export * from './session';
 export * from './booking';
 export * from './student';
 export * from './category';
-export * from './sessionStack';
+export * from './learningStack';
 export * from './teachingData';

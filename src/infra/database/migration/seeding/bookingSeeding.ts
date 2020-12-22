@@ -1,13 +1,12 @@
 import TYPES from '@/src/types';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
-import { IBookingEntity, BookingStatus, UserRole, LearningStatus, ISessionStackEntity } from '@/src/domain/types';
+import { IBookingEntity, BookingStatus, UserRole, LearningStatus, ILearningStackEntity } from '@/src/domain/types';
 import { inject } from 'inversify';
-import { Session, Booking, SessionStack } from '@/domain';
+import { Session, Booking, LearningStack } from '@/domain';
 import { NotFoundError } from '@/app/errors';
 import { IDocumentReference } from '@/src/infra/database/types';
-import { COLLECTIONS } from '../../config/collection';
-import { ISessionRepository, IBookingRepository, ISessionStackRepository } from '@/src/infra/database/repositories';
+import { ISessionRepository, IBookingRepository, ILearningStackRepository } from '@/src/infra/database/repositories';
 import * as time from '@/src/app/helpers';
 import { BaseSeeding } from './baseSeeding';
 
@@ -15,7 +14,7 @@ import { BaseSeeding } from './baseSeeding';
 export class BookingSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.BookingRepository) private readonly bookingRepository: IBookingRepository;
     @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository;
-    @inject(TYPES.SessionStackRepository) private readonly sessionStackRepository: ISessionStackRepository;
+    @inject(TYPES.LearningStackRepository) private readonly learningStackRepository: ILearningStackRepository;
 
     /**
      * Get sessions to embed to the booking
@@ -108,15 +107,15 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
             console.log(`New booking was created ${modelEntity.orderId}`);
 
             // Create learning stack record
-            await this.createSessionStack(modelEntity);
+            await this.createLearningStack(modelEntity);
         }
 
         console.log('DONE!');
     }
 
-    async createSessionStack(booking: IBookingEntity): Promise<void> {
+    async createLearningStack(booking: IBookingEntity): Promise<void> {
         const bookingRef = this.bookingRepository.getDocumentRef(`${booking.id}`);
-        const existedBooking = await this.sessionStackRepository.findBy('booking', bookingRef);
+        const existedBooking = await this.learningStackRepository.findBy('booking', bookingRef);
         if (existedBooking.length > 0) {
             console.log(`---Learning stack with booking ${booking.orderId} already existed in the database`);
             return;
@@ -125,7 +124,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
         const studentReferences = await this.getUserReferences(UserRole.STUDENT);
         const teacherReferences = await this.getUserReferences(UserRole.STUDENT);
 
-        const model: SessionStack = SessionStack.create({
+        const model: LearningStack = LearningStack.create({
             booking: bookingRef,
             student: studentReferences[0],
             tutor: teacherReferences[0],
@@ -133,8 +132,8 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
             comment: '',
             earnedAmount: 0
         });
-        const newModel = await this.sessionStackRepository.create(model);
-        const modelEntity: ISessionStackEntity = newModel.serialize();
+        const newModel = await this.learningStackRepository.create(model);
+        const modelEntity: ILearningStackEntity = newModel.serialize();
         console.log(`--- New learning stack was created ${modelEntity.id}`);
     }
 }

@@ -17,7 +17,6 @@ import TYPES from '@/src/types';
 import Container from '@/src/container';
 import { BookingDTO } from '@/api/http/requests';
 import { BaseService, CouponService } from '.';
-import { COLLECTIONS } from '@/src/infra/database/config/collection';
 import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.BookingService)

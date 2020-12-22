@@ -208,7 +208,7 @@ export class UserSeeding implements ISeeding {
             user.id = authUser.uid;
 
             // Set/update custom claim
-            await this.authService.setCustomUserClaims(user.id, { role: user.role?.toString() });
+            await this.authService.setCustomUserClaims(`${user.id}`, { role: user.role?.toString() });
 
             // Create Firestore user
             const userModel: User = User.create(user);

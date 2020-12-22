@@ -11,5 +11,5 @@ export const COLLECTIONS = {
     Student: 'students',
     Category: 'categories',
     TeachingData: 'teaching_data',
-    SessionStack: 'session_stacks'
+    LearningStack: 'learning_stacks'
 };

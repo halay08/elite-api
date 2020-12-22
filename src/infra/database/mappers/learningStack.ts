@@ -1,11 +1,11 @@
-import { SessionStack } from '@/domain';
+import { LearningStack } from '@/domain';
 
 /**
- * SessionStack mapper
+ * LearningStack mapper
  */
-export class SessionStackMapper {
-    public static toDomain(raw: any): SessionStack {
-        return SessionStack.create({
+export class LearningStackMapper {
+    public static toDomain(raw: any): LearningStack {
+        return LearningStack.create({
             id: raw.id,
 
             booking: raw.booking,

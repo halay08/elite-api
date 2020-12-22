@@ -3,7 +3,7 @@
 
 import { injectable } from 'inversify';
 import FirestoreCollection from './collection';
-import { User, Course, Tutor, Session, Room, Category, Booking, Student, SessionStack } from '@/domain';
+import { User, Course, Tutor, Session, Room, Category, Booking, Student, LearningStack } from '@/domain';
 import * as types from './types';
 import { COLLECTIONS } from '../config/collection';
 
@@ -17,7 +17,9 @@ class FirestoreData {
     public static students: FirestoreCollection<Student> = new FirestoreCollection(COLLECTIONS.Student);
     public static bookings: FirestoreCollection<Booking> = new FirestoreCollection(COLLECTIONS.Booking);
     public static categories: FirestoreCollection<Category> = new FirestoreCollection(COLLECTIONS.Category);
-    public static sessionStacks: FirestoreCollection<SessionStack> = new FirestoreCollection(COLLECTIONS.SessionStack);
+    public static learningStacks: FirestoreCollection<LearningStack> = new FirestoreCollection(
+        COLLECTIONS.LearningStack
+    );
 }
 
 export { FirestoreCollection, FirestoreData, types };

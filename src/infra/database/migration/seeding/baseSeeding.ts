@@ -5,20 +5,19 @@ import { IUserRepository, ITutorRepository } from '@/src/infra/database/reposito
 import { User } from '@/domain';
 import { NotFoundError } from '@/app/errors';
 import { IDocumentReference } from '../../types';
-import { COLLECTIONS } from '../../config/collection';
 
 @injectable()
 export class BaseSeeding {
     @inject(TYPES.UserRepository)
-    protected readonly _userRepository: IUserRepository;
+    protected readonly userRepository: IUserRepository;
     @inject(TYPES.TutorRepository)
-    protected readonly _tutorRepository: ITutorRepository;
+    protected readonly tutorRepository: ITutorRepository;
 
     /**
      * Get the user to embed to tutor
      */
     private async getUsers(role: UserRole): Promise<User[]> {
-        const users = await this._userRepository.query([{ role, operator: '==' }], { limit: 10 });
+        const users = await this.userRepository.query([{ role, operator: '==' }], { limit: 10 });
 
         if (users.length === 0) {
             throw new NotFoundError('No user found in the system');
@@ -34,7 +33,7 @@ export class BaseSeeding {
 
         for (const user of users) {
             const userEntity = user.serialize();
-            const userRef = this._tutorRepository.getDocumentRef(`${userEntity.id}`);
+            const userRef = this.userRepository.getDocumentRef(`${userEntity.id}`);
             userReferences.push(userRef);
         }
 

@@ -10,4 +10,4 @@ export * from './student';
 export * from './booking';
 export * from './payment';
 export * from './teachingData';
-export * from './sessionStack';
+export * from './learningStack';

@@ -4,7 +4,6 @@ import TYPES from '@/src/types';
 import { BaseService } from './base';
 import { ICourseRepository, IRepository, ISessionRepository } from '@/src/infra/database/repositories';
 import Container from '@/src/container';
-import { COLLECTIONS } from '@/src/infra/database/config/collection';
 import { ISessionQueryParam } from '../types';
 import { IQuery } from '@/src/infra/database/types';
 import * as dayjs from 'dayjs';

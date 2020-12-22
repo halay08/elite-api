@@ -2,10 +2,10 @@ type ISessionQueryParam = {
     from?: Date;
     to?: Date;
 };
-type ITutorSessionStackSummary = {
+type ITutorLearningStackSummary = {
     completed?: number;
     missed?: number;
     totalHour?: number;
 };
 
-export { ITutorSessionStackSummary, ISessionQueryParam };
+export { ITutorLearningStackSummary, ISessionQueryParam };

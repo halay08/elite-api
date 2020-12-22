@@ -1,6 +1,6 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { ICategoryRepository, ITutorRepository } from '@/src/infra/database/repositories';
+import { ICategoryRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { Category, Tutor } from '@/domain';
@@ -13,9 +13,6 @@ import { BaseSeeding } from './baseSeeding';
 export class TutorSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.CategoryRepository)
     private readonly categoryRepository: ICategoryRepository;
-
-    @inject(TYPES.CategoryRepository)
-    private readonly tutorRepository: ITutorRepository;
 
     /**
      * Get the category to embed to the tutor

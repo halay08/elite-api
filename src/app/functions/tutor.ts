@@ -1,26 +1,26 @@
 import { COLLECTIONS } from '@/src/infra/database/config/collection';
 import * as functions from 'firebase-functions';
 import Container from '@/src/container';
-import { SessionStackService, TeachingDataService } from '../services';
+import { LearningStackService, TeachingDataService } from '../services';
 import TYPES from '@/src/types';
-import { ISessionStackEntity, LearningStatus, IBookingEntity, ITeachingData } from '@/src/domain/types';
+import { ILearningStackEntity, LearningStatus, IBookingEntity, ITeachingData } from '@/src/domain/types';
 
 /**
  * Build an aggregation transaction to store teaching data summary. Firestore doesn't support aggregation feature like mongodb.
  * See more here https://cloud.google.com/firestore/docs/solutions/aggregation
  */
 const updateTearchingData = functions.firestore
-    .document(`${COLLECTIONS.SessionStack}/{id}`)
+    .document(`${COLLECTIONS.LearningStack}/{id}`)
     .onUpdate(async (change, context) => {
         if (!change.before.exists || !change.after.exists) {
             return;
         }
 
-        const sessionStackService = Container.get<SessionStackService>(TYPES.SessionStackService);
+        const learningStackService = Container.get<LearningStackService>(TYPES.LearningStackService);
         const teachingDataService = Container.get<TeachingDataService>(TYPES.TeachingDataService);
 
-        const oldStack: ISessionStackEntity = change.before.data() as any;
-        const newStack: ISessionStackEntity = change.after.data() as any;
+        const oldStack: ILearningStackEntity = change.before.data() as any;
+        const newStack: ILearningStackEntity = change.after.data() as any;
         if (oldStack.status === newStack.status) {
             console.warn('Status of learning stack record before and after changing are same.');
             return;
@@ -29,19 +29,19 @@ const updateTearchingData = functions.firestore
         const { tutor: tutorRef } = newStack;
 
         // Update aggregations in a transaction
-        await sessionStackService.runTransaction(
+        await learningStackService.runTransaction(
             async (transaction): Promise<any> => {
-                const sessionStack = await sessionStackService.getByTutor(tutorRef);
-                if (!sessionStack) {
+                const learningStack = await learningStackService.getByTutor(tutorRef);
+                if (!learningStack) {
                     throw new Error(`No learning stack with tutor '${tutorRef.id}' found`);
                 }
 
-                const sessionStackEntity = sessionStack.serialize();
-                const booking: IBookingEntity = sessionStackEntity.booking as any;
+                const learningStackEntity = learningStack.serialize();
+                const booking: IBookingEntity = learningStackEntity.booking as any;
 
                 // Get stack hour and earned amount
                 const { duration } = booking.bookingSession;
-                const earnedAmount = sessionStackEntity.earnedAmount;
+                const earnedAmount = learningStackEntity.earnedAmount;
 
                 // Get teaching data by tutor
                 const teachingData = await teachingDataService.getByTutor(tutorRef);

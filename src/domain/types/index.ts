@@ -21,7 +21,7 @@ export * from './studentWallet';
 export * from './globalSetting';
 export * from './country';
 export * from './policy';
-export * from './sessionStack';
+export * from './learningStack';
 export * from './booking';
 export * from './paymentMethod';
 export * from './studentWalletTransaction';

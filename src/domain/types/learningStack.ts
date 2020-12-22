@@ -11,7 +11,7 @@ enum LearningStatus {
     MISSED_STUDENT = 'missed_student' // miss student when starting learning,...
 }
 
-type ISessionStack = {
+type ILearningStack = {
     booking: IDocumentReference;
 
     // Student reference
@@ -29,6 +29,6 @@ type ISessionStack = {
     earnedAmount: number; // Teaching amount
 };
 
-type ISessionStackEntity = IEntity & ISessionStack & ITimestamp;
+type ILearningStackEntity = IEntity & ILearningStack & ITimestamp;
 
-export { ISessionStackEntity, LearningStatus };
+export { ILearningStackEntity, LearningStatus };
