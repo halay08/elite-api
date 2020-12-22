@@ -138,7 +138,7 @@ export class CallController extends BaseHttpController implements interfaces.Con
      *
      */
     @httpPost('/create')
-    public async join(@queryParam('startAt') startAt: number, @response() res: Response) {
+    public async create(@queryParam('startAt') startAt: number, @response() res: Response) {
         try {
             const { user }: { user: fireauth.IUserRecord } = this.httpContext.user.details;
             const room = Room.create({
@@ -150,14 +150,14 @@ export class CallController extends BaseHttpController implements interfaces.Con
             const data = await this.roomService.create(room);
 
             return res.status(HttpStatus.CREATED).json(data.serialize());
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message }).end();
         }
     }
 
     /**
      *
-     * @api {GET} /call/:roomName?startAt=timestamp Get video call token
+     * @api {GET} /call/verify/:roomName?startAt=timestamp Get video call token
      * @apiName Verify people in room
      * @apiGroup Call
      * @apiVersion  1.0.0

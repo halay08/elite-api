@@ -6,7 +6,7 @@ import { inject } from 'inversify';
 import { BaseHttpController, controller, httpPost, interfaces, response, requestBody } from 'inversify-express-utils';
 
 import TYPES from '@/src/types';
-import { momoWalletDTO, validateMomoTransaction } from '@/api/http/requests/payment';
+import { momoWalletDTO, validateCreateMomoWallet, validateMomoIPN } from '@/api/http/requests/payment';
 import { PaymentService } from '@/app/services';
 import { paymentConfig } from '@/api/http/config/constants';
 import { Momo, MomoCaptureWallet, MomoWalletResponse, MomoIPNRequest } from '@/infra/payments/momo';
@@ -72,7 +72,7 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpPost('/momo', authorize({ roles: [UserRole.STUDENT, UserRole.ADMIN] }), validateMomoTransaction)
+    @httpPost('/momo', authorize({ roles: [UserRole.STUDENT, UserRole.ADMIN] }), validateCreateMomoWallet)
     public async momo(@requestBody() body: momoWalletDTO, @response() res: Response) {
         try {
             const orderId = this.paymentService.generateOrderId();
@@ -90,7 +90,7 @@ export class PaymentController extends BaseHttpController implements interfaces.
 
             return res.status(httpStatus).json(data);
         } catch ({ message }) {
-            return res.status(HttpStatus.BAD_REQUEST).send(message);
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 
@@ -155,7 +155,7 @@ export class PaymentController extends BaseHttpController implements interfaces.
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpPost('/momo/ipn')
+    @httpPost('/momo/ipn', validateMomoIPN)
     public async momoIPN(@requestBody() payload: MomoIPNRequest, @response() res: Response) {
         try {
             const ipnResponse = await this.paymentByMomo.handleIncomingIPN(payload);

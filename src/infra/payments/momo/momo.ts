@@ -27,6 +27,11 @@ export class Momo {
     /**
      * Create signature for capture wallet
      * @see https://developers.momo.vn/#/?id=ch%e1%bb%af-k%c3%bd-%c4%91i%e1%bb%87n-t%e1%bb%ad
+     *
+     * @private
+     * @param {(MomoCaptureWallet | MomoIPNSignature)} payload
+     * @returns {string}
+     * @memberof Momo
      */
     private createSignature(payload: MomoCaptureWallet | MomoIPNSignature): string {
         const MOMO_SECRET_KEY = env.momo.SECRET_KEY;
@@ -42,15 +47,26 @@ export class Momo {
     /**
      * Verify signature when Momo send payload via IPN
      * @see https://developers.momo.vn/#/docs/aio/?id=ki%e1%bb%83m-tra-to%c3%a0n-v%e1%ba%b9n-d%e1%bb%af-li%e1%bb%87u
+     *
+     * @private
+     * @param {string} momoSignature
+     * @param {MomoIPNSignature} payload
+     * @returns {boolean}
+     * @memberof Momo
      */
     private verifySignature(momoSignature: string, payload: MomoIPNSignature): boolean {
         const ourGeneratedSignature = this.createSignature(payload);
+
         return momoSignature === ourGeneratedSignature;
     }
 
     /**
      * Create format date yyyy-mm-dd HH:mm:ss
      * Required by Momo
+     *
+     * @private
+     * @returns {string}
+     * @memberof Momo
      */
     private getResponseTime(): string {
         const [mdy, time] = new Date()
@@ -63,24 +79,12 @@ export class Momo {
     }
 
     /**
-     * Check Extradata payload is valid JSON format
-     *
-     * @private
-     * @param {string} extraData
-     * @returns {boolean}
-     * @memberof Momo
-     */
-    private isValidJsonFormat(extraData: string): boolean {
-        try {
-            return JSON.parse(extraData);
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /**
      * Capture Momo wallet
      * @see https://developers.momo.vn/#/docs/aio/?id=ph%c6%b0%c6%a1ng-th%e1%bb%a9c-thanh-to%c3%a1n
+     *
+     * @param {MomoCaptureWallet} payload
+     * @returns {Promise<MomoWalletResponse>}
+     * @memberof Momo
      */
     public async captureMoMoWallet(payload: MomoCaptureWallet): Promise<MomoWalletResponse> {
         const credentials: MomoCredentials = this.businessCredentials;
@@ -103,6 +107,10 @@ export class Momo {
     /**
      * Capture Momo Response for IPN
      * @see https://developers.momo.vn/#/docs/aio/?id=ph%c6%b0%c6%a1ng-th%e1%bb%a9c-thanh-to%c3%a1n
+     *
+     * @param {MomoIPNRequest} payload
+     * @returns {Promise<MomoIPNResponse>}
+     * @memberof Momo
      */
     public async handleIncomingIPN({
         requestId,
@@ -113,7 +121,6 @@ export class Momo {
         signature
     }: MomoIPNRequest): Promise<MomoIPNResponse> {
         if (errorCode !== 0) throw new Error('Transaction failed!');
-        if (!this.isValidJsonFormat(extraData)) throw new Error('Invalid data!');
 
         const credentials: MomoCredentials = this.businessCredentials;
         const responseTime = this.getResponseTime();
