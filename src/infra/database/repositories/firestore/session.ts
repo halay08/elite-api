@@ -13,7 +13,7 @@ export class SessionRepository extends BaseRepository<Session> implements ISessi
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Session;
     }
 

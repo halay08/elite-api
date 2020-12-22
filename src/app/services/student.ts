@@ -1,15 +1,20 @@
 import { provide } from 'inversify-binding-decorators';
 import { Student } from '@/domain';
-import { IRepository, IStudentRepository } from '@/src/infra/database/repositories';
+import { IRepository, IStudentRepository, IUserRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import { BaseService } from './base';
 import Container from '@/src/container';
 import { IStudentEntity } from '@/src/domain/types';
 import { UpdateStudentPayload } from '@/src/api/http/requests/student';
 import { NotFoundError } from '../errors';
+import { inject } from 'inversify';
 
 @provide(TYPES.StudentService)
 export class StudentService extends BaseService<Student> {
+    constructor(@inject(TYPES.UserRepository) private readonly userRepository: IUserRepository) {
+        super();
+    }
+
     /**
      * Create student repository instance
      * @returns IRepository<T>
@@ -25,7 +30,7 @@ export class StudentService extends BaseService<Student> {
      * @returns `Student` object
      */
     async getByUserId(id: string): Promise<Student> {
-        const userRef = this.getDocumentRef(`users/${id}`);
+        const userRef = this.userRepository.getDocumentRef(id);
         const [student] = await this.findBy('user', userRef);
 
         if (!student) {
@@ -41,7 +46,7 @@ export class StudentService extends BaseService<Student> {
      * @returns updated
      */
     async updateByUserId(id: string, studentPayload: UpdateStudentPayload): Promise<Student> {
-        const userRef = this.getDocumentRef(`users/${id}`);
+        const userRef = this.userRepository.getDocumentRef(id);
         const student = await this.getByUserId(id);
 
         const studentEntity: IStudentEntity = student.serialize();
@@ -57,7 +62,7 @@ export class StudentService extends BaseService<Student> {
      * @returns created
      */
     async createByUserId(id: string): Promise<Student> {
-        const userRef = this.getDocumentRef(`users/${id}`);
+        const userRef = this.userRepository.getDocumentRef(id);
         const [existed] = await this.findBy('user', userRef);
         if (existed) {
             return existed;

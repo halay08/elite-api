@@ -10,7 +10,7 @@ import { BaseSeeding } from './baseSeeding';
 @provide(TYPES.CourseSeeding)
 export class CourseSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.CourseRepository)
-    private readonly _courseRepository: ICourseRepository;
+    private readonly courseRepository: ICourseRepository;
 
     /**
      * Gets policy
@@ -43,7 +43,7 @@ export class CourseSeeding extends BaseSeeding implements ISeeding {
     }
 
     private async getCourseData(): Promise<Course[]> {
-        const usersRef = await this.getUsersReference();
+        const usersRef = await this.getUserReferences();
 
         return [
             Course.create({
@@ -86,14 +86,14 @@ export class CourseSeeding extends BaseSeeding implements ISeeding {
         const courses = await this.getCourseData();
 
         for (const course of courses) {
-            const existedCourse = await this._courseRepository.findBy('slug', course.slug);
+            const existedCourse = await this.courseRepository.findBy('slug', course.slug);
             if (existedCourse.length > 0) {
                 console.log(`Course <${course.name}> already existed in the database`);
                 continue;
             }
 
             const categoryModel: Course = Course.create(course.serialize());
-            const newCourse = await this._courseRepository.create(categoryModel);
+            const newCourse = await this.courseRepository.create(categoryModel);
             const newCourseEntity = newCourse.serialize();
             console.log(`New course was created ${newCourseEntity.id}`);
         }

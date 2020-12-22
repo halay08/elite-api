@@ -1,25 +1,27 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { ICategoryRepository } from '@/src/infra/database/repositories';
+import { ICategoryRepository, ITutorRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { Category, Tutor } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
 import { ITutorEntity, TutorStatus, CertificateStatus } from '@/domain/types';
 import * as time from '@/app/helpers';
-import { COLLECTIONS } from '../../config/collection';
 import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.TutorSeeding)
 export class TutorSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.CategoryRepository)
-    private readonly _categoryRepository: ICategoryRepository;
+    private readonly categoryRepository: ICategoryRepository;
+
+    @inject(TYPES.CategoryRepository)
+    private readonly tutorRepository: ITutorRepository;
 
     /**
      * Get the category to embed to the tutor
      */
     private async getCategory(): Promise<Category> {
-        const categories = await this._categoryRepository.query([], { limit: 1 });
+        const categories = await this.categoryRepository.query([], { limit: 1 });
 
         if (categories.length === 0) {
             throw new NotFoundError('No category found in the system');
@@ -29,11 +31,11 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
     }
 
     async run() {
-        const userReferences = await this.getUsersReference();
+        const userReferences = await this.getUserReferences();
         const category: Category = await this.getCategory();
 
         const categoryEntity = category.serialize();
-        const categoryRef = this._categoryRepository.getDocumentRef(`${COLLECTIONS.Category}/${categoryEntity.id}`);
+        const categoryRef = this.categoryRepository.getDocumentRef(`${categoryEntity.id}`);
 
         const tutors: ITutorEntity[] = [
             {
@@ -191,14 +193,14 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
         ];
 
         for (const tutor of tutors) {
-            const existedTutor = await this._tutorRepository.findBy('user', tutor.user);
+            const existedTutor = await this.tutorRepository.findBy('user', tutor.user);
             if (existedTutor.length > 0) {
                 console.log(`Tutor with user ${tutor.user.id} already existed in the database`);
                 continue;
             }
 
             const tutorModel: Tutor = Tutor.create(tutor);
-            const newTutor = await this._tutorRepository.create(tutorModel);
+            const newTutor = await this.tutorRepository.create(tutorModel);
             const tutorEntity = newTutor.serialize();
             console.log(`New tutor was created ${tutorEntity.id}`);
         }

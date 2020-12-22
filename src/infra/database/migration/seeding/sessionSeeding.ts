@@ -8,21 +8,20 @@ import { NotFoundError } from '@/src/app/errors';
 import { CostType, ISessionMedia, SessionStatus } from '@/domain/types';
 import * as time from '@/app/helpers';
 import { IDocumentReference } from '../../types';
-import { COLLECTIONS } from '../../config/collection';
 import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.SessionSeeding)
 export class SessionSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.SessionRepository)
-    private readonly _sessionRepository: ISessionRepository;
+    private readonly sessionRepository: ISessionRepository;
     @inject(TYPES.CourseRepository)
-    private readonly _courseRepository: ICourseRepository;
+    private readonly courseRepository: ICourseRepository;
 
     /**
      * Get the courses to embed to the session
      */
     private async getCourses(): Promise<Course[]> {
-        const users = await this._courseRepository.findAll({ limit: 10 });
+        const users = await this.courseRepository.findAll({ limit: 10 });
 
         if (users.length === 0) {
             throw new NotFoundError('No user found in the system');
@@ -82,13 +81,13 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
     }
 
     private async getSessionData(): Promise<Session[]> {
-        const usersRef = await this.getUsersReference();
+        const userRefs = await this.getUserReferences();
         const courses = await this.getCourses();
         const courseReferences: IDocumentReference[] = [];
 
         for (const course of courses) {
             const courseEntity = course.serialize();
-            const courseRef = this._courseRepository.getDocumentRef(`${COLLECTIONS.Course}/${courseEntity.id}`);
+            const courseRef = this.courseRepository.getDocumentRef(`${courseEntity.id}`);
             courseReferences.push(courseRef);
         }
 
@@ -103,7 +102,7 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
                 name: 'Intensive English lesson 1',
                 slug: 'intensive-english-lesson-1',
                 course: courseReferences[0],
-                tutor: usersRef[0],
+                tutor: userRefs[0],
                 startTime: startTime[0],
                 duration: 60,
                 cost: 250,
@@ -121,7 +120,7 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
                 name: 'Intensive English lesson 2',
                 slug: 'intensive-english-lesson-2',
                 course: courseReferences[0],
-                tutor: usersRef[0],
+                tutor: userRefs[0],
                 startTime: startTime[1],
                 duration: 60,
                 cost: 250,
@@ -139,7 +138,7 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
                 name: 'Building Your English Brain lesson 1',
                 slug: 'building-your-english-brain-lesson-1',
                 course: courseReferences[1],
-                tutor: usersRef[1],
+                tutor: userRefs[1],
                 startTime: startTime[2],
                 duration: 60,
                 cost: 250,
@@ -160,14 +159,14 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
         const sessions = await this.getSessionData();
 
         for (const session of sessions) {
-            const existedSession = await this._sessionRepository.findBy('slug', session.slug);
+            const existedSession = await this.sessionRepository.findBy('slug', session.slug);
             if (existedSession.length > 0) {
                 console.log(`Session with name ${session.name} already existed in the database`);
                 continue;
             }
 
             const sessionModel: Session = Session.create(session.serialize());
-            const newSession = await this._sessionRepository.create(sessionModel);
+            const newSession = await this.sessionRepository.create(sessionModel);
             console.log(`New session was created ${newSession.id}`);
         }
 

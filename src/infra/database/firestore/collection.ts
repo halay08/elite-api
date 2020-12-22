@@ -18,6 +18,8 @@ import { IEntity } from '@/src/domain/types';
 export default class FirestoreCollection<T extends IEntity> {
     #collectionName: string = '';
 
+    #softDelete: boolean = true;
+
     /**
      * Collection  of firestore repository
      */
@@ -34,6 +36,20 @@ export default class FirestoreCollection<T extends IEntity> {
 
     get collectionName(): string {
         return this.#collectionName;
+    }
+
+    /**
+     * Uses soft delete for collection
+     */
+    useSoftDelete() {
+        this.#softDelete = true;
+    }
+
+    /**
+     * Uses hard delete for collection
+     */
+    useHardDelete() {
+        this.#softDelete = false;
     }
 
     /**
@@ -108,10 +124,19 @@ export default class FirestoreCollection<T extends IEntity> {
     /**
      * Get reference document by path
      * @param path
-     * @returns ref
+     * @returns IDocumentReference
      */
     getDocumentRef(path: string): IDocumentReference {
         return admin.firestore().doc(path);
+    }
+
+    /**
+     * Gets blank document
+     * @param collection Collection name
+     * @returns IDocumentReference
+     */
+    getBlankDocument(collection: string): IDocumentReference {
+        return admin.firestore().collection(collection).doc();
     }
 
     /**
@@ -141,10 +166,13 @@ export default class FirestoreCollection<T extends IEntity> {
      * @returns create
      */
     async set(id: string, data: Partial<T>): Promise<IWriteResult> {
-        const dataModel = {
-            ...data,
-            deletedAt: null
+        const dataModel: any = {
+            ...data
         };
+
+        if (this.#softDelete) {
+            dataModel['deletedAt'] = null;
+        }
 
         // Not allow to write field `id` to database
         delete dataModel.id;
@@ -160,10 +188,13 @@ export default class FirestoreCollection<T extends IEntity> {
      */
     async create(data: Partial<T>, recursive: number = 0): Promise<T> {
         // Add createdAt value
-        const dataModel = {
-            ...data,
-            deletedAt: null
+        const dataModel: any = {
+            ...data
         };
+
+        if (this.#softDelete) {
+            dataModel['deletedAt'] = null;
+        }
 
         // Not allow to write field `id` to database
         delete dataModel.id;
@@ -191,10 +222,10 @@ export default class FirestoreCollection<T extends IEntity> {
      * @softDelete Only update deletedAt field to the document
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<IWriteResult> {
+    async delete(id: string): Promise<IWriteResult> {
         let result: IWriteResult;
 
-        if (softDelete) {
+        if (this.#softDelete) {
             // Add deleteAt value
             const dataModel: object = {
                 deletedAt: time.getCurrentUTCDate()
@@ -224,7 +255,7 @@ export default class FirestoreCollection<T extends IEntity> {
         let query = this.getQueryCollection();
 
         // Not include trashed documents
-        if (!options.withTrashed) {
+        if (!options.withTrashed && this.#softDelete) {
             query = query.where('deletedAt', '==', null);
         }
 
@@ -255,6 +286,33 @@ export default class FirestoreCollection<T extends IEntity> {
         const documentData = await query.get();
 
         return Promise.all(documentData.docs.map((doc) => this._mapDocReference(doc, recursive)));
+    }
+
+    /**
+     * Executes the given updateFunction and commits the changes applied within
+     * the transaction.
+     *
+     * You can use the transaction object passed to 'updateFunction' to read and
+     * modify Firestore documents under lock. Transactions are committed once
+     * 'updateFunction' resolves and attempted up to five times on failure.
+     *
+     * @param updateFunction The function to execute within the transaction
+     * @param {object=} transactionOptions Transaction options.
+     * @param {number=} transactionOptions.maxAttempts The maximum number of
+     * attempts for this transaction.
+     * @return If the transaction completed successfully or was explicitly
+     * aborted (by the updateFunction returning a failed Promise), the Promise
+     * returned by the updateFunction will be returned here. Else if the
+     * transaction failed, a rejected Promise with the corresponding failure
+     * error will be returned.
+     */
+    async runTransaction(
+        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
+        transactionOptions?: { maxAttempts?: number }
+    ): Promise<T> {
+        return await admin
+            .firestore()
+            .runTransaction(async (transaction): Promise<T> => updateFunction(transaction), transactionOptions);
     }
 
     /**

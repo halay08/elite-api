@@ -1,7 +1,6 @@
 import { injectable } from 'inversify';
 import { IRepository } from '@/src/infra/database/repositories';
 import { IDocumentReference, IQuery, IQueryOption } from '@/src/infra/database/types';
-import { admin } from '@/src/firebase.config';
 
 @injectable()
 export abstract class BaseService<T> {
@@ -22,11 +21,20 @@ export abstract class BaseService<T> {
 
     /**
      * Get reference document by path
-     * @param path Path of reference document, ex: users/tygD3iFGr42DfZs4sz
+     * @param id ID of document
+     * @param path Path of reference document, ex: users/{id}/{path}
      * @returns IDocumentReference
      */
-    getDocumentRef(path: string): IDocumentReference {
-        return admin.firestore().doc(path);
+    getDocumentRef(id: string, path: string = ''): IDocumentReference {
+        return this.baseRepository.getDocumentRef(id, path);
+    }
+
+    /**
+     * Gets blank document
+     * @returns IDocumentReference
+     */
+    getBlankDocument(): IDocumentReference {
+        return this.baseRepository.getBlankDocument();
     }
 
     /**
@@ -34,7 +42,7 @@ export abstract class BaseService<T> {
      * @returns all
      */
     async getAll(): Promise<T[]> {
-        return await this.baseRepository.findAll();
+        return this.baseRepository.findAll();
     }
 
     /**
@@ -44,7 +52,7 @@ export abstract class BaseService<T> {
      * @returns query
      */
     async query(queries: IQuery<T>[] = [], options: Partial<IQueryOption<T>> = {}): Promise<T[]> {
-        return await this.baseRepository.query(queries, options);
+        return this.baseRepository.query(queries, options);
     }
 
     /**
@@ -54,8 +62,7 @@ export abstract class BaseService<T> {
      * @param value The query value
      */
     async findBy(field: string, value: any, operator?: any): Promise<T[]> {
-        const query = await this.baseRepository.findBy(field, value, operator);
-        return query;
+        return this.baseRepository.findBy(field, value, operator);
     }
 
     /**
@@ -75,8 +82,7 @@ export abstract class BaseService<T> {
      * @returns create
      */
     async create(document: T): Promise<T> {
-        const inserted = await this.baseRepository.create(document);
-        return inserted;
+        return this.baseRepository.create(document);
     }
 
     /**
@@ -86,17 +92,49 @@ export abstract class BaseService<T> {
      * @returns update
      */
     async update(id: string, document: T): Promise<T> {
-        const updated = await this.baseRepository.update(id, document);
-        return updated;
+        return this.baseRepository.update(id, document);
     }
 
     /**
      * Deletes document service
      * @param id
-     * @param [softDelete]
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<number> {
-        return await this.baseRepository.delete(id, softDelete);
+    async delete(id: string): Promise<number> {
+        return this.baseRepository.delete(id);
+    }
+
+    /**
+     * Executes the given updateFunction and commits the changes applied within
+     * the transaction.
+     *
+     * You can use the transaction object passed to 'updateFunction' to read and
+     * modify Firestore documents under lock. Transactions are committed once
+     * 'updateFunction' resolves and attempted up to five times on failure.
+     *
+     * @param updateFunction The function to execute within the transaction
+     * @param {object=} transactionOptions Transaction options.
+     * @param {number=} transactionOptions.maxAttempts The maximum number of
+     * attempts for this transaction.
+     * @return If the transaction completed successfully or was explicitly
+     * aborted (by the updateFunction returning a failed Promise), the Promise
+     * returned by the updateFunction will be returned here. Else if the
+     * transaction failed, a rejected Promise with the corresponding failure
+     * error will be returned.
+     */
+    async runTransaction(
+        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
+        transactionOptions?: { maxAttempts?: number }
+    ): Promise<T> {
+        return this.baseRepository.runTransaction(updateFunction, transactionOptions);
+    }
+
+    /**
+     * Extracts reference to document entity
+     * @param ref Reference to a collection
+     * @returns T
+     */
+    async extractReference(ref: IDocumentReference): Promise<T> {
+        return this.baseRepository.extractReference(ref);
     }
 }

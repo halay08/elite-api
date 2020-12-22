@@ -7,7 +7,12 @@ import { Booking } from '@/domain';
 import { IBookingSession, BookingStatus, CostType } from '@/domain/types';
 import * as nanoid from 'nanoid';
 import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
-import { IRepository, IBookingRepository, ISessionRepository } from '@/src/infra/database/repositories';
+import {
+    IRepository,
+    IBookingRepository,
+    ISessionRepository,
+    IUserRepository
+} from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import Container from '@/src/container';
 import { BookingDTO } from '@/api/http/requests';
@@ -19,6 +24,7 @@ import { NotFoundError } from '@/app/errors';
 export class BookingService extends BaseService<Booking> {
     @inject(TYPES.CouponService) private readonly couponService: CouponService;
     @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository;
+    @inject(TYPES.UserService) private readonly userRepository: IUserRepository;
     /**
      * Create tutor repository instance
      * @returns IRepository<T>
@@ -43,7 +49,7 @@ export class BookingService extends BaseService<Booking> {
         { paymentMethod, coupon, amount, sessionId, tutorId, bookedDate }: BookingDTO,
         user: fireauth.IUserRecord
     ): Promise<string> {
-        const studentRef = this.getDocumentRef(`${COLLECTIONS.User}/${user.uid}`);
+        const studentRef = this.userRepository.getDocumentRef(`${user.uid}`);
         const session = await this.sessionRepository.findById(sessionId);
 
         if (!session || !studentRef) {
@@ -52,7 +58,7 @@ export class BookingService extends BaseService<Booking> {
 
         const orderId = this.generateOrderId();
 
-        const sessionRef = this.getDocumentRef(`${COLLECTIONS.Session}/${session.id}`);
+        const sessionRef = this.sessionRepository.getDocumentRef(`${session.id}`);
 
         const bookingSession: IBookingSession = {
             startTime: session.startTime,

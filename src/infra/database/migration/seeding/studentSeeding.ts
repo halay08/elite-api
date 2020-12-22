@@ -13,7 +13,7 @@ export class StudentSeeding extends BaseSeeding implements ISeeding {
     private readonly studentRepository: IStudentRepository;
 
     async run() {
-        const userReferences = await this.getUsersReference(UserRole.STUDENT);
+        const userReferences = await this.getUserReferences(UserRole.STUDENT);
 
         const students: IStudentEntity[] = [
             {

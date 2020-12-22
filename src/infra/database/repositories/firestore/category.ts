@@ -13,7 +13,7 @@ export class CategoryRepository extends BaseRepository<Category> implements ICat
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Category;
     }
 

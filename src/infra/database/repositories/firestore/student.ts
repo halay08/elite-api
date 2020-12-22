@@ -13,7 +13,7 @@ export class StudentRepository extends BaseRepository<Student> implements IStude
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Student;
     }
 

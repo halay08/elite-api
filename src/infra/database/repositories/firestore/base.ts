@@ -19,14 +19,14 @@ export abstract class BaseRepository<T extends IEntity> {
     @inject(TYPES.Database) protected database: FirestoreData;
 
     constructor() {
-        this.collection = new FirestoreCollection(this.getCollection());
+        this.collection = new FirestoreCollection(this.getCollectionName());
     }
 
     /**
      * Gets collection name
      * @returns collection
      */
-    protected abstract getCollection(): string;
+    protected abstract getCollectionName(): string;
 
     /**
      * Map fields to domain entity
@@ -72,8 +72,22 @@ export abstract class BaseRepository<T extends IEntity> {
      * @param path Path of reference document, ex: users/tygD3iFGr42DfZs4sz
      * @returns IDocumentReference
      */
-    getDocumentRef(path: string): IDocumentReference {
-        return admin.firestore().doc(path);
+    getDocumentRef(id: string, path: string = ''): IDocumentReference {
+        let documentPath = `${this.getCollectionName()}/${id}`;
+
+        if (path) {
+            documentPath += `/${path}`;
+        }
+
+        return this.collection.getDocumentRef(documentPath);
+    }
+
+    /**
+     * Gets blank document
+     * @returns IDocumentReference
+     */
+    getBlankDocument(): IDocumentReference {
+        return admin.firestore().collection(this.getCollectionName()).doc();
     }
 
     /**
@@ -106,7 +120,7 @@ export abstract class BaseRepository<T extends IEntity> {
     async findById(id: string): Promise<T> {
         const item = await this.collection.findById(id);
         if (!item) {
-            throw new NotFoundError(`Document <${this.getCollection()}/${id}> not found`);
+            throw new NotFoundError(`Document <${this.getCollectionName()}/${id}> not found`);
         }
 
         return this.toDomain(item);
@@ -148,8 +162,33 @@ export abstract class BaseRepository<T extends IEntity> {
      * @param id
      * @returns delete
      */
-    async delete(id: string, softDelete: boolean = true): Promise<number> {
-        return (await this.collection.delete(id, softDelete)).writeTime.seconds;
+    async delete(id: string): Promise<number> {
+        return (await this.collection.delete(id)).writeTime.seconds;
+    }
+
+    /**
+     * Executes the given updateFunction and commits the changes applied within
+     * the transaction.
+     *
+     * You can use the transaction object passed to 'updateFunction' to read and
+     * modify Firestore documents under lock. Transactions are committed once
+     * 'updateFunction' resolves and attempted up to five times on failure.
+     *
+     * @param updateFunction The function to execute within the transaction
+     * @param {object=} transactionOptions Transaction options.
+     * @param {number=} transactionOptions.maxAttempts The maximum number of
+     * attempts for this transaction.
+     * @return If the transaction completed successfully or was explicitly
+     * aborted (by the updateFunction returning a failed Promise), the Promise
+     * returned by the updateFunction will be returned here. Else if the
+     * transaction failed, a rejected Promise with the corresponding failure
+     * error will be returned.
+     */
+    async runTransaction(
+        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
+        transactionOptions?: { maxAttempts?: number }
+    ): Promise<T> {
+        return this.collection.runTransaction(updateFunction, transactionOptions);
     }
 
     /**

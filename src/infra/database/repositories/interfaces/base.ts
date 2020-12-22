@@ -6,9 +6,14 @@ export interface IRepository<T> {
     findById(id: string): Promise<T>;
     findBy(field: string, value: any, operator?: any): Promise<T[]>;
     create(entity: Partial<T>): Promise<T>;
-    getDocumentRef(path: string): IDocumentReference;
+    getDocumentRef(id: string, path?: string): IDocumentReference;
+    getBlankDocument(): IDocumentReference;
     update(id: string, entity: Partial<T>): Promise<T>;
-    delete(id: string, softDelete: boolean): Promise<number>;
+    delete(id: string): Promise<number>;
     query(queries: IQuery<T>[], options?: Partial<IQueryOption<T>>): Promise<T[]>;
+    runTransaction(
+        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
+        transactionOptions?: { maxAttempts?: number }
+    ): Promise<T>;
     extractReference(ref: IDocumentReference): Promise<T>;
 }

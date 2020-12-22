@@ -27,14 +27,14 @@ export class BaseSeeding {
         return users;
     }
 
-    async getUsersReference(role: UserRole = UserRole.TUTOR): Promise<Array<IDocumentReference>> {
+    async getUserReferences(role: UserRole = UserRole.TUTOR): Promise<Array<IDocumentReference>> {
         const users: User[] = await this.getUsers(role);
 
         const userReferences: IDocumentReference[] = [];
 
         for (const user of users) {
             const userEntity = user.serialize();
-            const userRef = this._tutorRepository.getDocumentRef(`${COLLECTIONS.User}/${userEntity.id}`);
+            const userRef = this._tutorRepository.getDocumentRef(`${userEntity.id}`);
             userReferences.push(userRef);
         }
 

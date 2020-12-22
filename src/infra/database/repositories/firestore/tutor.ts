@@ -13,7 +13,7 @@ export class TutorRepository extends BaseRepository<Tutor> implements ITutorRepo
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Tutor;
     }
 

@@ -10,5 +10,6 @@ export const COLLECTIONS = {
     Session: 'sessions',
     Student: 'students',
     Category: 'categories',
-    LearningStack: 'learning_stacks'
+    TeachingData: 'teaching_data',
+    SessionStack: 'session_stacks'
 };

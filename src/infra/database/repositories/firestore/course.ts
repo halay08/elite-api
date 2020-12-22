@@ -13,7 +13,7 @@ export class CourseRepository extends BaseRepository<Course> implements ICourseR
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Course;
     }
 

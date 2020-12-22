@@ -3,15 +3,17 @@ import { Course } from '@/domain';
 import { ICourseDetail } from '@/domain/types';
 import TYPES from '@/src/types';
 import { BaseService } from './base';
-import { IRepository, ICourseRepository } from '@/src/infra/database/repositories';
+import { IRepository, ICourseRepository, ITutorRepository } from '@/src/infra/database/repositories';
 import Container from '@/src/container';
-import { COLLECTIONS } from '@/src/infra/database/config/collection';
 import { inject } from 'inversify';
 import { SessionService } from './session';
 
 @provide(TYPES.CourseService)
 export class CourseService extends BaseService<Course> {
-    constructor(@inject(TYPES.SessionService) private sessionService: SessionService) {
+    constructor(
+        @inject(TYPES.SessionService) private sessionService: SessionService,
+        @inject(TYPES.TutorRepository) private readonly tutorRepository: ITutorRepository
+    ) {
         super();
     }
     /**
@@ -28,7 +30,7 @@ export class CourseService extends BaseService<Course> {
      * @param id The tutor id
      */
     async getCourseByTutor(id: string): Promise<Course[]> {
-        const ref = this.baseRepository.getDocumentRef(`${COLLECTIONS.Tutor}/${id}`);
+        const ref = this.tutorRepository.getDocumentRef(id);
         const courses = await this.baseRepository.query([{ tutor: ref }]);
 
         return courses;

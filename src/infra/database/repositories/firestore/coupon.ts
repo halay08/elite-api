@@ -13,7 +13,7 @@ export class CouponRepository extends BaseRepository<Coupon> implements ICouponR
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Coupon;
     }
 

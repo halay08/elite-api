@@ -8,6 +8,6 @@ export * from './course';
 export * from './session';
 export * from './student';
 export * from './booking';
-export * from './learningStack';
-export * from './coupon';
 export * from './payment';
+export * from './teachingData';
+export * from './sessionStack';

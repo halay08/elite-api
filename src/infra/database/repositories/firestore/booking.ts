@@ -13,7 +13,7 @@ export class BookingRepository extends BaseRepository<Booking> implements IBooki
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Booking;
     }
 

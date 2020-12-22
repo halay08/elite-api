@@ -8,4 +8,5 @@ export * from './booking';
 export * from './session';
 export * from './student';
 export * from './category';
-export * from './learningStack';
+export * from './sessionStack';
+export * from './teachingData';

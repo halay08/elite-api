@@ -13,7 +13,7 @@ export default class UserRepository extends BaseRepository<User> implements IUse
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.User;
     }
 

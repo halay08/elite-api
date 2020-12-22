@@ -20,7 +20,8 @@ export default {
     BookingRepository: Symbol.for('BookingRepository'),
     StudentRepository: Symbol.for('StudentRepository'),
     CategoryRepository: Symbol.for('CategoryRepository'),
-    LearningStackRepository: Symbol.for('LearningStackRepository'),
+    SessionStackRepository: Symbol.for('SessionStackRepository'),
+    TeachingDataRepository: Symbol.for('TeachingDataRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
@@ -32,6 +33,8 @@ export default {
     SessionService: Symbol.for('SessionService'),
     LearningStackService: Symbol.for('LearningStackService'),
     PaymentService: Symbol.for('PaymentService'),
+    SessionStackService: Symbol.for('SessionStackService'),
+    TeachingDataService: Symbol.for('TeachingDataService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),

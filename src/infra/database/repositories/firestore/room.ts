@@ -13,7 +13,7 @@ export class RoomRepository extends BaseRepository<Room> implements IRoomReposit
      * Gets collection
      * @returns
      */
-    getCollection() {
+    getCollectionName() {
         return COLLECTIONS.Room;
     }
 

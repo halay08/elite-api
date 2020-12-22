@@ -18,7 +18,7 @@ import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
 import { NotFoundError } from '@/app/errors/notFound';
-import { TutorService, UserService, CourseService, LearningStackService } from '@/src/app/services';
+import { TutorService, UserService, CourseService, SessionStackService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
 
 // Required login
@@ -28,7 +28,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
         @inject(TYPES.TutorService) private tutorService: TutorService,
         @inject(TYPES.UserService) private userService: UserService,
         @inject(TYPES.CourseService) private courseService: CourseService,
-        @inject(TYPES.LearningStackService) private learningStackService: LearningStackService
+        @inject(TYPES.SessionStackService) private sessionStackService: SessionStackService
     ) {
         super();
     }
@@ -115,7 +115,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             }
 
             const userEntity = user.serialize();
-            const userRef = this.tutorService.getDocumentRef(`users/${userEntity.id}`);
+            const userRef = this.userService.getDocumentRef(userEntity.id || '');
 
             // Get tutor by user reference
             const [tutor] = await this.tutorService.findBy('user', userRef);
@@ -125,7 +125,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             }
 
             // Get tutor teaching stack summary
-            const teachingStack = await this.learningStackService.getTutorLearningStackSummary(tutor.id);
+            const teachingStack = await this.sessionStackService.getTeachingStackSummary(tutor.id);
 
             const data = {
                 info: tutor.serialize(),
