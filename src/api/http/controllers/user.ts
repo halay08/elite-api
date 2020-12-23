@@ -158,14 +158,12 @@ export class UserController extends BaseHttpController implements interfaces.Con
             }
 
             const role: UserRole | undefined = req.role ? (<any>UserRole)[req.role.toUpperCase()] : undefined;
-            let user = User.create({
+            const user = User.create({
+                role,
                 id,
                 email: req.email,
                 status: UserStatus.ACTIVE
             });
-            if (role) {
-                user = { ...user, role } as User;
-            }
 
             const data = await this.userService.create(user);
             await this.setRole(id, role);
