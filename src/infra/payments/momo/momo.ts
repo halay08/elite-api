@@ -2,7 +2,14 @@ import got from 'got';
 import { injectable } from 'inversify';
 import * as crypto from 'crypto';
 import * as querystring from 'querystring';
-import { MomoFields, MomoCredentials, MomoWallet, MomoWalletResponse } from './types';
+import {
+    MomoFields,
+    MomoCredentials,
+    MomoWallet,
+    MomoWalletResponse,
+    MomoIPNSignature,
+    MomoIPNResponse
+} from './types';
 import { env, paymentConfig } from '@/api/http/config/constants';
 
 @injectable()
@@ -18,7 +25,7 @@ export class Momo {
      * Create signature
      * @see https://developers.momo.vn/#/?id=ch%e1%bb%af-k%c3%bd-%c4%91i%e1%bb%87n-t%e1%bb%ad
      */
-    private createSignature(payload: MomoFields): string {
+    private createSignature(payload: MomoFields | MomoIPNSignature): string {
         const MOMO_SECRET_KEY = env.momo.SECRET_KEY;
 
         const credentials: MomoCredentials = this.businessCredentials;
@@ -27,6 +34,20 @@ export class Momo {
         });
 
         return crypto.createHmac('sha256', MOMO_SECRET_KEY).update(objectToQueryString).digest('hex');
+    }
+
+    /**
+     * Create format date yyyy-mm-dd HH:mm:ss
+     * Required by Momo
+     */
+    private getResponseTime(): string {
+        const [mdy, time] = new Date()
+            .toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh', hour12: false })
+            .split(' ');
+
+        const [month, day, year] = mdy.split('/');
+
+        return parseInt(year) + '-' + parseInt(month) + '-' + parseInt(day) + ' ' + time;
     }
 
     /**
@@ -49,5 +70,29 @@ export class Momo {
         });
 
         return body;
+    }
+
+    /**
+     * Capture Momo Response for IPN
+     * @see https://developers.momo.vn/#/docs/aio/?id=ph%c6%b0%c6%a1ng-th%e1%bb%a9c-thanh-to%c3%a1n
+     */
+    public async ipnResponse(payload: MomoIPNResponse): Promise<MomoIPNResponse> {
+        const credentials: MomoCredentials = this.businessCredentials;
+        const responseTime = this.getResponseTime();
+
+        const signaturePayload: MomoIPNSignature = {
+            ...credentials,
+            ...{
+                requestId: payload.requestId,
+                orderId: payload.orderId,
+                errorCode: payload.errorCode,
+                message: payload.message,
+                responseTime,
+                extraData: payload.extraData
+            }
+        };
+        const signature = this.createSignature(signaturePayload);
+
+        return { ...signaturePayload, signature };
     }
 }

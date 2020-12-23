@@ -13,6 +13,35 @@ export type MomoFields = {
     extraData?: string;
 };
 
+export type MomoIPNRequest = {
+    partnerCode: string;
+    accessKey: string;
+    requestId: string;
+    orderId: string;
+    orderInfo: string;
+    orderType: string;
+    transId: string;
+    errorCode: number;
+    message: string;
+    localMessage: string;
+    payType: string;
+    responseTime: string;
+    extraData: string;
+    signature: string;
+    amount: string;
+};
+
+export type MomoIPNSignature = MomoCredentials & {
+    requestId: string;
+    orderId: string;
+    errorCode: number;
+    message: string;
+    responseTime: string;
+    extraData: string;
+};
+
+export type MomoIPNResponse = MomoIPNSignature & { signature: string };
+
 export type MomoWalletResponse = {
     requestId: string;
     errorCode: number;
