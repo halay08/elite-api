@@ -8,10 +8,10 @@ type IEmbedViolation = Required<IEntity> & {
 };
 
 enum UserStatus {
-    PENDING = 0,
-    ACTIVE = 1,
-    REJECT = 2,
-    BANNED = 3
+    PENDING = 'pending',
+    ACTIVE = 'active',
+    REJECTED = 'rejected',
+    BANNED = 'banned'
 }
 
 enum UserRole {

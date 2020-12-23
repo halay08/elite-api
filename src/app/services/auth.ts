@@ -13,6 +13,42 @@ export class AuthService {
     constructor(@inject(TYPES.FireAuth) private readonly _auth: fireauth.IAuth) {}
 
     /**
+     * Creates a new user.
+     *
+     * See [Create a user](/docs/auth/admin/manage-users#create_a_user) for code
+     * samples and detailed documentation.
+     *
+     * @param properties The properties to set on the
+     *   new user record to be created.
+     *
+     * @return A promise fulfilled with the user
+     *   data corresponding to the newly created user.
+     */
+    public async createUser(properties: fireauth.ICreateRequest): Promise<fireauth.IUserRecord> {
+        return await this._auth.createUser(properties);
+    }
+
+    /**
+     * Creates a new Firebase custom token (JWT) that can be sent back to a client
+     * device to use to sign in with the client SDKs' `signInWithCustomToken()`
+     * methods. (Tenant-aware instances will also embed the tenant ID in the
+     * token.)
+     *
+     * See [Create Custom Tokens](/docs/auth/admin/create-custom-tokens) for code
+     * samples and detailed documentation.
+     *
+     * @param uid The `uid` to use as the custom token's subject.
+     * @param developerClaims Optional additional claims to include
+     *   in the custom token's payload.
+     *
+     * @return A promise fulfilled with a custom token for the
+     *   provided `uid` and payload.
+     */
+    public async createCustomToken(uid: string, developerClaims?: object): Promise<string> {
+        return await this._auth.createCustomToken(uid, developerClaims);
+    }
+
+    /**
      * Verifies a Firebase ID token (JWT). If the token is valid, the promise is
      * fulfilled with the token's decoded claims; otherwise, the promise is
      * rejected.
@@ -48,7 +84,24 @@ export class AuthService {
      *   data corresponding to the provided `uid`.
      */
     public async getUser(uid: string): Promise<fireauth.IUserRecord> {
+        this._auth.getUser;
         return await this._auth.getUser(uid);
+    }
+
+    /**
+     * Gets the user data for the user corresponding to a given email.
+     *
+     * See [Retrieve user data](/docs/auth/admin/manage-users#retrieve_user_data)
+     * for code samples and detailed documentation.
+     *
+     * @param email The email corresponding to the user whose data to
+     *   fetch.
+     *
+     * @return A promise fulfilled with the user
+     *   data corresponding to the provided email.
+     */
+    public async getUserByEmail(email: string): Promise<fireauth.IUserRecord> {
+        return await this._auth.getUserByEmail(email);
     }
 
     /**

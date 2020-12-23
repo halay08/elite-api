@@ -10,4 +10,5 @@ export interface IRepository<T> {
     update(id: string, entity: Partial<T>): Promise<T>;
     delete(id: string, softDelete: boolean): Promise<number>;
     query(queries: IQuery<T>[], options?: Partial<IQueryOption<T>>): Promise<T[]>;
+    extractReference(ref: IDocumentReference): Promise<T>;
 }

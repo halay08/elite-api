@@ -17,7 +17,7 @@ import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
 import { NotFoundError } from '@/app/errors/notFound';
-import { TutorService, UserService, CourseService } from '@/src/app/services';
+import { TutorService, UserService, CourseService, LearningStackService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
 
 // Required login
@@ -26,7 +26,8 @@ export class TutorController extends BaseHttpController implements interfaces.Co
     constructor(
         @inject(TYPES.TutorService) private tutorService: TutorService,
         @inject(TYPES.UserService) private userService: UserService,
-        @inject(TYPES.CourseService) private courseService: CourseService
+        @inject(TYPES.CourseService) private courseService: CourseService,
+        @inject(TYPES.LearningStackService) private learningStackService: LearningStackService
     ) {
         super();
     }
@@ -91,8 +92,8 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             };
 
             return res.status(HttpStatus.OK).json(data);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }
     }
 
@@ -122,9 +123,17 @@ export class TutorController extends BaseHttpController implements interfaces.Co
                 throw new NotFoundError('Tutor not found');
             }
 
-            return res.status(HttpStatus.OK).json(tutor.serialize());
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error });
+            // Get tutor teaching stack summary
+            const teachingStack = await this.learningStackService.getTutorLearningStackSummary(tutor.id);
+
+            const data = {
+                info: tutor.serialize(),
+                summary: teachingStack
+            };
+
+            return res.status(HttpStatus.OK).json(data);
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }
     }
 
@@ -141,8 +150,26 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             const courses = await this.courseService.getCourseByTutor(id);
 
             return res.status(HttpStatus.OK).json(courses.map((c) => c.serialize()));
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ error });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
+        }
+    }
+
+    /**
+     * Https GET summary by tutor id
+     * Postman API document: https://elitework.postman.co
+     * @param id
+     * @param res
+     * @returns
+     */
+    @httpGet('/:id/summary')
+    public async getSummary(@requestParam('id') id: string, @response() res: Response) {
+        try {
+            const courses = await this.courseService.getCourseByTutor(id);
+
+            return res.status(HttpStatus.OK).json(courses.map((c) => c.serialize()));
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }
     }
 }

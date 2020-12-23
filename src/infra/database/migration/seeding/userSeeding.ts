@@ -2,19 +2,23 @@ import { inject } from 'inversify';
 import TYPES from '@/src/types';
 import { IUserRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
-import { UserStatus, UserRole } from '@/domain/types';
+import { UserStatus, UserRole, IUserEntity } from '@/domain/types';
 import { ISeeding } from './seedingInterface';
 import { User } from '@/domain';
+import { AuthService } from '@/src/app/services';
+import { fireauth } from '@/infra/auth/firebase/types';
 
 @provide(TYPES.UserSeeding)
-class UserSeeding implements ISeeding {
+export class UserSeeding implements ISeeding {
     constructor(
         @inject(TYPES.UserRepository)
-        private readonly _userRepository: IUserRepository
+        private readonly userRepository: IUserRepository,
+        @inject(TYPES.AuthService)
+        private readonly authService: AuthService
     ) {}
 
-    async run() {
-        const users = [
+    getUserData(): IUserEntity[] {
+        return [
             {
                 role: UserRole.STUDENT,
                 email: 'kenziix@gmail.com',
@@ -22,6 +26,26 @@ class UserSeeding implements ISeeding {
                 name: 'Mr Kenziix',
                 phoneNumber: '0938195827',
                 username: 'kenziix',
+                avatar: 'https://ca.slack-edge.com/T018R4JFELS-U018R4LCPFC-3e7f2fc0ab72-512',
+                shortIntro:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                timezone: '+7',
+                country: {
+                    code: 'vn',
+                    name: 'Vietnam'
+                },
+                language: {
+                    code: 'vn',
+                    name: 'Vietnam'
+                }
+            },
+            {
+                role: UserRole.STUDENT,
+                email: 'test@gmail.com',
+                status: UserStatus.ACTIVE,
+                name: 'Mr Test',
+                phoneNumber: '0933185827',
+                username: 'test',
                 avatar: 'https://ca.slack-edge.com/T018R4JFELS-U018R4LCPFC-3e7f2fc0ab72-512',
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -142,16 +166,53 @@ class UserSeeding implements ISeeding {
                 }
             }
         ];
+    }
+
+    async run() {
+        const users = this.getUserData();
 
         for (const user of users) {
-            const existedUser = await this._userRepository.findBy('email', user.email);
+            const { email = '' } = user;
+
+            // Check exist user in Firestore
+            const existedUser = await this.userRepository.findBy('email', email);
             if (existedUser.length > 0) {
-                console.log(`User ${user.email} already existed in the database`);
+                console.log(`User ${email} already existed in the database`);
                 continue;
             }
 
+            // Check exist user in Authentication
+            let authUser;
+            try {
+                authUser = await this.authService.getUserByEmail(email);
+            } catch (err) {
+                console.log(`Warning: ${err.message}`);
+            }
+
+            if (!authUser) {
+                const props: fireauth.ICreateRequest = {
+                    email,
+                    displayName: user.name,
+                    emailVerified: true,
+                    photoURL: user.avatar,
+                    password: '123123123'
+                };
+
+                // Create authentication user
+                authUser = await this.authService.createUser(props);
+                if (!authUser?.uid) {
+                    throw new Error(`Couldn't create authentication user with email ${email}`);
+                }
+            }
+
+            user.id = authUser.uid;
+
+            // Set/update custom claim
+            await this.authService.setCustomUserClaims(user.id, { role: user.role?.toString() });
+
+            // Create Firestore user
             const userModel: User = User.create(user);
-            const newUser = await this._userRepository.create(userModel);
+            const newUser = await this.userRepository.create(userModel);
             const newUserEntity = newUser.serialize();
             console.log(`New user was created ${newUserEntity.id}`);
         }
@@ -159,5 +220,3 @@ class UserSeeding implements ISeeding {
         console.log('DONE!');
     }
 }
-
-export default UserSeeding;

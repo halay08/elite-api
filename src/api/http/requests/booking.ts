@@ -1,5 +1,5 @@
 import { Joi, validate } from 'express-validation';
-import { IBookingPaymentMethod, IBookingType, BOOKING_TYPES, BOOKING_PAYMENT_METHOD } from '@/domain/types';
+import { IBookingPaymentMethod, BOOKING_PAYMENT_METHOD } from '@/domain/types';
 
 type BookingDTO = {
     paymentMethod: IBookingPaymentMethod;
@@ -8,9 +8,11 @@ type BookingDTO = {
 
     amount: number;
 
-    type: IBookingType;
+    transactionId: string;
 
-    objectId: string; // Id of session or course
+    sessionId: string;
+
+    tutorId: string;
 
     bookedDate: Date;
 };
@@ -23,10 +25,8 @@ const BookingValidation = {
                 .required(),
             coupon: Joi.string().optional(),
             amount: Joi.number().required(),
-            type: Joi.string()
-                .valid(...Object.values(BOOKING_TYPES))
-                .required(),
-            objectId: Joi.string().required(),
+            sessionId: Joi.string().required(),
+            tutorId: Joi.string().required(),
             bookedDate: Joi.date().required()
         })
     }

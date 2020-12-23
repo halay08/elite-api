@@ -1,39 +1,48 @@
-import { ITimestamp, IEntity, IEmbedCoupon } from './index';
+import { ITimestamp, IEntity, IEmbedCoupon, ISession } from '.';
 import { IDocumentReference } from '@/infra/database/types';
 
-enum IBookingStatus {
+const BOOKING_PAYMENT_METHOD = ['momo', 'vnpay'] as const;
+
+type IBookingPaymentMethod = typeof BOOKING_PAYMENT_METHOD[number];
+
+enum BookingStatus {
     AVAILABLE = 'available',
     ONHOLD = 'onhold',
     PROCESSING = 'processing',
     BOOKED = 'booked'
 }
 
-export const BOOKING_TYPES = ['course', 'session'] as const;
-export const BOOKING_PAYMENT_METHOD = ['momo', 'vnpay'] as const;
-
-type IBookingType = typeof BOOKING_TYPES[number];
-type IBookingPaymentMethod = typeof BOOKING_PAYMENT_METHOD[number];
+type IBookingSession = Pick<ISession, 'startTime' | 'duration' | 'cost' | 'costType'>;
 
 type IBooking = {
     paymentMethod: IBookingPaymentMethod;
 
     orderId: string;
 
-    coupon: IEmbedCoupon | null;
+    transactionId: string; // momo | vnpay transaction id
 
-    amount: number;
+    coupon?: IEmbedCoupon | null;
 
-    type: IBookingType;
+    // Tutor reference
+    // The reference point to tutor collection
+    tutor: IDocumentReference;
 
-    object: any;
+    // Origin session reference. It's origin because the session may be re-scheduled by tutor.
+    // The reference point to session collection
+    originSession: IDocumentReference;
+
+    // The data use to store booked session histories.
+    bookingSession: IBookingSession;
+
+    amount: number; // Total amount after using discount
 
     student: IDocumentReference;
 
     bookedDate: Date;
 
-    status: IBookingStatus;
+    status: BookingStatus;
 };
 
 type IBookingEntity = IEntity & IBooking & ITimestamp;
 
-export { IBookingStatus, IBookingType, IBookingPaymentMethod, IBooking, IBookingEntity };
+export { BookingStatus, IBooking, IBookingEntity, IBookingSession, IBookingPaymentMethod, BOOKING_PAYMENT_METHOD };

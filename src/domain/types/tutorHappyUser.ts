@@ -1,14 +1,14 @@
-import { IEmbedUser, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type ITutorHappyUser = {
-    tutor: IEmbedUser;
-
-    student: IEmbedUser;
+    tutor: IDocumentReference;
+    student: IDocumentReference;
 };
 
 /**
  * Tutor follower entity
  */
-type ITutorHappyUserEntity = IEntity & Required<IEmbedUser> & ITimestamp;
+type ITutorHappyUserEntity = IEntity & ITutorHappyUser & ITimestamp;
 
 export { ITutorHappyUser, ITutorHappyUserEntity };

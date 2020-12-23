@@ -5,27 +5,29 @@ Loosely coupling with clear dependency graphs provided by Inversion of Control.
 
 ![alt text](architecture.png 'Clean Architecture')
 
--   [Elite API](#elite-api)
-    -   [Getting Started](#getting-started)
-    -   [Project architecture](#project-architecture)
-    -   [Setup Development Environment](#setup-development-environment)
-        -   [Set firebase project alias](#set-firebase-project-alias)
-        -   [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
-        -   [Set environment configuration](#set-environment-configuration)
-        -   [Retrieve current environment configuration](#retrieve-current-environment-configuration)
-        -   [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
-        -   [Start the dev server](#start-the-dev-server)
-    -   [API Documentation](#api-documentation)
-        -   [VS Code snippet](#vs-code-snippet)
-    -   [Using API](#using-api)
-        -   [Authorization](#authorization)
-        -   [Create an user](#create-an-user)
-        -   [List items](#list-items)
-        -   [List item by id](#list-item-by-id)
-        -   [Update User](#update-user)
-        -   [Delete User](#delete-user)
-    -   [VS Code](#vs-code)
-    -   [Troubleshooting](#troubleshooting)
+- [Elite API](#elite-api)
+  - [Getting Started](#getting-started)
+  - [Project architecture](#project-architecture)
+  - [Setup Development Environment](#setup-development-environment)
+    - [Set firebase project alias](#set-firebase-project-alias)
+    - [Decrypt the service account. (passphase: 3lite)](#decrypt-the-service-account-passphase-3lite)
+    - [Set environment configuration](#set-environment-configuration)
+    - [Retrieve current environment configuration](#retrieve-current-environment-configuration)
+    - [Start firestore for database (emulators)](#start-firestore-for-database-emulators)
+    - [Start the dev server](#start-the-dev-server)
+  - [API Documentation](#api-documentation)
+    - [VS Code snippet](#vs-code-snippet)
+  - [Using API](#using-api)
+    - [Code Generator](#code-generator)
+    - [Authorization](#authorization)
+    - [Create an user](#create-an-user)
+    - [List items](#list-items)
+    - [List item by id](#list-item-by-id)
+    - [Update User](#update-user)
+    - [Delete User](#delete-user)
+  - [Migration & Seeding](#migration--seeding)
+  - [VS Code](#vs-code)
+  - [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
@@ -227,6 +229,62 @@ curl -XPUT -i -H"Content-Type: application/json" -d'{"uid" : 1, "email": "abc@gm
 
 ```sh
 curl -XDELETE -i http://localhost:5000/elites-work-staging/asia-east2/api/v1/users/qPXJqaJrcly2BXja1v8v
+```
+
+## Migration & Seeding
+
+The database seeding provides an easy way to generate sample data in the database using seed classes.
+
+```ts
+// File: src/infra/database/migration/seeding/studentSeeding.ts
+
+@provide(TYPES.StudentSeeding)
+class StudentSeeding implements ISeeding {
+    constructor(
+        @inject(TYPES.StudentRepository)
+        private readonly studentRepository: IStudentRepository
+    ) {}
+
+    async run() {
+        // ...
+    }
+}
+```
+
+How to use it in CLI:
+
+1. Open file `src/cli/seeding.ts` then added the new seeding class.
+
+```ts
+type ISeedingType = 'StudentSeeding' | 'CategorySeeding';
+
+class Seeding {
+    #seedings: ISeedingType[] = ['StudentSeeding', 'CategorySeeding'];
+}
+```
+
+2. Build & Run seedings
+
+Before run seedings using CLI, you must use firebase function shell to run user seeding first.
+
+```sh
+$ yarn shell
+```
+
+```sh
+> userSeeding({})
+```
+
+Run other seedings
+
+```sh
+$ cd /path/to/project
+$ yarn build && chmod +x ./dist/cli/index.js
+$ yarn tools
+# Run single seeding
+$ ./dist/cli/index.js --seed StudentSeeding
+$ # Run all seeding with
+$ ./dist/cli/index.js --seedall
 ```
 
 ## VS Code

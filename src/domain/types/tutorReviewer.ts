@@ -1,9 +1,10 @@
-import { IEmbedUser, IEntity, ITimestamp } from '.';
+import { IEntity, ITimestamp } from '.';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 type ITutorReviewer = {
-    tutor: IEmbedUser;
+    tutor: IDocumentReference;
 
-    student: IEmbedUser;
+    student: IDocumentReference;
 
     /**
      * Review by 5 stars ✭✭✭✭✭

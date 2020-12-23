@@ -7,6 +7,42 @@ import { fireauth, BaseAuth } from './types';
 @injectable()
 export default class FireAuth extends BaseAuth implements fireauth.IAuth {
     /**
+     * Creates a new user.
+     *
+     * See [Create a user](/docs/auth/admin/manage-users#create_a_user) for code
+     * samples and detailed documentation.
+     *
+     * @param properties The properties to set on the
+     *   new user record to be created.
+     *
+     * @return A promise fulfilled with the user
+     *   data corresponding to the newly created user.
+     */
+    public async createUser(properties: fireauth.ICreateRequest): Promise<fireauth.IUserRecord> {
+        return await this.auth.createUser(properties);
+    }
+
+    /**
+     * Creates a new Firebase custom token (JWT) that can be sent back to a client
+     * device to use to sign in with the client SDKs' `signInWithCustomToken()`
+     * methods. (Tenant-aware instances will also embed the tenant ID in the
+     * token.)
+     *
+     * See [Create Custom Tokens](/docs/auth/admin/create-custom-tokens) for code
+     * samples and detailed documentation.
+     *
+     * @param uid The `uid` to use as the custom token's subject.
+     * @param developerClaims Optional additional claims to include
+     *   in the custom token's payload.
+     *
+     * @return A promise fulfilled with a custom token for the
+     *   provided `uid` and payload.
+     */
+    public async createCustomToken(uid: string, developerClaims?: object): Promise<string> {
+        return await this.auth.createCustomToken(uid, developerClaims);
+    }
+
+    /**
      * Verifies a Firebase ID token (JWT). If the token is valid, the promise is
      * fulfilled with the token's decoded claims; otherwise, the promise is
      * rejected.

@@ -1,5 +1,5 @@
+import { IEntity, ITimestamp } from '.';
 import { IDocumentReference } from '@/src/infra/database/types';
-import { IFollowing, IEntity, ITimestamp } from '.';
 
 type IStudent = {
     user: IDocumentReference;
@@ -12,7 +12,7 @@ type IStudent = {
 
     jobPlace?: string;
 
-    followings?: IFollowing[];
+    followings?: IDocumentReference[];
 };
 
 /**

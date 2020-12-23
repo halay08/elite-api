@@ -1,4 +1,4 @@
-import { IMedia, IEntity, IEmbedUser } from '.';
+import { IMedia, IEntity } from '.';
 
 enum CertificateStatus {
     VERIFIED = 'verified',
@@ -54,8 +54,4 @@ type IContract = {
     updated_date?: string;
 };
 
-type IFollowing = Required<IEntity> & {
-    tutor: IEmbedUser;
-};
-
-export { IEducationMedia, IEducation, IExpertise, ICertificate, IContract, IFollowing, CertificateStatus };
+export { IEducationMedia, IEducation, IExpertise, ICertificate, IContract, CertificateStatus };

@@ -6,21 +6,27 @@ import { Booking } from '@/domain';
 export class BookingMapper {
     public static toDomain(raw: any): Booking {
         return Booking.create({
-            orderId: raw.orderId,
-
-            paymentMethod: raw.paymentMethod,
+            id: raw.id,
 
             student: raw.student,
+
+            tutor: raw.tutor,
+
+            originSession: raw.originSession,
+
+            bookingSession: raw.bookingSession,
+
+            orderId: raw.orderId,
+
+            transactionId: raw.transactionId,
+
+            bookedDate: raw.bookedDate,
+
+            paymentMethod: raw.paymentMethod,
 
             coupon: raw.coupon,
 
             amount: raw.amount,
-
-            type: raw.type,
-
-            object: raw.object,
-
-            bookedDate: raw.bookedDate,
 
             status: raw.status,
 

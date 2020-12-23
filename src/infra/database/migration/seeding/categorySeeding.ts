@@ -6,7 +6,7 @@ import { ISeeding } from '.';
 import { Category } from '@/domain';
 
 @provide(TYPES.CategorySeeding)
-class CategorySeeding implements ISeeding {
+export class CategorySeeding implements ISeeding {
     constructor(
         @inject(TYPES.CategoryRepository)
         private readonly _categoryRepository: ICategoryRepository
@@ -36,5 +36,3 @@ class CategorySeeding implements ISeeding {
         console.log('DONE!');
     }
 }
-
-export default CategorySeeding;

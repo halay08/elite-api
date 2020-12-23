@@ -11,7 +11,7 @@ import { IDocumentReference } from '../../types';
 import { COLLECTIONS } from '../../config/collection';
 
 @provide(TYPES.SessionSeeding)
-class SessionSeeding implements ISeeding {
+export class SessionSeeding implements ISeeding {
     constructor(
         @inject(TYPES.SessionRepository)
         private readonly _sessionRepository: ISessionRepository,
@@ -171,5 +171,3 @@ class SessionSeeding implements ISeeding {
         console.log('DONE!');
     }
 }
-
-export default SessionSeeding;

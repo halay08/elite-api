@@ -17,24 +17,26 @@ export default {
     TutorRepository: Symbol.for('TutorRepository'),
     CourseRepository: Symbol.for('CourseRepository'),
     SessionRepository: Symbol.for('SessionRepository'),
-    CategoryRepository: Symbol.for('CategoryRepository'),
-    StudentRepository: Symbol.for('StudentRepository'),
     BookingRepository: Symbol.for('BookingRepository'),
+    StudentRepository: Symbol.for('StudentRepository'),
+    CategoryRepository: Symbol.for('CategoryRepository'),
+    LearningStackRepository: Symbol.for('LearningStackRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
     TutorService: Symbol.for('TutorService'),
-    StudentService: Symbol.for('StudentService'),
-    BookingService: Symbol.for('BookingService'),
-
     RoomService: Symbol.for('RoomService'),
     CourseService: Symbol.for('CourseService'),
+    BookingService: Symbol.for('BookingService'),
+    StudentService: Symbol.for('StudentService'),
     SessionService: Symbol.for('SessionService'),
+    LearningStackService: Symbol.for('LearningStackService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),
     CourseSeeding: Symbol.for('CourseSeeding'),
     SessionSeeding: Symbol.for('SessionSeeding'),
     CategorySeeding: Symbol.for('CategorySeeding'),
-    StudentSeeding: Symbol.for('StudentSeeding')
+    StudentSeeding: Symbol.for('StudentSeeding'),
+    BookingSeeding: Symbol.for('BookingSeeding')
 };

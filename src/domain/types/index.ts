@@ -23,6 +23,7 @@ export * from './country';
 export * from './policy';
 export * from './bookingPayment';
 export * from './bookingInvoice';
+export * from './learningStack';
 export * from './booking';
 export * from './paymentMethod';
 export * from './studentWalletTransaction';
