@@ -51,4 +51,8 @@ export class Session extends Entity<ISessionEntity> {
     get costType(): string {
         return this._props.costType;
     }
+
+    get tutor(): IDocumentReference {
+        return this._props.tutor;
+    }
 }

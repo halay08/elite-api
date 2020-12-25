@@ -19,12 +19,13 @@ type IBooking = {
 
     orderId: string;
 
-    transactionId: string; // momo | vnpay transaction id
-
     coupon?: IEmbedCoupon | null;
 
-    // Tutor reference
-    // The reference point to tutor collection
+    // student reference
+    // The reference point to student who purchased the session
+    student: IDocumentReference;
+
+    // the reference point to teacher who sell this session
     tutor: IDocumentReference;
 
     // Origin session reference. It's origin because the session may be re-scheduled by tutor.
@@ -35,8 +36,6 @@ type IBooking = {
     bookingSession: IBookingSession;
 
     amount: number; // Total amount after using discount
-
-    student: IDocumentReference;
 
     bookedDate: Date;
 

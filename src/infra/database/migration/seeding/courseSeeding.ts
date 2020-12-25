@@ -1,35 +1,16 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { ICourseRepository, ITutorRepository } from '@/src/infra/database/repositories';
+import { ICourseRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { CourseStatus, ICoursePolicy, CourseType } from '@/domain/types';
-import { Course, Tutor } from '@/domain';
-import { NotFoundError } from '@/app/errors';
-import { IDocumentReference } from '../../types';
-import { COLLECTIONS } from '../../config/collection';
+import { Course } from '@/domain';
+import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.CourseSeeding)
-export class CourseSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.CourseRepository)
-        private readonly _courseRepository: ICourseRepository,
-        @inject(TYPES.TutorRepository)
-        private readonly _tutorRepository: ITutorRepository
-    ) {}
-
-    /**
-     * Get the tutors to embed to the course
-     */
-    private async getTutors(): Promise<Tutor[]> {
-        const tutors = await this._tutorRepository.query([], { limit: 10 });
-
-        if (tutors.length === 0) {
-            throw new NotFoundError('No tutor found in the system');
-        }
-
-        return tutors;
-    }
+export class CourseSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.CourseRepository)
+    private readonly _courseRepository: ICourseRepository;
 
     /**
      * Gets policy
@@ -62,14 +43,7 @@ export class CourseSeeding implements ISeeding {
     }
 
     private async getCourseData(): Promise<Course[]> {
-        const tutors: Tutor[] = await this.getTutors();
-        const tutorReferences: IDocumentReference[] = [];
-
-        for (const tutor of tutors) {
-            const tutorEntity = tutor.serialize();
-            const tutorRef = this._tutorRepository.getDocumentRef(`${COLLECTIONS.Tutor}/${tutorEntity.id}`);
-            tutorReferences.push(tutorRef);
-        }
+        const usersRef = await this.getUsersReference();
 
         return [
             Course.create({
@@ -84,7 +58,7 @@ export class CourseSeeding implements ISeeding {
                     '<p>Your <strong>most powerful and intensive online English language course</strong>.</p><p>It is a must-have <strong>English language course for complete beginners</strong> in English, who want to reach the<strong> intermediate level of spoken English</strong> language in the <strong>shortest time possible</strong>.&nbsp; </p>',
                 requirements: ['Laptop/PC', 'Webcame', 'Microphone'],
                 policy: this.getPolicy(),
-                tutor: tutorReferences[0],
+                tutor: usersRef[0],
                 sessions: [],
                 status: CourseStatus.AVAILABLE
             }),
@@ -101,7 +75,7 @@ export class CourseSeeding implements ISeeding {
 `,
                 requirements: ['Laptop/PC', 'Webcame', 'Microphone'],
                 policy: this.getPolicy(),
-                tutor: tutorReferences[1],
+                tutor: usersRef[1],
                 sessions: [],
                 status: CourseStatus.AVAILABLE
             })

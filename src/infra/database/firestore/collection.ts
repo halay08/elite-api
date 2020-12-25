@@ -1,4 +1,4 @@
-import { time } from '@/app/helpers';
+import * as time from '@/app/helpers';
 import { admin } from '@/src/firebase.config';
 import {
     IDocumentReference,

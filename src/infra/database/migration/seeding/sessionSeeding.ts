@@ -6,18 +6,17 @@ import { ISeeding } from '.';
 import { Session, Course } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
 import { CostType, ISessionMedia, SessionStatus } from '@/domain/types';
-import { time } from '@/app/helpers';
+import * as time from '@/app/helpers';
 import { IDocumentReference } from '../../types';
 import { COLLECTIONS } from '../../config/collection';
+import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.SessionSeeding)
-export class SessionSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.SessionRepository)
-        private readonly _sessionRepository: ISessionRepository,
-        @inject(TYPES.CourseRepository)
-        private readonly _courseRepository: ICourseRepository
-    ) {}
+export class SessionSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.SessionRepository)
+    private readonly _sessionRepository: ISessionRepository;
+    @inject(TYPES.CourseRepository)
+    private readonly _courseRepository: ICourseRepository;
 
     /**
      * Get the courses to embed to the session
@@ -83,6 +82,7 @@ export class SessionSeeding implements ISeeding {
     }
 
     private async getSessionData(): Promise<Session[]> {
+        const usersRef = await this.getUsersReference();
         const courses = await this.getCourses();
         const courseReferences: IDocumentReference[] = [];
 
@@ -103,6 +103,7 @@ export class SessionSeeding implements ISeeding {
                 name: 'Intensive English lesson 1',
                 slug: 'intensive-english-lesson-1',
                 course: courseReferences[0],
+                tutor: usersRef[0],
                 startTime: startTime[0],
                 duration: 60,
                 cost: 250,
@@ -120,6 +121,7 @@ export class SessionSeeding implements ISeeding {
                 name: 'Intensive English lesson 2',
                 slug: 'intensive-english-lesson-2',
                 course: courseReferences[0],
+                tutor: usersRef[0],
                 startTime: startTime[1],
                 duration: 60,
                 cost: 250,
@@ -137,6 +139,7 @@ export class SessionSeeding implements ISeeding {
                 name: 'Building Your English Brain lesson 1',
                 slug: 'building-your-english-brain-lesson-1',
                 course: courseReferences[1],
+                tutor: usersRef[1],
                 startTime: startTime[2],
                 duration: 60,
                 cost: 250,

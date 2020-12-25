@@ -1,58 +1,21 @@
 import TYPES from '@/src/types';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
-import { IBookingEntity, BookingStatus, LearningStatus, ILearningStackEntity } from '@/src/domain/types';
+import { IBookingEntity, BookingStatus, UserRole, LearningStatus, ILearningStackEntity } from '@/src/domain/types';
 import { inject } from 'inversify';
-import { Student, Tutor, Session, Booking, LearningStack } from '@/domain';
+import { Session, Booking, LearningStack } from '@/domain';
 import { NotFoundError } from '@/app/errors';
 import { IDocumentReference } from '@/src/infra/database/types';
 import { COLLECTIONS } from '../../config/collection';
-import {
-    ISessionRepository,
-    IStudentRepository,
-    ITutorRepository,
-    IBookingRepository,
-    LearningStackRepository
-} from '@/src/infra/database/repositories';
-import { time } from '@/src/app/helpers';
+import { ISessionRepository, IBookingRepository, ILearningStackRepository } from '@/src/infra/database/repositories';
+import * as time from '@/src/app/helpers';
+import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.BookingSeeding)
-export class BookingSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.BookingRepository) private readonly bookingRepository: IBookingRepository,
-        @inject(TYPES.LearningStackRepository) private readonly learningStackRepository: LearningStackRepository,
-        @inject(TYPES.StudentRepository) private readonly studentRepository: IStudentRepository,
-        @inject(TYPES.TutorRepository) private readonly tutorRepository: ITutorRepository,
-        @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository
-    ) {}
-
-    /**
-     * Get students to embed to the booking
-     * @returns Student[]
-     */
-    private async getStudents(): Promise<Student[]> {
-        const students = await this.studentRepository.query([], { limit: 2 });
-
-        if (students.length === 0) {
-            throw new NotFoundError('No student found in the system');
-        }
-
-        return students;
-    }
-
-    /**
-     * Get tutors to embed to the booking
-     * @returns Tutor[]
-     */
-    private async getTutors(): Promise<Tutor[]> {
-        const tutors = await this.tutorRepository.query([], { limit: 2 });
-
-        if (tutors.length === 0) {
-            throw new NotFoundError('No tutor found in the system');
-        }
-
-        return tutors;
-    }
+export class BookingSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.BookingRepository) private readonly bookingRepository: IBookingRepository;
+    @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository;
+    @inject(TYPES.LearningStackRepository) private readonly learningStackRepository: ILearningStackRepository;
 
     /**
      * Get sessions to embed to the booking
@@ -66,42 +29,6 @@ export class BookingSeeding implements ISeeding {
         }
 
         return sessions;
-    }
-
-    /**
-     * Get the student references to embed to the booking
-     * @param students List of students from database
-     * @returns IDocumentReference[]
-     */
-    private getReferenceStudents(students: Student[]): IDocumentReference[] {
-        // Student reference data
-        const studentReferences: IDocumentReference[] = [];
-
-        for (const student of students) {
-            const studentEntity = student.serialize();
-            const studentRef = this.studentRepository.getDocumentRef(`${COLLECTIONS.Student}/${studentEntity.id}`);
-            studentReferences.push(studentRef);
-        }
-
-        return studentReferences;
-    }
-
-    /**
-     * Get the tutor references to embed to the booking
-     * @param tutors List of tutor from database
-     * @returns IDocumentReference[]
-     */
-    private getReferenceTutors(tutors: Tutor[]): IDocumentReference[] {
-        // Student reference data
-        const tutorReferences: IDocumentReference[] = [];
-
-        for (const tutor of tutors) {
-            const tutorEntity = tutor.serialize();
-            const tutorRef = this.tutorRepository.getDocumentRef(`${COLLECTIONS.Tutor}/${tutorEntity.id}`);
-            tutorReferences.push(tutorRef);
-        }
-
-        return tutorReferences;
     }
 
     /**
@@ -123,17 +50,15 @@ export class BookingSeeding implements ISeeding {
     }
 
     async getBookingData(): Promise<IBookingEntity[]> {
-        const students = await this.getStudents();
-        const tutors = await this.getTutors();
+        const studentReferences = await this.getUsersReference(UserRole.STUDENT);
+        const teacherReferences = await this.getUsersReference(UserRole.TUTOR);
         const sessions = await this.getSessions();
-        const studentReferences: IDocumentReference[] = this.getReferenceStudents(students);
-        const tutorReferences: IDocumentReference[] = this.getReferenceTutors(tutors);
         const sessionReferences: IDocumentReference[] = this.getReferenceSessions(sessions);
 
         return [
             {
                 student: studentReferences[0],
-                tutor: tutorReferences[0],
+                tutor: teacherReferences[0],
                 originSession: sessionReferences[0],
                 bookingSession: {
                     startTime: sessions[0].props.startTime,
@@ -142,7 +67,6 @@ export class BookingSeeding implements ISeeding {
                     costType: sessions[0].props.costType
                 },
                 orderId: 'MOMO1000000',
-                transactionId: 'MOMO1000000',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 100,
                 paymentMethod: 'momo',
@@ -150,7 +74,7 @@ export class BookingSeeding implements ISeeding {
             },
             {
                 student: studentReferences[1],
-                tutor: tutorReferences[0],
+                tutor: teacherReferences[1],
                 originSession: sessionReferences[1],
                 bookingSession: {
                     startTime: sessions[1].props.startTime,
@@ -159,7 +83,6 @@ export class BookingSeeding implements ISeeding {
                     costType: sessions[1].props.costType
                 },
                 orderId: 'MOMO1000001',
-                transactionId: 'MOMO1000001',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 200,
                 paymentMethod: 'momo',
@@ -196,14 +119,14 @@ export class BookingSeeding implements ISeeding {
             return;
         }
 
-        const tutorRef = this.studentRepository.getDocumentRef(`${COLLECTIONS.Tutor}/${booking.tutor.id}`);
-        const studentRef = this.studentRepository.getDocumentRef(`${COLLECTIONS.Student}/${booking.student.id}`);
+        const studentReferences = await this.getUsersReference(UserRole.STUDENT);
+        const teacherReferences = await this.getUsersReference(UserRole.STUDENT);
         const bookingRef = this.bookingRepository.getDocumentRef(`${COLLECTIONS.Booking}/${booking.id}`);
 
         const model: LearningStack = LearningStack.create({
             booking: bookingRef,
-            student: studentRef,
-            tutor: tutorRef,
+            student: studentReferences[0],
+            tutor: teacherReferences[0],
             status: LearningStatus.BOOKED,
             comment: ''
         });

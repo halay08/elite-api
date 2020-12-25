@@ -18,8 +18,6 @@ export class BookingMapper {
 
             orderId: raw.orderId,
 
-            transactionId: raw.transactionId,
-
             bookedDate: raw.bookedDate,
 
             paymentMethod: raw.paymentMethod,

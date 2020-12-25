@@ -1,25 +1,19 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { ICategoryRepository, ITutorRepository, IUserRepository } from '@/src/infra/database/repositories';
+import { ICategoryRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
-import { Category, User, Tutor } from '@/domain';
+import { Category, Tutor } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
-import { ITutorEntity, TutorStatus, CertificateStatus, UserRole } from '@/domain/types';
-import { time } from '@/app/helpers';
-import { IDocumentReference } from '../../types';
+import { ITutorEntity, TutorStatus, CertificateStatus } from '@/domain/types';
+import * as time from '@/app/helpers';
 import { COLLECTIONS } from '../../config/collection';
+import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.TutorSeeding)
-export class TutorSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.CategoryRepository)
-        private readonly _categoryRepository: ICategoryRepository,
-        @inject(TYPES.TutorRepository)
-        private readonly _tutorRepository: ITutorRepository,
-        @inject(TYPES.UserRepository)
-        private readonly _userRepository: IUserRepository
-    ) {}
+export class TutorSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.CategoryRepository)
+    private readonly _categoryRepository: ICategoryRepository;
 
     /**
      * Get the category to embed to the tutor
@@ -34,30 +28,9 @@ export class TutorSeeding implements ISeeding {
         return categories[0];
     }
 
-    /**
-     * Get the user to embed to tutor
-     */
-    private async getUsers(): Promise<User[]> {
-        const users = await this._userRepository.query([{ role: UserRole.TUTOR, operator: '==' }], { limit: 10 });
-
-        if (users.length === 0) {
-            throw new NotFoundError('No user found in the system');
-        }
-
-        return users;
-    }
-
     async run() {
-        const users: User[] = await this.getUsers();
+        const userReferences = await this.getUsersReference();
         const category: Category = await this.getCategory();
-
-        const userReferences: IDocumentReference[] = [];
-
-        for (const user of users) {
-            const userEntity = user.serialize();
-            const userRef = this._tutorRepository.getDocumentRef(`${COLLECTIONS.User}/${userEntity.id}`);
-            userReferences.push(userRef);
-        }
 
         const categoryEntity = category.serialize();
         const categoryRef = this._categoryRepository.getDocumentRef(`${COLLECTIONS.Category}/${categoryEntity.id}`);

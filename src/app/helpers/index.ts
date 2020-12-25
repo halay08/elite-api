@@ -1,3 +1,1 @@
-import * as time from './time';
-
-export { time };
+export * from './time';

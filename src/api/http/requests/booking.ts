@@ -8,8 +8,6 @@ type BookingDTO = {
 
     amount: number;
 
-    transactionId: string;
-
     sessionId: string;
 
     tutorId: string;

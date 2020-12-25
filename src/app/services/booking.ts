@@ -1,32 +1,23 @@
 //@ts-ignore
 import * as isEmpty from 'ramda.isempty';
-import * as cuid from 'cuid';
 import { inject } from 'inversify';
 import { fireauth } from '@/infra/auth/firebase/types';
 import { provide } from 'inversify-binding-decorators';
-import { Booking, LearningStack } from '@/domain';
-import { IBookingSession, BookingStatus, CostType, LearningStatus } from '@/domain/types';
+import { Booking } from '@/domain';
+import { IBookingSession, BookingStatus, CostType } from '@/domain/types';
+import * as nanoid from 'nanoid';
 import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
-import {
-    IRepository,
-    IBookingRepository,
-    ITutorRepository,
-    IStudentRepository,
-    ISessionRepository
-} from '@/src/infra/database/repositories';
+import { IRepository, IBookingRepository, ISessionRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import Container from '@/src/container';
 import { BookingDTO } from '@/api/http/requests';
-import { BaseService, CouponService, LearningStackService } from '.';
+import { BaseService, CouponService } from '.';
 import { COLLECTIONS } from '@/src/infra/database/config/collection';
 import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.BookingService)
 export class BookingService extends BaseService<Booking> {
     @inject(TYPES.CouponService) private readonly couponService: CouponService;
-    @inject(TYPES.LearningStackService) private readonly learningStackService: LearningStackService;
-    @inject(TYPES.TutorRepository) private readonly tutorRepository: ITutorRepository;
-    @inject(TYPES.StudentRepository) private readonly studentRepository: IStudentRepository;
     @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository;
     /**
      * Create tutor repository instance
@@ -36,24 +27,32 @@ export class BookingService extends BaseService<Booking> {
         return Container.get<IBookingRepository>(TYPES.BookingRepository);
     }
 
+    /**
+     * Generate unique order id
+     *
+     * @returns string
+     * @memberof PaymentService
+     */
+    public generateOrderId(): string {
+        const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const orderId = nanoid.customAlphabet(alphabet, 10);
+        return orderId();
+    }
+
     public async createBooking(
-        { paymentMethod, coupon, amount, transactionId, sessionId, tutorId, bookedDate }: BookingDTO,
+        { paymentMethod, coupon, amount, sessionId, tutorId, bookedDate }: BookingDTO,
         user: fireauth.IUserRecord
     ): Promise<string> {
-        const userRef = this.getDocumentRef(`${COLLECTIONS.User}/${user.uid}`);
+        const studentRef = this.getDocumentRef(`${COLLECTIONS.User}/${user.uid}`);
         const session = await this.sessionRepository.findById(sessionId);
-        const tutor = await this.tutorRepository.findById(tutorId);
-        const [student] = (await this.studentRepository.findBy('user', userRef)) || [];
 
-        if (!session || !tutor || !student) {
+        if (!session || !studentRef) {
             throw new NotFoundError('Invalid booking reference fields');
         }
 
-        const orderId = cuid();
+        const orderId = this.generateOrderId();
 
         const sessionRef = this.getDocumentRef(`${COLLECTIONS.Session}/${session.id}`);
-        const tutorRef = this.getDocumentRef(`${COLLECTIONS.Tutor}/${tutor.id}`);
-        const studentRef = this.getDocumentRef(`${COLLECTIONS.Student}/${student.id}`);
 
         const bookingSession: IBookingSession = {
             startTime: session.startTime,
@@ -68,16 +67,15 @@ export class BookingService extends BaseService<Booking> {
 
         const model = Booking.create({
             orderId,
-            transactionId,
             coupon: getCoupon,
             student: studentRef,
-            tutor: tutorRef,
+            tutor: session.tutor,
             originSession: sessionRef,
             bookingSession: bookingSession,
             amount,
             bookedDate,
             paymentMethod,
-            status: BookingStatus.BOOKED
+            status: BookingStatus.PROCESSING
         });
 
         const booking = await this.create(model);
@@ -85,16 +83,6 @@ export class BookingService extends BaseService<Booking> {
         if (!booking) {
             throw new Error(`Couldn't create booking record`);
         }
-
-        // Create learning stack record
-        const bookingRef = this.baseRepository.getDocumentRef(`${COLLECTIONS.Booking}/${booking.id}`);
-        const learningStack = LearningStack.create({
-            booking: bookingRef,
-            student: studentRef,
-            tutor: tutorRef,
-            status: LearningStatus.BOOKED
-        });
-        await this.learningStackService.create(learningStack);
 
         // Notification & email
         const data = {

@@ -70,6 +70,7 @@
         "inversify-logger-middleware": "^3.1.0",
         "lodash.isempty": "^4.4.0",
         "module-alias": "^2.2.2",
+        "nanoid": "^3.1.20",
         "nodemailer": "^6.4.17",
         "nodemailer-smtp-transport": "^2.7.4",
         "pino": "^6.7.0",

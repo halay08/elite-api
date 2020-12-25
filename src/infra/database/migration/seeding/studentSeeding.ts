@@ -1,45 +1,19 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { IStudentRepository, IUserRepository } from '@/src/infra/database/repositories';
+import { IStudentRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
-import { User, Student } from '@/domain';
-import { NotFoundError } from '@/src/app/errors';
+import { Student } from '@/domain';
 import { IStudentEntity, UserRole } from '@/domain/types';
-import { IDocumentReference } from '../../types';
-import { COLLECTIONS } from '../../config/collection';
+import { BaseSeeding } from './baseSeeding';
 
 @provide(TYPES.StudentSeeding)
-export class StudentSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.StudentRepository)
-        private readonly studentRepository: IStudentRepository,
-        @inject(TYPES.UserRepository)
-        private readonly userRepository: IUserRepository
-    ) {}
-
-    /**
-     * Get the user to embed to student
-     */
-    private async getUsers(): Promise<User[]> {
-        const users = await this.userRepository.query([{ role: UserRole.STUDENT, operator: '==' }], { limit: 2 });
-
-        if (users.length === 0) {
-            throw new NotFoundError('No user found in the system');
-        }
-
-        return users;
-    }
+export class StudentSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.StudentRepository)
+    private readonly studentRepository: IStudentRepository;
 
     async run() {
-        const users: User[] = await this.getUsers();
-        const userReferences: IDocumentReference[] = [];
-
-        for (const user of users) {
-            const userEntity = user.serialize();
-            const userRef = this.studentRepository.getDocumentRef(`${COLLECTIONS.User}/${userEntity.id}`);
-            userReferences.push(userRef);
-        }
+        const userReferences = await this.getUsersReference(UserRole.STUDENT);
 
         const students: IStudentEntity[] = [
             {

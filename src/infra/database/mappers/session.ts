@@ -16,6 +16,8 @@ export class SessionMapper {
 
             course: raw.course,
 
+            tutor: raw.tutor,
+
             startTime: raw.startTime,
 
             /**

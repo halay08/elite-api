@@ -22,6 +22,8 @@ type ISession = {
 
     course: IDocumentReference;
 
+    tutor: IDocumentReference;
+
     startTime: Date;
 
     isRecurrence?: boolean;

@@ -58,6 +58,7 @@ type ICourse = {
 
     policy: ICoursePolicy;
 
+    // Ref to User table
     tutor: IDocumentReference;
 
     sessions?: IDocumentReference[];
