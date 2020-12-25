@@ -1,5 +1,4 @@
 import { provide } from 'inversify-binding-decorators';
-
 import { Session } from '@/domain';
 import TYPES from '@/src/types';
 import { BaseService } from './base';
