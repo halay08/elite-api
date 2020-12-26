@@ -9,17 +9,17 @@ type ITutorReviewer = {
     /**
      * Review by 5 stars ✭✭✭✭✭
      */
-    punctual: NonNullable<number>;
+    punctual: number;
 
     /**
      * Review by 5 stars ✭✭✭✭✭
      */
-    organized: NonNullable<number>;
+    organized: number;
 
     /**
      * Review by 5 stars ✭✭✭✭✭
      */
-    engaging: NonNullable<number>;
+    engaging: number;
 
     comment: string;
 };

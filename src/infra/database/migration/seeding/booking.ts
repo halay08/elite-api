@@ -8,7 +8,7 @@ import { NotFoundError } from '@/app/errors';
 import { IDocumentReference } from '@/src/infra/database/types';
 import { ISessionRepository, IBookingRepository, ILearningStackRepository } from '@/src/infra/database/repositories';
 import * as time from '@/src/app/helpers';
-import { BaseSeeding } from './baseSeeding';
+import { BaseSeeding } from './base';
 
 @provide(TYPES.BookingSeeding)
 export class BookingSeeding extends BaseSeeding implements ISeeding {

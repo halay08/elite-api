@@ -7,8 +7,8 @@ import { Category, Tutor } from '@/domain';
 import { NotFoundError } from '@/src/app/errors';
 import { ITutorEntity, TutorStatus, CertificateStatus } from '@/domain/types';
 import * as time from '@/app/helpers';
-import { BaseSeeding } from './baseSeeding';
 import { TutorService } from '@/src/app/services';
+import { BaseSeeding } from './base';
 
 @provide(TYPES.TutorSeeding)
 export class TutorSeeding extends BaseSeeding implements ISeeding {

@@ -3,7 +3,7 @@ import TYPES from '@/src/types';
 import { IUserRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { UserStatus, UserRole, IUserEntity } from '@/domain/types';
-import { ISeeding } from './seedingInterface';
+import { ISeeding } from './interfaces/seeding';
 import { User } from '@/domain';
 import { AuthService } from '@/src/app/services';
 import { fireauth } from '@/infra/auth/firebase/types';

@@ -8,7 +8,7 @@ import { NotFoundError } from '@/src/app/errors';
 import { CostType, ISessionMedia, SessionStatus } from '@/domain/types';
 import * as time from '@/app/helpers';
 import { IDocumentReference } from '../../types';
-import { BaseSeeding } from './baseSeeding';
+import { BaseSeeding } from './base';
 
 @provide(TYPES.SessionSeeding)
 export class SessionSeeding extends BaseSeeding implements ISeeding {
