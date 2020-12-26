@@ -67,6 +67,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                     costType: sessions[0].props.costType
                 },
                 orderId: 'MOMO1000000',
+                transactionId: '',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 100,
                 paymentMethod: 'momo',
@@ -83,6 +84,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                     costType: sessions[1].props.costType
                 },
                 orderId: 'MOMO1000001',
+                transactionId: '',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 200,
                 paymentMethod: 'momo',
@@ -94,7 +96,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
     async run() {
         const bookings = await this.getBookingData();
         for (const booking of bookings) {
-            const existedBooking = await this.bookingRepository.findBy('bookingNumber', booking.orderId);
+            const existedBooking = await this.bookingRepository.findBy('orderId', booking.orderId);
             if (existedBooking.length > 0) {
                 console.log(`Booking with number ${booking.orderId} already existed in the database`);
                 continue;
@@ -113,7 +115,8 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
     }
 
     async createLearningStack(booking: IBookingEntity): Promise<void> {
-        const existedBooking = await this.learningStackRepository.findBy('bookingNumber', booking.orderId);
+        const bookingRef = this.bookingRepository.getDocumentRef(`${COLLECTIONS.Booking}/${booking.id}`);
+        const existedBooking = await this.learningStackRepository.findBy('booking', bookingRef);
         if (existedBooking.length > 0) {
             console.log(`---Learning stack with booking ${booking.orderId} already existed in the database`);
             return;
@@ -121,7 +124,6 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
 
         const studentReferences = await this.getUsersReference(UserRole.STUDENT);
         const teacherReferences = await this.getUsersReference(UserRole.STUDENT);
-        const bookingRef = this.bookingRepository.getDocumentRef(`${COLLECTIONS.Booking}/${booking.id}`);
 
         const model: LearningStack = LearningStack.create({
             booking: bookingRef,
