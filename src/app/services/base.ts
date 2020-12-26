@@ -64,13 +64,9 @@ export abstract class BaseService<T> {
      * @param id The document id
      * @returns `document` object
      */
-    async getById(id: string): Promise<T | null> {
-        try {
-            const document = await this.baseRepository.findById(id);
-            return document;
-        } catch (error) {
-            return null;
-        }
+    async getById(id: string): Promise<T> {
+        const document = await this.baseRepository.findById(id);
+        return document;
     }
 
     /**

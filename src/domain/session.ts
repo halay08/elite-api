@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
-import { IDocumentReference } from '../infra/database/types';
+import { IDocumentReference } from '@/infra/database/types';
+import { SessionStatus, ISessionEntity } from '@/domain/types/';
 
 import { Entity } from './entity';
-import { ISessionEntity } from './types';
 
 @injectable()
 export class Session extends Entity<ISessionEntity> {
@@ -54,5 +54,9 @@ export class Session extends Entity<ISessionEntity> {
 
     get tutor(): IDocumentReference {
         return this._props.tutor;
+    }
+
+    get status(): SessionStatus {
+        return this._props.status;
     }
 }

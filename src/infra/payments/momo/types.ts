@@ -2,7 +2,7 @@ export type MomoCredentials = {
     partnerCode: string;
     accessKey: string;
 };
-export type MomoFields = {
+export type MomoCaptureWallet = {
     requestId: string;
     amount: string;
     orderId: string;
@@ -14,8 +14,6 @@ export type MomoFields = {
 };
 
 export type MomoIPNRequest = {
-    partnerCode: string;
-    accessKey: string;
     requestId: string;
     orderId: string;
     orderInfo: string;
@@ -36,11 +34,13 @@ export type MomoIPNSignature = MomoCredentials & {
     orderId: string;
     errorCode: number;
     message: string;
-    responseTime: string;
     extraData: string;
 };
 
-export type MomoIPNResponse = MomoIPNSignature & { signature: string };
+export type MomoIPNResponse = MomoIPNSignature & {
+    responseTime: string;
+    signature: string;
+};
 
 export type MomoWalletResponse = {
     requestId: string;
@@ -57,4 +57,4 @@ export type MomoWalletResponse = {
 };
 
 type MomoSignature = { signature?: string };
-export type MomoWallet = MomoCredentials & MomoFields & MomoSignature;
+export type MomoWallet = MomoCredentials & MomoCaptureWallet & MomoSignature;

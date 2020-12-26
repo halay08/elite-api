@@ -6,6 +6,7 @@ import { BaseHttpController, controller, httpPost, interfaces, response, request
 import { BookingService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
+import { UserRole } from '@/src/domain/types';
 import { BookingDTO, bookingValidationMiddleWare } from '../requests';
 
 @controller(`/booking`)
@@ -42,7 +43,7 @@ export class BookingController extends BaseHttpController implements interfaces.
      *   Error 401: Unauthorized
      *   Unauthorized
      */
-    @httpPost('/', authorize({ roles: ['admin', 'student'] }), bookingValidationMiddleWare)
+    @httpPost('/', authorize({ roles: [UserRole.ADMIN, UserRole.STUDENT] }), bookingValidationMiddleWare)
     public async index(@requestBody() payload: BookingDTO, @response() res: Response) {
         try {
             const { user }: { user: fireauth.IUserRecord } = this.httpContext.user.details;

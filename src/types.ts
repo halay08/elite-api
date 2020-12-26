@@ -31,6 +31,7 @@ export default {
     StudentService: Symbol.for('StudentService'),
     SessionService: Symbol.for('SessionService'),
     LearningStackService: Symbol.for('LearningStackService'),
+    PaymentService: Symbol.for('PaymentService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),

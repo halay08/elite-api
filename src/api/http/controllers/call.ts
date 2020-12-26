@@ -19,7 +19,8 @@ import { env } from '@/api/http/config/constants';
 import TYPES from '@/src/types';
 import { Twilio as Call } from '@/infra/call/twillio';
 import { Room } from '@/domain/index';
-import { RoomStatus } from '@/src/domain/types';
+import { RoomStatus, UserRole } from '@/src/domain/types';
+import { authorize } from '@/api/http/middlewares';
 import { RoomService } from '@/src/app/services';
 
 const Validation = {
@@ -32,7 +33,7 @@ const Validation = {
     }
 };
 
-@controller(`/call`)
+@controller(`/call`, authorize({ roles: [UserRole.ADMIN, UserRole.STUDENT, UserRole.TUTOR] }))
 export class CallController extends BaseHttpController implements interfaces.Controller {
     @inject(TYPES.Call) private call: Call;
     @inject(TYPES.RoomService) private roomService: RoomService;

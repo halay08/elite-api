@@ -3,7 +3,7 @@ import * as MockDate from 'mockdate';
 import * as cuid from 'cuid';
 import * as sinon from 'sinon';
 import { Momo } from '../momo';
-import { MomoFields, MomoIPNRequest } from '../types';
+import { MomoCaptureWallet, MomoIPNRequest } from '../types';
 
 const constantsMock = require('@/api/http/config/constants');
 const momo = new Momo();
@@ -15,7 +15,7 @@ const env = {
     }
 };
 
-const payload: Partial<MomoFields> = {
+const payload: Partial<MomoCaptureWallet> = {
     requestId: 'MM1540456472575',
     amount: '150000',
     orderId: 'MM1540456472575',
@@ -25,9 +25,7 @@ const payload: Partial<MomoFields> = {
     extraData: 'email=abc@gmail.com'
 };
 
-const payloadIPN: MomoIPNRequest = {
-    partnerCode: 'MOMOTUEN20190312',
-    accessKey: 'ZjF6taKUohp7iN8l',
+const payloadIPN: Partial<MomoIPNRequest> = {
     requestId: '1555383430',
     orderId: '1555383430',
     orderInfo: ' ',
@@ -38,8 +36,8 @@ const payloadIPN: MomoIPNRequest = {
     localMessage: 'Th%C3%A0nh%20c%C3%B4ng',
     payType: 'qr',
     responseTime: '2019-04-09%2014%3A53%3A38',
-    extraData: 'Nothing',
-    signature: 'e1da7982cdbc732c172e4f2909d6f70c5e2a5d2dde7e8c02dce866c6b35c9461',
+    extraData: JSON.stringify({ sessionId: 123 }),
+    signature: '96f6de1e0711dfefdc53007cf71d3a122fd8bee8587f37debe7d913ded05dceb',
     amount: '300000'
 };
 
@@ -87,10 +85,34 @@ describe('#MOMO', () => {
         });
     });
 
-    describe('#ipnResponse()', () => {
+    describe('#handleIncomingIPN()', () => {
         it('should return correctly response for Momo', async () => {
-            const { errorCode } = await (momo as any).ipnResponse(payloadIPN);
+            const { errorCode } = await (momo as any).handleIncomingIPN(payloadIPN);
             expect(errorCode).toEqual(0);
+        });
+
+        it('should throw "Transaction failed!" when errorCode <> 0', async () => {
+            try {
+                await (momo as any).handleIncomingIPN({ ...payloadIPN, errorCode: 1 });
+            } catch ({ message }) {
+                expect(message).toBe('Transaction failed!');
+            }
+        });
+
+        it('should throw "Signature is not valid!" when Momo signature verify failed', async () => {
+            try {
+                await (momo as any).handleIncomingIPN({ ...payloadIPN, signature: 'fake' });
+            } catch ({ message }) {
+                expect(message).toBe('Signature is not valid!');
+            }
+        });
+
+        it('should throw "Invalid data!" when extradata is invalid JSON format', async () => {
+            try {
+                await (momo as any).handleIncomingIPN({ ...payloadIPN, extraData: '' });
+            } catch ({ message }) {
+                expect(message).toBe('Invalid data!');
+            }
         });
     });
 });

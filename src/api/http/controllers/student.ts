@@ -108,8 +108,8 @@ export class StudentController extends BaseHttpController implements interfaces.
             const student: Student = await this.studentService.getByUserId(id);
 
             return res.status(HttpStatus.OK).json(student.serialize());
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json(error).end();
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 
@@ -206,9 +206,8 @@ export class StudentController extends BaseHttpController implements interfaces.
 
             const updated: Student = await this.studentService.updateByUserId(id, payload);
             return res.status(HttpStatus.OK).json(updated.serialize());
-        } catch (error) {
-            console.log(error);
-            return res.status(HttpStatus.BAD_REQUEST).json(error).end();
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 }
