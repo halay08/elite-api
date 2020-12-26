@@ -23,4 +23,12 @@ export class Booking extends Entity<IBookingEntity> {
     get id(): string {
         return this._props.id || '';
     }
+
+    get transactionId(): string {
+        return this._props.transactionId || '';
+    }
+
+    get status(): string {
+        return this._props.status || '';
+    }
 }

@@ -145,7 +145,7 @@ export abstract class BaseRepository<T extends IEntity> {
     }
 
     /**
-     * Updates user record
+     * Updates data record
      * @param id
      * @param user
      * @returns update

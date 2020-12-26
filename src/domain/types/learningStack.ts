@@ -26,7 +26,7 @@ type ILearningStack = {
 
     comment?: string; // cancellation/miss reason, notes,...
 
-    earnedAmount: number; // Teaching amount
+    earnedAmount: number; // Teaching amount. Default: 0
 };
 
 type ILearningStackEntity = IEntity & ILearningStack;

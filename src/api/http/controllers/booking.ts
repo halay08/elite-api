@@ -48,10 +48,10 @@ export class BookingController extends BaseHttpController implements interfaces.
         try {
             const { user }: { user: fireauth.IUserRecord } = this.httpContext.user.details;
 
-            const data = await this.bookingService.createBooking(payload, user);
-            return res.status(HttpStatus.OK).end(data);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json(error);
+            const orderId = await this.bookingService.createBooking(payload, user);
+            return res.status(HttpStatus.OK).json({ orderId });
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }
     }
 }

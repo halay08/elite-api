@@ -106,7 +106,7 @@ class AuthProvider implements interfaces.AuthProvider {
                 details.decodedIdToken = decodedIdToken;
                 details.user = user;
             } catch (e) {
-                console.log(e.message);
+                throw new Error(e.message);
             }
         }
 
