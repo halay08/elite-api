@@ -305,33 +305,6 @@ export default class FirestoreCollection<T extends IEntity> {
     }
 
     /**
-     * Executes the given updateFunction and commits the changes applied within
-     * the transaction.
-     *
-     * You can use the transaction object passed to 'updateFunction' to read and
-     * modify Firestore documents under lock. Transactions are committed once
-     * 'updateFunction' resolves and attempted up to five times on failure.
-     *
-     * @param updateFunction The function to execute within the transaction
-     * @param {object=} transactionOptions Transaction options.
-     * @param {number=} transactionOptions.maxAttempts The maximum number of
-     * attempts for this transaction.
-     * @return If the transaction completed successfully or was explicitly
-     * aborted (by the updateFunction returning a failed Promise), the Promise
-     * returned by the updateFunction will be returned here. Else if the
-     * transaction failed, a rejected Promise with the corresponding failure
-     * error will be returned.
-     */
-    async runTransaction(
-        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
-        transactionOptions?: { maxAttempts?: number }
-    ): Promise<T> {
-        return await admin
-            .firestore()
-            .runTransaction(async (transaction): Promise<T> => updateFunction(transaction), transactionOptions);
-    }
-
-    /**
      * Extracts reference to document entity
      * @param ref Reference to a collection
      * @returns T

@@ -23,6 +23,7 @@ export default {
     TeachingDataRepository: Symbol.for('TeachingDataRepository'),
     TutorReviewerRepository: Symbol.for('TutorReviewerRepository'),
     LearningStackRepository: Symbol.for('LearningStackRepository'),
+    TutorReviewerSummaryRepository: Symbol.for('TutorReviewerSummaryRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
@@ -36,6 +37,7 @@ export default {
     TeachingDataService: Symbol.for('TeachingDataService'),
     TutorReviewerService: Symbol.for('TutorReviewerService'),
     LearningStackService: Symbol.for('LearningStackService'),
+    TutorReviewerSummaryService: Symbol.for('TutorReviewerSummaryService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),

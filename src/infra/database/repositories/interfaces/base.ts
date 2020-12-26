@@ -11,9 +11,5 @@ export interface IRepository<T> {
     update(id: string, entity: Partial<T>): Promise<T>;
     delete(id: string): Promise<number>;
     query(queries: IQuery<T>[], options?: Partial<IQueryOption<T>>): Promise<T[]>;
-    runTransaction(
-        updateFunction: (transaction: FirebaseFirestore.Transaction) => Promise<T>,
-        transactionOptions?: { maxAttempts?: number }
-    ): Promise<T>;
     extractReference(ref: IDocumentReference): Promise<T>;
 }

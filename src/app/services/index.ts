@@ -11,3 +11,5 @@ export * from './booking';
 export * from './payment';
 export * from './teachingData';
 export * from './learningStack';
+export * from './tutorReviewer';
+export * from './tutorReviewerSummary';

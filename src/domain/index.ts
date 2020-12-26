@@ -27,3 +27,4 @@ export * from './globalSetting';
 export * from './entity';
 export * from './coupon';
 export * from './teachingData';
+export * from './tutorReviewerSummary';

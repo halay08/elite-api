@@ -3,16 +3,14 @@ import { provide } from 'inversify-binding-decorators';
 import { TeachingData } from '@/domain';
 import TYPES from '@/src/types';
 import { BaseService } from './base';
-import { IRepository, ITeachingDataRepository, ITutorRepository } from '@/src/infra/database/repositories';
+import { IRepository, ITeachingDataRepository, IUserRepository } from '@/src/infra/database/repositories';
 import Container from '@/src/container';
 import { IDocumentReference, IQueryOption } from '@/infra/database/types';
 import { inject } from 'inversify';
 
 @provide(TYPES.TeachingDataService)
 export class TeachingDataService extends BaseService<TeachingData> {
-    constructor(@inject(TYPES.TutorRepository) private readonly tutorRepository: ITutorRepository) {
-        super();
-    }
+    @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository;
 
     /**
      * Create course repository instance
@@ -30,7 +28,7 @@ export class TeachingDataService extends BaseService<TeachingData> {
     async getByTutor(tutor: IDocumentReference | string): Promise<TeachingData> {
         if (typeof tutor === 'string') {
             // eslint-disable-next-line no-param-reassign
-            tutor = this.tutorRepository.getDocumentRef(tutor);
+            tutor = this.userRepository.getDocumentRef(tutor);
         }
 
         const [record] = (await this.findBy('tutor', tutor)) || [];
