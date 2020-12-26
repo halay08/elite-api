@@ -106,13 +106,5 @@ describe('#MOMO', () => {
                 expect(message).toBe('Signature is not valid!');
             }
         });
-
-        it('should throw "Invalid data!" when extradata is invalid JSON format', async () => {
-            try {
-                await (momo as any).handleIncomingIPN({ ...payloadIPN, extraData: '' });
-            } catch ({ message }) {
-                expect(message).toBe('Invalid data!');
-            }
-        });
     });
 });
