@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { IRepository } from '@/src/infra/database/repositories';
 import { IDocumentReference, IQuery, IQueryOption } from '@/src/infra/database/types';
+import { NotFoundError } from '../errors';
 
 @injectable()
 export abstract class BaseService<T> {
@@ -71,9 +72,16 @@ export abstract class BaseService<T> {
      * @param id The document id
      * @returns `document` object
      */
-    async getById(id: string): Promise<T> {
-        const document = await this.baseRepository.findById(id);
-        return document;
+    async getById(id: string): Promise<T | null> {
+        try {
+            const document = await this.baseRepository.findById(id);
+            return document;
+        } catch (error) {
+            if (error instanceof NotFoundError) {
+                return null;
+            }
+            throw error;
+        }
     }
 
     /**
