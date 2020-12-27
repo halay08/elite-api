@@ -32,15 +32,16 @@ export class TutorService extends BaseService<Tutor> {
      * @returns created
      */
     async createByUserId(id: string): Promise<Tutor> {
-        const userRef = this.userRepository.getDocumentRef(id);
-        const [existed] = await this.findBy('user', userRef);
+        // User ID is also tutor ID
+        const existed = await this.getById(id);
         if (existed) {
             return existed;
         }
 
+        const userRef = this.userRepository.getDocumentRef(id);
         const tutor: Tutor = Tutor.create({ id, user: userRef, activeStatus: TutorStatus.ACTIVE });
-        const created = await this.create(tutor);
-        return created;
+
+        return this.create(tutor);
     }
 
     /**

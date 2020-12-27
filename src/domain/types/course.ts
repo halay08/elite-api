@@ -1,6 +1,5 @@
 import { IDocumentReference } from '@/src/infra/database/types';
-import { IEntity, ITimestamp, ILanguage } from '.';
-import { Course } from '@/domain';
+import { IEntity, ITimestamp, ILanguage, ITutorEntity } from '.';
 
 enum CourseStatus {
     AVAILABLE = 0,
@@ -74,6 +73,6 @@ type ICourseEntity = IEntity & ICourse & ITimestamp;
 /**
  * Course detail
  */
-type ICourseDetail = Partial<Course> & { totalCost: number };
+type ICourseDetail = Omit<ICourseEntity, 'tutor'> & { totalCost: number; tutor: ITutorEntity };
 
 export { ICourse, ICourseEntity, CourseStatus, ICoursePolicy, CourseType, ICourseDetail };

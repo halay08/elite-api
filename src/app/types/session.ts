@@ -1,3 +1,5 @@
+import { ITutorEntity, ISessionEntity } from '@/src/domain/types';
+
 type ISessionQueryParam = {
     from?: Date;
     to?: Date;
@@ -8,4 +10,8 @@ type ITutorLearningStackSummary = {
     totalHour?: number;
 };
 
-export { ITutorLearningStackSummary, ISessionQueryParam };
+interface ISessionDetail extends Omit<ISessionEntity, 'tutor'> {
+    tutor: ITutorEntity;
+}
+
+export { ITutorLearningStackSummary, ISessionQueryParam, ISessionDetail };
