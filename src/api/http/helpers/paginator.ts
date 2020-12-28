@@ -1,36 +1,14 @@
-import { LIMIT } from '../config/pagination';
+import { IPaginationResponse } from '../../types/pagination';
+import { IEntity } from '@/domain/types';
 
-type IPagination = {
-    page: number;
-
-    limit: number;
-
-    offset: number;
+export const paginate = <T extends IEntity>(items: T[], filter?: object, sort?: object): IPaginationResponse<T> => {
+    return {
+        pagination: {
+            lastRef: items[0]?.id || '',
+            totalItemOfPage: items.length
+        },
+        filter,
+        sort,
+        items
+    };
 };
-
-export class Paginator {
-    constructor(private _page: number = 1) {
-        this.page = _page;
-    }
-
-    set page(value: number) {
-        let page = value;
-        if (page <= 0) {
-            page = 1;
-        }
-        this._page = page;
-    }
-
-    get(): IPagination {
-        const page = this._page;
-        const limit = LIMIT;
-
-        const offset = (page - 1) * limit;
-
-        return {
-            page,
-            limit,
-            offset
-        };
-    }
-}

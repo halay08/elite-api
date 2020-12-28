@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 
 import { Entity } from './entity';
 import { ITutorReviewerEntity } from './types';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 // Collection: tutor_reviewers
 @injectable()
@@ -22,6 +23,10 @@ export class TutorReviewer extends Entity<ITutorReviewerEntity> {
 
     get id(): string {
         return this._props.id || '';
+    }
+
+    get tutor(): IDocumentReference {
+        return this._props.tutor;
     }
 
     get punctual(): number {
