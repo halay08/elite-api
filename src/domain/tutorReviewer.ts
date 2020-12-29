@@ -23,4 +23,20 @@ export class TutorReviewer extends Entity<ITutorReviewerEntity> {
     get id(): string {
         return this._props.id || '';
     }
+
+    get punctual(): number {
+        return this._props.punctual;
+    }
+
+    get organized(): number {
+        return this._props.organized;
+    }
+
+    get engaging(): number {
+        return this._props.engaging;
+    }
+
+    get comment(): string {
+        return this._props.comment;
+    }
 }

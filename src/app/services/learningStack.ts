@@ -2,7 +2,7 @@
 import * as isEmpty from 'ramda.isempty';
 import { provide } from 'inversify-binding-decorators';
 import { LearningStack } from '@/domain';
-import { IRepository, ILearningStackRepository, ITutorRepository } from '@/src/infra/database/repositories';
+import { IRepository, ILearningStackRepository, IUserRepository } from '@/src/infra/database/repositories';
 import TYPES from '@/src/types';
 import { BaseService } from './base';
 import Container from '@/src/container';
@@ -13,9 +13,7 @@ import { inject } from 'inversify';
 
 @provide(TYPES.LearningStackService)
 export class LearningStackService extends BaseService<LearningStack> {
-    constructor(@inject(TYPES.TutorRepository) private readonly tutorRepository: ITutorRepository) {
-        super();
-    }
+    @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository;
 
     /**
      * Create booking repository instance
@@ -30,8 +28,8 @@ export class LearningStackService extends BaseService<LearningStack> {
      * @param tutorId ID of tutor uses to query the learning sessions
      * @returns ITutorLearningStackSummary
      */
-    async getTeachingStackSummary(tutorId: string): Promise<ITutorLearningStackSummary> {
-        const tutorRef = this.tutorRepository.getDocumentRef(tutorId);
+    async getTutorStackSummary(tutorId: string): Promise<ITutorLearningStackSummary> {
+        const tutorRef = this.userRepository.getDocumentRef(tutorId);
         let stacks: LearningStack[] = await this.findBy('tutor', tutorRef);
         stacks = await this.getAll();
 
@@ -57,14 +55,12 @@ export class LearningStackService extends BaseService<LearningStack> {
      * @param tutor Reference to a tutor or tutor id
      * @returns LearningStack
      */
-    async getByTutor(tutor: IDocumentReference | string): Promise<LearningStack> {
+    async getByTutor(tutor: IDocumentReference | string): Promise<LearningStack[]> {
         if (typeof tutor === 'string') {
             // eslint-disable-next-line no-param-reassign
-            tutor = this.tutorRepository.getDocumentRef(tutor);
+            tutor = this.userRepository.getDocumentRef(tutor);
         }
 
-        const [record] = (await this.findBy('tutor', tutor)) || [];
-
-        return record;
+        return this.findBy('tutor', tutor);
     }
 }

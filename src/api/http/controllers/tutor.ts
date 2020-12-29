@@ -18,20 +18,27 @@ import { IQueryOption } from '@/infra/database/types';
 import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
 import { NotFoundError } from '@/app/errors/notFound';
-import { TutorService, UserService, CourseService, LearningStackService } from '@/src/app/services';
+import {
+    TutorService,
+    UserService,
+    CourseService,
+    LearningStackService,
+    TutorReviewerSummaryService
+} from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
 
 // Required login
 @controller(`/tutors`, authorize({ roles: [UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT] }))
 export class TutorController extends BaseHttpController implements interfaces.Controller {
-    constructor(
-        @inject(TYPES.TutorService) private tutorService: TutorService,
-        @inject(TYPES.UserService) private userService: UserService,
-        @inject(TYPES.CourseService) private courseService: CourseService,
-        @inject(TYPES.LearningStackService) private learningStackService: LearningStackService
-    ) {
-        super();
-    }
+    @inject(TYPES.UserService) private userService: UserService;
+
+    @inject(TYPES.TutorService) private tutorService: TutorService;
+
+    @inject(TYPES.CourseService) private courseService: CourseService;
+
+    @inject(TYPES.LearningStackService) private learningStackService: LearningStackService;
+
+    @inject(TYPES.TutorReviewerSummaryService) private tutorReviewerSummaryService: TutorReviewerSummaryService;
 
     /**
      *
@@ -125,11 +132,11 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             }
 
             // Get tutor teaching stack summary
-            const teachingStack = await this.learningStackService.getTeachingStackSummary(tutor.id);
+            const tutorStackSummary = await this.learningStackService.getTutorStackSummary(tutor.id);
 
             const data = {
                 info: tutor.serialize(),
-                summary: teachingStack
+                summary: tutorStackSummary
             };
 
             return res.status(HttpStatus.OK).json(data);
@@ -169,6 +176,37 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             const courses = await this.courseService.getCourseByTutor(id);
 
             return res.status(HttpStatus.OK).json(courses.map((c) => c.serialize()));
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message });
+        }
+    }
+
+    @httpGet('/:id/reviews')
+    public async getReviews(@requestParam('id') id: string, @response() res: Response) {
+        try {
+            // Tutor(user) id, also tutor summary id, they're same
+            const reviewerSummary = await this.tutorReviewerSummaryService.getById(id);
+
+            if (!reviewerSummary) {
+                throw new NotFoundError('No review found');
+            }
+
+            // Get tutor info
+            const tutor = await this.tutorService.getByUser(id);
+
+            const { punctual = 0, organized = 0, engaging = 0, totalOfReviewer = 0 } = reviewerSummary;
+
+            const data = {
+                tutor: tutor.serialize(),
+                summary: {
+                    punctual: totalOfReviewer > 0 ? punctual / totalOfReviewer : 0,
+                    organized: totalOfReviewer > 0 ? organized / totalOfReviewer : 0,
+                    engaging: totalOfReviewer > 0 ? engaging / totalOfReviewer : 0
+                },
+                reviews: [] // TODO: Update later
+            };
+
+            return res.status(HttpStatus.OK).json(data);
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }

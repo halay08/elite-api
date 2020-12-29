@@ -11,3 +11,4 @@ export * from './category';
 export * from './teachingData';
 export * from './tutorReviewer';
 export * from './learningStack';
+export * from './tutorReviewerSummary';

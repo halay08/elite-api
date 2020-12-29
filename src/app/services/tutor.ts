@@ -7,7 +7,7 @@ import Container from '@/src/container';
 import { TutorStatus } from '@/src/domain/types';
 import { inject } from 'inversify';
 import { TeachingDataService } from '.';
-import { IQuery, IQueryOption } from '@/src/infra/database/types';
+import { IDocumentReference, IQuery, IQueryOption } from '@/src/infra/database/types';
 
 @provide(TYPES.TutorService)
 export class TutorService extends BaseService<Tutor> {
@@ -82,5 +82,21 @@ export class TutorService extends BaseService<Tutor> {
         }
 
         return this.query(queries, options);
+    }
+
+    /*
+     * Gets by user
+     * @param user Reference to a user or user id
+     * @returns Tutor
+     */
+    async getByUser(user: IDocumentReference | string): Promise<Tutor> {
+        if (typeof user === 'string') {
+            // eslint-disable-next-line no-param-reassign
+            user = this.userRepository.getDocumentRef(user);
+        }
+
+        const [record] = (await this.findBy('user', user)) || [];
+
+        return record;
     }
 }
