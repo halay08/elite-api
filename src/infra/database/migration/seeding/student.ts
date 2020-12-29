@@ -4,8 +4,8 @@ import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { Student } from '@/domain';
 import { IStudentEntity, UserRole } from '@/domain/types';
-import { BaseSeeding } from './baseSeeding';
 import { StudentService } from '@/src/app/services';
+import { BaseSeeding } from './base';
 
 @provide(TYPES.StudentSeeding)
 export class StudentSeeding extends BaseSeeding implements ISeeding {

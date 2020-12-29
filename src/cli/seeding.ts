@@ -18,7 +18,8 @@ type ISeedingType =
     | 'CourseSeeding'
     | 'SessionSeeding'
     | 'StudentSeeding'
-    | 'BookingSeeding';
+    | 'BookingSeeding'
+    | 'TutorReviewerSeeding';
 
 class Seeding {
     #seedings: ISeedingType[] = [
@@ -27,7 +28,8 @@ class Seeding {
         'CourseSeeding',
         'SessionSeeding',
         'StudentSeeding',
-        'BookingSeeding'
+        'BookingSeeding',
+        'TutorReviewerSeeding'
     ];
 
     async runSingle(specifiedSeeding: ISeedingType) {

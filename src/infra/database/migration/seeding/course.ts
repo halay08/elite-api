@@ -5,7 +5,7 @@ import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { CourseStatus, ICoursePolicy, CourseType } from '@/domain/types';
 import { Course } from '@/domain';
-import { BaseSeeding } from './baseSeeding';
+import { BaseSeeding } from './base';
 
 @provide(TYPES.CourseSeeding)
 export class CourseSeeding extends BaseSeeding implements ISeeding {
