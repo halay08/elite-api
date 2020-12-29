@@ -20,7 +20,11 @@ type ITutorQuery = {
 
     sort: Partial<ITutorSort>;
 
-    page: number;
+    lastDocumentId: string;
 };
 
-export { ITutorSort, ITutorQuery, TutorFilterStatus };
+type ITutorReviewerQuery = {
+    lastDocumentId: string;
+};
+
+export { ITutorSort, ITutorQuery, TutorFilterStatus, ITutorReviewerQuery };

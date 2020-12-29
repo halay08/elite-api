@@ -5,8 +5,9 @@ import TYPES from '@/src/types';
 import { BaseService } from './base';
 import { IRepository, ITutorReviewerRepository, IUserRepository } from '@/src/infra/database/repositories';
 import Container from '@/src/container';
-import { IDocumentReference } from '@/infra/database/types';
+import { IDocumentReference, IQuery, IQueryOption } from '@/infra/database/types';
 import { inject } from 'inversify';
+import { DEFAULT_PAGE_LIMIT } from '../types';
 
 @provide(TYPES.TutorReviewerService)
 export class TutorReviewerService extends BaseService<TutorReviewer> {
@@ -32,5 +33,42 @@ export class TutorReviewerService extends BaseService<TutorReviewer> {
         }
 
         return await this.findBy('tutor', tutor);
+    }
+
+    /**
+     * Paginates tutor reviewers
+     * @param tutor Tutor reference or tutor ID
+     * @param lastDocument Last previous document reference or ID
+     * @param [limit] Limit records per page
+     * @returns TutorReviewer[]
+     */
+    async paginate(
+        tutor: IDocumentReference | string,
+        lastDocument: IDocumentReference | string,
+        limit = DEFAULT_PAGE_LIMIT
+    ): Promise<TutorReviewer[]> {
+        if (typeof tutor === 'string') {
+            // eslint-disable-next-line no-param-reassign
+            tutor = this.userRepository.getDocumentRef(tutor);
+        }
+
+        const queryOption: Partial<IQueryOption<TutorReviewer>> = {};
+        queryOption.limit = limit;
+
+        if (lastDocument) {
+            if (typeof lastDocument === 'string') {
+                queryOption.startAfter = this.getDocumentRef(lastDocument);
+            } else {
+                queryOption.startAfter = lastDocument;
+            }
+        }
+
+        const operatorQueries: IQuery<TutorReviewer>[] = [
+            {
+                tutor
+            }
+        ];
+
+        return this.query(operatorQueries, queryOption);
     }
 }

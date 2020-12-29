@@ -11,11 +11,10 @@ import {
     requestParam
 } from 'inversify-express-utils';
 import TYPES from '@/src/types';
-import { ITutorQuery } from '../requests';
+import { ITutorQuery, ITutorReviewerQuery } from '../requests';
 import { Tutor } from '@/src/domain';
-import { UserRole } from '@/src/domain/types';
+import { UserRole, ITutorReviewerEntity } from '@/domain/types';
 import { IQueryOption } from '@/infra/database/types';
-import { Paginator } from '../helpers/paginator';
 import { getOperatorQueries } from '../helpers/tutor';
 import { NotFoundError } from '@/app/errors/notFound';
 import {
@@ -23,9 +22,13 @@ import {
     UserService,
     CourseService,
     LearningStackService,
+    TutorReviewerService,
     TutorReviewerSummaryService
 } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
+import { LIMIT } from '../config/pagination';
+import { IPaginationResponse } from '../../types/pagination';
+import { paginate } from '../helpers/paginator';
 
 // Required login
 @controller(`/tutors`, authorize({ roles: [UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT] }))
@@ -38,66 +41,35 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
     @inject(TYPES.LearningStackService) private learningStackService: LearningStackService;
 
+    @inject(TYPES.TutorReviewerService) private tutorReviewerService: TutorReviewerService;
+
     @inject(TYPES.TutorReviewerSummaryService) private tutorReviewerSummaryService: TutorReviewerSummaryService;
 
-    /**
-     *
-     * @api {GET} /tutors Get list of tutors. No authentication required
-     * @apiGroup Tutor
-     * @apiVersion  1.0.0
-     *
-     * @apiSuccess (200) {Array} List of tutors
-     * @apiSuccessExample {Array} Success-Response:
-     * [
-     *      {
-     *          "_id": "Ygfec8d3BfVk7E7OeDPm",
-     *          "user": {
-     *              "id": "yZGFDF6fGC3DdfgLgh69",
-     *              "email": "test@example.com"
-     *          },
-     *          "category": {
-     *              "id": "z6N89Oisw3ojJHGF23FS",
-     *              "name": "English"
-     *          },
-     *          "status": "online"
-     *      }
-     * ]
-     *
-     * @apiError BAD_REQUEST Return Error Message.
-     * @apiErrorExample {Object} Error-Response:
-     *   Error 400: Bad Request
-     *   {
-     *     "error": "something went wrong"
-     *   }
-     */
     @httpGet('/')
     public async index(@queryParam() queries: ITutorQuery, @response() res: Response) {
         try {
             const queryOption: Partial<IQueryOption<Tutor>> = {};
             // startTime will be implemented when we have course and session data.
-            const { page = 1, category, expertise, startTime, status } = queries;
+            const { category, expertise, startTime, status, lastDocumentId } = queries;
 
-            const pagination = new Paginator(page).get();
-            queryOption.limit = pagination.limit;
-            queryOption.startAt = pagination.offset;
+            queryOption.limit = LIMIT;
+
+            if (lastDocumentId) {
+                queryOption.startAfter = this.tutorService.getDocumentRef(lastDocumentId);
+            }
 
             const operatorQueries = getOperatorQueries(queries);
             const items = await this.tutorService.query(operatorQueries, queryOption);
-            const data = {
-                pagination: {
-                    currentPage: page,
-                    nextPage: page + 1,
-                    totalItemOfPage: items.length
-                },
-                filter: {
+            const data = paginate(
+                items.map((t) => t.serialize()),
+                {
                     category,
                     expertise,
                     startTime,
                     status
                 },
-                sort: queries.sort,
-                items: items.map((t) => t.serialize())
-            };
+                queries.sort
+            );
 
             return res.status(HttpStatus.OK).json(data);
         } catch ({ message }) {
@@ -182,7 +154,11 @@ export class TutorController extends BaseHttpController implements interfaces.Co
     }
 
     @httpGet('/:id/reviews')
-    public async getReviews(@requestParam('id') id: string, @response() res: Response) {
+    public async getReviews(
+        @requestParam('id') id: string,
+        @queryParam() queries: ITutorReviewerQuery,
+        @response() res: Response
+    ) {
         try {
             // Tutor(user) id, also tutor summary id, they're same
             const reviewerSummary = await this.tutorReviewerSummaryService.getById(id);
@@ -196,6 +172,13 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
             const { punctual = 0, organized = 0, engaging = 0, totalOfReviewer = 0 } = reviewerSummary;
 
+            // Get list of reviews
+            const { lastDocumentId } = queries;
+            const reviewers = await this.tutorReviewerService.paginate(id, lastDocumentId, LIMIT);
+            const reviewerPagination: IPaginationResponse<ITutorReviewerEntity> = paginate(
+                reviewers.map((r) => r.serialize())
+            );
+
             const data = {
                 tutor: tutor.serialize(),
                 summary: {
@@ -203,7 +186,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
                     organized: totalOfReviewer > 0 ? organized / totalOfReviewer : 0,
                     engaging: totalOfReviewer > 0 ? engaging / totalOfReviewer : 0
                 },
-                reviews: [] // TODO: Update later
+                reviews: reviewerPagination
             };
 
             return res.status(HttpStatus.OK).json(data);

@@ -19,7 +19,13 @@ type IQueryOption<T> = {
 
     limit: number;
 
-    startAt: number;
+    startAt?: IDocumentReference;
+
+    startAfter?: IDocumentReference;
+
+    endAt?: IDocumentReference;
+
+    endBefore?: IDocumentReference;
 
     orderBy: IOrderBy<T>[];
 };

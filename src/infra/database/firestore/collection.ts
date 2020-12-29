@@ -285,7 +285,15 @@ export default class FirestoreCollection<T extends IEntity> {
         }
 
         if (options.startAt) {
-            query = query.limit(options.startAt);
+            query = query.startAt(options.startAt);
+        } else if (options.startAfter) {
+            query = query.startAfter(options.startAfter);
+        }
+
+        if (options.endAt) {
+            query = query.endAt(options.endAt);
+        } else if (options.endBefore) {
+            query = query.endBefore(options.endBefore);
         }
 
         if (options.limit) {
