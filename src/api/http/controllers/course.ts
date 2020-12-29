@@ -13,7 +13,6 @@ import {
 import TYPES from '@/src/types';
 import { SessionService, CourseService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
-import { NotFoundError } from '@/app/errors';
 import { ISessionQueryParam } from '../requests';
 import { UserRole } from '@/src/domain/types';
 
@@ -60,10 +59,6 @@ export class CourseController extends BaseHttpController implements interfaces.C
         try {
             const courses = await this.courseService.getRecommendations();
 
-            if (!courses) {
-                throw new NotFoundError('No course found');
-            }
-
             return res.status(HttpStatus.OK).json(courses.map((s) => s.serialize()));
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message });
@@ -73,12 +68,7 @@ export class CourseController extends BaseHttpController implements interfaces.C
     @httpGet('/:id')
     public async index(@requestParam('id') id: string, @response() res: Response) {
         try {
-            const course = await this.courseService.findDetailById(id);
-
-            if (!course) {
-                throw new NotFoundError('Course is not found');
-            }
-
+            const course = await this.courseService.getDetailById(id);
             return res.status(HttpStatus.OK).json(course);
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).send({ message });

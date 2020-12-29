@@ -5,7 +5,6 @@ import { BaseHttpController, controller, httpGet, response, interfaces, requestP
 import { SessionService } from '@/src/app/services';
 import TYPES from '@/src/types';
 import { authorize } from '@/api/http/middlewares';
-import { NotFoundError } from '@/app/errors/notFound';
 
 @controller(`/sessions`, authorize({ roles: ['admin', 'student', 'tutor'] }))
 export class SessionController extends BaseHttpController implements interfaces.Controller {
@@ -254,12 +253,8 @@ export class SessionController extends BaseHttpController implements interfaces.
     @httpGet('/:id')
     public async index(@requestParam('id') id: string, @response() res: Response) {
         try {
-            const session = await this.sessionService.getById(id);
-
-            if (typeof session === 'undefined' || !session) {
-                throw new NotFoundError('Session is not found');
-            }
-            return res.status(HttpStatus.OK).json(session.serialize());
+            const session = await this.sessionService.getDetailById(id);
+            return res.status(HttpStatus.OK).json(session);
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }

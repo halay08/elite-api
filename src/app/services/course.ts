@@ -43,20 +43,23 @@ export class CourseService extends BaseService<Course> {
      *
      * @param courseId The course id
      */
-    async findDetailById(courseId: string): Promise<ICourseDetail | undefined> {
-        const course = await this.getById(courseId);
+    async getDetailById(courseId: string): Promise<ICourseDetail> {
+        const courseEntity = await this.getById(courseId);
 
-        if (typeof course === 'undefined' || !course) {
-            return;
+        if (typeof courseEntity === 'undefined' || !courseEntity) {
+            throw new NotFoundError('Course not found');
         }
-        const serialized = course.serialize();
+        const course = courseEntity.serialize();
 
-        const sessions = await this.sessionService.getByCourses(serialized.id || '');
+        const sessions = await this.sessionService.getByCourses(course.id || '');
         const totalCost = sessions.reduce((acc, session) => {
             return acc + session.serialize().cost;
         }, 0);
 
-        return { ...serialized, totalCost };
+        const tutorEntity = await this.tutorService.getById(course.tutor.id);
+        const tutor = tutorEntity.serialize();
+
+        return { ...course, tutor, totalCost };
     }
 
     /**
