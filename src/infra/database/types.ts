@@ -21,7 +21,7 @@ type IQueryOption<T> = {
 
     startAt: number;
 
-    orderBy: IOrderBy<T>;
+    orderBy: IOrderBy<T>[];
 };
 
 // Firebase types

@@ -18,13 +18,7 @@ export class TeachingDataMapper {
 
             missedMinute: raw.missedMinute,
 
-            totalEarnedAmount: raw.totalEarnedAmount,
-
-            createdAt: raw.createdAt,
-
-            updatedAt: raw.updatedAt,
-
-            deletedAt: raw.deletedAt
+            totalEarnedAmount: raw.totalEarnedAmount
         });
     }
 }

@@ -68,7 +68,7 @@ export class StudentService extends BaseService<Student> {
             return existed;
         }
 
-        const student: Student = Student.create({ user: userRef });
+        const student: Student = Student.create({ id, user: userRef });
         const created = await this.create(student);
         return created;
     }

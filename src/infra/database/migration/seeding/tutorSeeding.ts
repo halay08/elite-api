@@ -8,11 +8,15 @@ import { NotFoundError } from '@/src/app/errors';
 import { ITutorEntity, TutorStatus, CertificateStatus } from '@/domain/types';
 import * as time from '@/app/helpers';
 import { BaseSeeding } from './baseSeeding';
+import { TutorService } from '@/src/app/services';
 
 @provide(TYPES.TutorSeeding)
 export class TutorSeeding extends BaseSeeding implements ISeeding {
     @inject(TYPES.CategoryRepository)
     private readonly categoryRepository: ICategoryRepository;
+
+    @inject(TYPES.TutorService)
+    private readonly tutorService: TutorService;
 
     /**
      * Get the category to embed to the tutor
@@ -36,6 +40,7 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
 
         const tutors: ITutorEntity[] = [
             {
+                id: userReferences[0].id,
                 user: userReferences[0],
                 category: categoryRef,
                 activeStatus: TutorStatus.ACTIVE,
@@ -74,6 +79,7 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
                 reviews: 12
             },
             {
+                id: userReferences[1].id,
                 user: userReferences[1],
                 category: categoryRef,
                 activeStatus: TutorStatus.ACTIVE,
@@ -112,6 +118,7 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
                 reviews: 8
             },
             {
+                id: userReferences[2].id,
                 user: userReferences[2],
                 category: categoryRef,
                 activeStatus: TutorStatus.ACTIVE,
@@ -150,6 +157,7 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
                 reviews: 20
             },
             {
+                id: userReferences[3].id,
                 user: userReferences[3],
                 category: categoryRef,
                 activeStatus: TutorStatus.ACTIVE,
@@ -190,14 +198,14 @@ export class TutorSeeding extends BaseSeeding implements ISeeding {
         ];
 
         for (const tutor of tutors) {
-            const existedTutor = await this.tutorRepository.findBy('user', tutor.user);
-            if (existedTutor.length > 0) {
-                console.log(`Tutor with user ${tutor.user.id} already existed in the database`);
+            const existedTutor = await this.tutorService.getById(`${tutor.id}`);
+            if (existedTutor) {
+                console.log(`Tutor ${tutor.id} already existed in the database`);
                 continue;
             }
 
             const tutorModel: Tutor = Tutor.create(tutor);
-            const newTutor = await this.tutorRepository.create(tutorModel);
+            const newTutor = await this.tutorService.create(tutorModel);
             const tutorEntity = newTutor.serialize();
             console.log(`New tutor was created ${tutorEntity.id}`);
         }

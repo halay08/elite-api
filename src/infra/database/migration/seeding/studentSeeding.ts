@@ -1,22 +1,23 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { IStudentRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { ISeeding } from '.';
 import { Student } from '@/domain';
 import { IStudentEntity, UserRole } from '@/domain/types';
 import { BaseSeeding } from './baseSeeding';
+import { StudentService } from '@/src/app/services';
 
 @provide(TYPES.StudentSeeding)
 export class StudentSeeding extends BaseSeeding implements ISeeding {
-    @inject(TYPES.StudentRepository)
-    private readonly studentRepository: IStudentRepository;
+    @inject(TYPES.StudentService)
+    private readonly studentService: StudentService;
 
     async run() {
         const userReferences = await this.getUserReferences(UserRole.STUDENT);
 
         const students: IStudentEntity[] = [
             {
+                id: userReferences[0].id,
                 user: userReferences[0],
                 studyTitle: '',
                 studyPlace: '',
@@ -25,6 +26,7 @@ export class StudentSeeding extends BaseSeeding implements ISeeding {
                 followings: []
             },
             {
+                id: userReferences[1].id,
                 user: userReferences[1],
                 studyTitle: 'Student',
                 studyPlace: 'Da Nang, Viet Nam',
@@ -35,14 +37,14 @@ export class StudentSeeding extends BaseSeeding implements ISeeding {
         ];
 
         for (const student of students) {
-            const existedStudent = await this.studentRepository.findBy('user', student.user);
-            if (existedStudent.length > 0) {
-                console.log(`Student with user ${student.user.id} already existed in the database`);
+            const existedStudent = await this.studentService.getById(`${student.id}`);
+            if (existedStudent) {
+                console.log(`Student ${student.id} already existed in the database`);
                 continue;
             }
 
             const model: Student = Student.create(student);
-            const newStudent = await this.studentRepository.create(model);
+            const newStudent = await this.studentService.create(model);
             const studentEntity = newStudent.serialize();
             console.log(`New student was created ${studentEntity.id}`);
         }

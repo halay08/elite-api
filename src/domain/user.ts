@@ -2,6 +2,7 @@ import { injectable } from 'inversify';
 
 import { Entity } from './entity';
 import { IUserEntity, UserRole, ICountry, ILanguage, ICategory, IEmbedViolation, UserStatus } from './types';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 // Collection: users
 @injectable()
@@ -102,5 +103,10 @@ export class User extends Entity<IUserEntity> {
 
     get status(): UserStatus {
         return this.props.status;
+    }
+
+    // Tutor or student
+    get metadata(): IDocumentReference {
+        return this.props.metadata || ([] as any);
     }
 }

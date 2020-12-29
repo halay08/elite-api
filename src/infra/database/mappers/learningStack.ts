@@ -18,13 +18,7 @@ export class LearningStackMapper {
 
             comment: raw.comment,
 
-            earnedAmount: raw.earnedAmount,
-
-            createdAt: raw.createdAt,
-
-            updatedAt: raw.updatedAt,
-
-            deletedAt: raw.deletedAt
+            earnedAmount: raw.earnedAmount
         });
     }
 }

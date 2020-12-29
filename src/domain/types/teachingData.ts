@@ -1,5 +1,5 @@
 import { IDocumentReference } from '@/src/infra/database/types';
-import { IEntity, ITimestamp } from '.';
+import { IEntity } from '.';
 
 type ITeachingData = {
     tutor: IDocumentReference;
@@ -18,6 +18,6 @@ type ITeachingData = {
 /**
  * Tutor teaching data entity
  */
-type ITeachingDataEntity = IEntity & Required<ITeachingData> & ITimestamp;
+type ITeachingDataEntity = IEntity & Required<ITeachingData>;
 
 export { ITeachingDataEntity, ITeachingData };

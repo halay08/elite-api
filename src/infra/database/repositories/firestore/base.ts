@@ -150,9 +150,8 @@ export abstract class BaseRepository<T extends IEntity> {
      * @param user
      * @returns update
      */
-    async update(id: string, entity: T): Promise<T> {
-        const dto = this.serialize(entity);
-        await this.collection.update(id, dto);
+    async update(id: string, entity: Partial<T>): Promise<T> {
+        await this.collection.update(id, entity);
 
         return this.findById(id);
     }

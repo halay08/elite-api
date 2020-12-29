@@ -6,10 +6,15 @@ import { BaseService } from './base';
 import Container from '@/src/container';
 import { TutorStatus } from '@/src/domain/types';
 import { inject } from 'inversify';
+import { TeachingDataService } from '.';
+import { IQuery, IQueryOption } from '@/src/infra/database/types';
 
 @provide(TYPES.TutorService)
 export class TutorService extends BaseService<Tutor> {
-    constructor(@inject(TYPES.UserRepository) private readonly userRepository: IUserRepository) {
+    constructor(
+        @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository,
+        @inject(TYPES.TeachingDataService) private readonly teachingDataService: TeachingDataService
+    ) {
         super();
     }
 
@@ -33,8 +38,49 @@ export class TutorService extends BaseService<Tutor> {
             return existed;
         }
 
-        const tutor: Tutor = Tutor.create({ user: userRef, activeStatus: TutorStatus.ACTIVE });
+        const tutor: Tutor = Tutor.create({ id, user: userRef, activeStatus: TutorStatus.ACTIVE });
         const created = await this.create(tutor);
         return created;
+    }
+
+    /**
+     * Gets elite tutors.
+     * It will be used to recommend tutors and courses for new student which just registers new account.
+     * @returns TeachingData[]
+     */
+    async getElites(limit: number = 10): Promise<Tutor[]> {
+        const queries: IQuery<Tutor>[] = [];
+        const options: Partial<IQueryOption<Tutor>> = {
+            limit,
+            orderBy: []
+        };
+
+        const eliteTeachingData = await this.teachingDataService.getElites();
+
+        const tutorIDs: string[] = eliteTeachingData.map((item) => {
+            const teachingData = item.serialize();
+            return teachingData.tutor.id || '';
+        });
+
+        // Query top tutors which have the highest complete sessions and total of earned amount
+        if (tutorIDs.length > 0) {
+            queries.push({
+                id: tutorIDs,
+                operator: 'in'
+            });
+        } else {
+            options.orderBy = [
+                {
+                    field: 'happyUsers',
+                    order: 'desc'
+                },
+                {
+                    field: 'reviews',
+                    order: 'desc'
+                }
+            ];
+        }
+
+        return this.query(queries, options);
     }
 }

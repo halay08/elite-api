@@ -9,6 +9,12 @@ import { ILearningStackEntity } from '@/src/domain/types';
 
 @provide(TYPES.LearningStackRepository)
 export class LearningStackRepository extends BaseRepository<LearningStack> implements ILearningStackRepository {
+    constructor() {
+        super();
+        // No deletedAt field is included in the collection document
+        this.collection.useHardDelete();
+    }
+
     /**
      * Gets collection
      * @returns
