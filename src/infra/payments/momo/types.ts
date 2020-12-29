@@ -10,7 +10,7 @@ export type MomoCaptureWallet = {
     returnUrl: string;
     notifyUrl: string;
     requestType?: string;
-    extraData?: string;
+    extraData: string;
 };
 
 export type MomoIPNRequest = {

@@ -6,7 +6,6 @@ import { provide } from 'inversify-binding-decorators';
 import { Booking } from '@/domain';
 import { IBookingSession, BookingStatus, CostType } from '@/domain/types';
 import * as nanoid from 'nanoid';
-import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
 import {
     IRepository,
     IBookingRepository,
@@ -16,14 +15,13 @@ import {
 import TYPES from '@/src/types';
 import Container from '@/src/container';
 import { BookingDTO } from '@/api/http/requests';
-import { BaseService, CouponService } from '.';
+import { BaseService } from '.';
 import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.BookingService)
 export class BookingService extends BaseService<Booking> {
-    @inject(TYPES.CouponService) private readonly couponService: CouponService;
     @inject(TYPES.SessionRepository) private readonly sessionRepository: ISessionRepository;
-    @inject(TYPES.UserService) private readonly userRepository: IUserRepository;
+    @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository;
     /**
      * Create tutor repository instance
      * @returns IRepository<T>
@@ -44,19 +42,40 @@ export class BookingService extends BaseService<Booking> {
         return orderId();
     }
 
+    /**
+     * Get booking by orderId which was generated from the function generateOrderId
+     *
+     * @param {string} orderId
+     * @returns
+     * @memberof BookingService
+     */
+    public async getBookingByOrderId(orderId: string): Promise<Booking> {
+        const query = await this.findBy('orderId', orderId);
+        const [booking]: Array<Booking> = query || [];
+
+        if (!booking) throw new NotFoundError('Booking is not found');
+
+        return booking;
+    }
+
+    /**
+     * Create a booking
+     *
+     * @param {BookingDTO} { paymentMethod, coupon, amount, sessionId, tutorId, bookedDate }
+     * @param {fireauth.IUserRecord} user
+     * @returns {Promise<string>}
+     * @memberof BookingService
+     */
     public async createBooking(
-        { paymentMethod, coupon, amount, sessionId, tutorId, bookedDate }: BookingDTO,
+        { paymentMethod, amount, sessionId, bookedDate }: BookingDTO,
         user: fireauth.IUserRecord
     ): Promise<string> {
-        const studentRef = this.userRepository.getDocumentRef(`${user.uid}`);
-        const session = await this.sessionRepository.findById(sessionId);
-
-        if (!session || !studentRef) {
-            throw new NotFoundError('Invalid booking reference fields');
-        }
+        const sessionData = await this.sessionRepository.findById(sessionId);
+        const session = sessionData.serialize();
 
         const orderId = this.generateOrderId();
-
+        const studentRef = this.userRepository.getDocumentRef(`${user.uid}`);
+        const tutorRef = this.userRepository.getDocumentRef(`${session.tutor.id}`);
         const sessionRef = this.sessionRepository.getDocumentRef(`${session.id}`);
 
         const bookingSession: IBookingSession = {
@@ -66,15 +85,15 @@ export class BookingService extends BaseService<Booking> {
             costType: CostType.CASH
         };
 
-        const getCoupon = coupon ? await this.couponService.verifyCoupon(coupon) : null;
         // TODO: Need to calculate amount here based on coupon.
+        // const getCoupon = coupon ? await this.couponService.verifyCoupon(coupon) : null;
         // There are two types of coupon: percentage & subtract amount
 
         const model = Booking.create({
             orderId,
-            coupon: getCoupon,
+            coupon: null,
             student: studentRef,
-            tutor: session.tutor,
+            tutor: tutorRef,
             originSession: sessionRef,
             bookingSession: bookingSession,
             amount,
@@ -88,14 +107,6 @@ export class BookingService extends BaseService<Booking> {
         if (!booking) {
             throw new Error(`Couldn't create booking record`);
         }
-
-        // Notification & email
-        const data = {
-            name: user.displayName,
-            orderId
-        };
-        const notification = new EmailAdapter(user.email as string, TemplateType.BOOKING, data, Vendor.GMAIL);
-        notification.send();
 
         return orderId;
     }

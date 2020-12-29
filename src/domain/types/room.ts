@@ -2,6 +2,7 @@ import { IEntity, ITimestamp } from '.';
 
 enum RoomStatus {
     BUSY = 'busy',
+    NOT_READY = 'not_ready',
     AVAILABBLE = 'available'
 }
 

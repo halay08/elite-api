@@ -2,6 +2,7 @@ import { Joi, validate } from 'express-validation';
 import { isJSON } from '@/app/helpers';
 
 export type momoWalletDTO = {
+    orderId: string; // this was generated when creating a booking
     amount: string;
     orderInfo: string;
     extraData: string;
@@ -10,6 +11,7 @@ export type momoWalletDTO = {
 const Validation = {
     momo: {
         body: Joi.object({
+            orderId: Joi.string().required(),
             amount: Joi.string().required(),
             orderInfo: Joi.string().optional(),
             extraData: Joi.string()

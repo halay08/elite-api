@@ -9,7 +9,7 @@ enum BookingStatus {
     AVAILABLE = 'available',
     ONHOLD = 'onhold',
     PROCESSING = 'processing',
-    BOOKED = 'booked'
+    PAID = 'paid'
 }
 
 type IBookingSession = Pick<ISession, 'startTime' | 'duration' | 'cost' | 'costType'>;

@@ -10,7 +10,7 @@ import { momoWalletDTO, validateCreateMomoWallet, validateMomoIPN } from '@/api/
 import { PaymentService } from '@/app/services';
 import { paymentConfig } from '@/api/http/config/constants';
 import { Momo, MomoCaptureWallet, MomoWalletResponse, MomoIPNRequest } from '@/infra/payments/momo';
-import { UserRole } from '@/src/domain/types';
+import { UserRole, PaymentProcessing } from '@/src/domain/types';
 import { authorize } from '@/api/http/middlewares';
 
 @controller(`/payments`)
@@ -75,11 +75,10 @@ export class PaymentController extends BaseHttpController implements interfaces.
     @httpPost('/momo', authorize({ roles: [UserRole.STUDENT, UserRole.ADMIN] }), validateCreateMomoWallet)
     public async momo(@requestBody() body: momoWalletDTO, @response() res: Response) {
         try {
-            const orderId = this.paymentService.generateOrderId();
             const payload: MomoCaptureWallet = {
-                requestId: orderId,
+                requestId: body.orderId,
                 amount: body.amount,
-                orderId: orderId,
+                orderId: body.orderId,
                 orderInfo: body.orderInfo,
                 returnUrl: paymentConfig.returnUrl,
                 notifyUrl: paymentConfig.notifyUrl,
@@ -160,8 +159,12 @@ export class PaymentController extends BaseHttpController implements interfaces.
         try {
             const ipnResponse = await this.paymentByMomo.handleIncomingIPN(payload);
 
-            const data = JSON.parse(payload.extraData);
-            await this.paymentService.onSuccessTransaction(data);
+            const data: PaymentProcessing = JSON.parse(payload.extraData);
+            await this.paymentService.onSuccessTransaction({
+                ...data,
+                transactionId: payload.transId,
+                orderId: ipnResponse.orderId
+            });
 
             return res.status(HttpStatus.OK).json(ipnResponse);
         } catch ({ message }) {

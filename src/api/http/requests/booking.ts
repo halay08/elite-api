@@ -10,8 +10,6 @@ type BookingDTO = {
 
     sessionId: string;
 
-    tutorId: string;
-
     bookedDate: Date;
 };
 
@@ -24,7 +22,6 @@ const BookingValidation = {
             coupon: Joi.string().optional(),
             amount: Joi.number().required(),
             sessionId: Joi.string().required(),
-            tutorId: Joi.string().required(),
             bookedDate: Joi.date().required()
         })
     }

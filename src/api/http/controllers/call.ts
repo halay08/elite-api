@@ -1,4 +1,3 @@
-import * as cuid from 'cuid';
 import { fireauth } from '@/infra/auth/firebase/types';
 import { Response } from 'express';
 import { Joi, validate } from 'express-validation';
@@ -8,7 +7,6 @@ import {
     BaseHttpController,
     controller,
     httpGet,
-    httpPost,
     interfaces,
     requestParam,
     queryParam,
@@ -18,8 +16,7 @@ import {
 import { env } from '@/api/http/config/constants';
 import TYPES from '@/src/types';
 import { Twilio as Call } from '@/infra/call/twillio';
-import { Room } from '@/domain/index';
-import { RoomStatus, UserRole } from '@/src/domain/types';
+import { UserRole } from '@/src/domain/types';
 import { authorize } from '@/api/http/middlewares';
 import { RoomService } from '@/src/app/services';
 
@@ -92,66 +89,6 @@ export class CallController extends BaseHttpController implements interfaces.Con
             return res.status(HttpStatus.OK).json(token).end();
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
-        }
-    }
-
-    /**
-     *
-     * @api {POST} /call/create?startAt=timestamp Get video call token
-     * @apiName Join people to a room
-     * @apiGroup Call
-     * @apiVersion  1.0.0
-     * @apiCurl curl -XPOST -i -H"Content-Type: application/json" -H "Authorization: Bearer $TOKEN" http://localhost:5001/elites-work-staging/asia-east2/api/v1/call/create
-     *
-     * @apiHeader {String} Authorization User's access key.
-     * @apiHeaderExample {json} Header-Example:
-     *     {
-     *       "Authorization": "Bearer: dsfsdkfhjks2904820493204930-sdflskjd"
-     *     }
-     *
-     * @apiParam  {String} roomName Id of course was created by teacher
-     * @apiParam  {String} startAt Timestamp the datetime student want to learn
-     *
-     * @apiParamExample  {type} Request-Example:
-     * {
-     *     roomName : 'Ygfec8d3BfVk7E7OeDPm'
-     *     startAt : '1606266300000'
-     * }
-     *
-     * @apiSuccess (200) {json} String token
-     *
-     * @apiSuccessExample {json} Success-Response:
-     * {
-     *     id : '324kjhdsfjkhsk2',
-     *     studentId: '123sfs',
-     *     teacherId: '345sdi'
-     * }
-     *
-     * @apiError BAD_REQUEST Return Error Message.
-     *
-     * @apiErrorExample {Object} Error-Response:
-     *   Error 400: Bad Request
-     *   {
-     *     "error": "roomName is required"
-     *   }
-     *
-     *
-     */
-    @httpPost('/create')
-    public async create(@queryParam('startAt') startAt: number, @response() res: Response) {
-        try {
-            const { user }: { user: fireauth.IUserRecord } = this.httpContext.user.details;
-            const room = Room.create({
-                name: cuid(),
-                studentId: user.uid,
-                teacherId: cuid(),
-                status: RoomStatus.AVAILABBLE
-            });
-            const data = await this.roomService.create(room);
-
-            return res.status(HttpStatus.CREATED).json(data.serialize());
-        } catch ({ message }) {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message }).end();
         }
     }
 

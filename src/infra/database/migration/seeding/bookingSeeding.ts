@@ -50,14 +50,14 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
 
     async getBookingData(): Promise<IBookingEntity[]> {
         const studentReferences = await this.getUserReferences(UserRole.STUDENT);
-        const teacherReferences = await this.getUserReferences(UserRole.TUTOR);
+        const tutorReferences = await this.getUserReferences(UserRole.TUTOR);
         const sessions = await this.getSessions();
         const sessionReferences: IDocumentReference[] = this.getSessionReferences(sessions);
 
         return [
             {
                 student: studentReferences[0],
-                tutor: teacherReferences[0],
+                tutor: tutorReferences[0],
                 originSession: sessionReferences[0],
                 bookingSession: {
                     startTime: sessions[0].props.startTime,
@@ -66,15 +66,15 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                     costType: sessions[0].props.costType
                 },
                 orderId: 'MOMO1000000',
-                transactionId: '',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 100,
                 paymentMethod: 'momo',
-                status: BookingStatus.BOOKED
+                transactionId: '2302586804',
+                status: BookingStatus.PAID
             },
             {
                 student: studentReferences[1],
-                tutor: teacherReferences[1],
+                tutor: tutorReferences[1],
                 originSession: sessionReferences[1],
                 bookingSession: {
                     startTime: sessions[1].props.startTime,
@@ -83,11 +83,11 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                     costType: sessions[1].props.costType
                 },
                 orderId: 'MOMO1000001',
-                transactionId: '',
                 bookedDate: time.getCurrentUTCDate(),
                 amount: 200,
                 paymentMethod: 'momo',
-                status: BookingStatus.BOOKED
+                transactionId: '2302586804',
+                status: BookingStatus.PAID
             }
         ];
     }
@@ -122,12 +122,12 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
         }
 
         const studentReferences = await this.getUserReferences(UserRole.STUDENT);
-        const teacherReferences = await this.getUserReferences(UserRole.STUDENT);
+        const tutorReferences = await this.getUserReferences(UserRole.TUTOR);
 
         const model: LearningStack = LearningStack.create({
             booking: bookingRef,
             student: studentReferences[0],
-            tutor: teacherReferences[0],
+            tutor: tutorReferences[0],
             status: LearningStatus.BOOKED,
             comment: '',
             earnedAmount: 0

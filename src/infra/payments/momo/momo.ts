@@ -56,7 +56,7 @@ export class Momo {
      */
     private verifySignature(momoSignature: string, payload: MomoIPNSignature): boolean {
         const ourGeneratedSignature = this.createSignature(payload);
-
+        if (process.env.NODE_ENV === 'development') console.log(ourGeneratedSignature);
         return momoSignature === ourGeneratedSignature;
     }
 
