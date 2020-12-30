@@ -50,7 +50,10 @@ export class TutorController extends BaseHttpController implements interfaces.Co
         try {
             const queryOption: Partial<IQueryOption<Tutor>> = {};
             // startTime will be implemented when we have course and session data.
-            const { category, expertise, startTime, status, lastDocumentId } = queries;
+            const { category, expertise, startTime, status, sort, lastDocumentId } = queries;
+            if (sort) {
+                queryOption.orderBy = Object.entries(sort).map(([field, order = 'asc']) => ({ field, order }));
+            }
 
             queryOption.limit = LIMIT;
 

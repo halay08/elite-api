@@ -1,7 +1,7 @@
 type ITutorSort = {
-    availability: 'asc' | 'ASC' | 'desc' | 'DESC';
+    happyUsers: 'asc' | 'desc';
 
-    experience: 'asc' | 'ASC' | 'desc' | 'DESC';
+    reviews: 'asc' | 'desc';
 };
 
 enum TutorFilterStatus {

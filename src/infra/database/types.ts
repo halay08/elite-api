@@ -1,7 +1,7 @@
 import { IFirestoreQuery } from './firestore/types';
 
 type IOrderBy<T> = {
-    field: keyof T | keyof T[];
+    field: keyof T | string;
 
     order: 'desc' | 'asc';
 };
