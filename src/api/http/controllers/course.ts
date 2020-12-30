@@ -15,6 +15,7 @@ import { SessionService, CourseService } from '@/src/app/services';
 import { authorize } from '@/api/http/middlewares';
 import { ISessionQueryParam } from '../requests';
 import { UserRole } from '@/src/domain/types';
+import { mapUserRef } from '@/src/app/helpers';
 
 // Required login
 @controller(`/courses`, authorize({ roles: [UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT] }))
@@ -59,7 +60,12 @@ export class CourseController extends BaseHttpController implements interfaces.C
         try {
             const courses = await this.courseService.getRecommendations();
 
-            return res.status(HttpStatus.OK).json(courses.map((s) => s.serialize()));
+            const data = courses.map((s) => {
+                const entity = s.serialize();
+                return mapUserRef(entity);
+            });
+
+            return res.status(HttpStatus.OK).json(data);
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message });
         }

@@ -93,13 +93,7 @@ export default class FirestoreCollection<T extends IEntity> {
                 const refDoc = await ref.get();
                 // Deep 3 levels.
                 if (recursive < 3) {
-                    if (doc.id !== ref.id) {
-                        // Map reference for ALL levels
-                        data[key] = await this._mapDocReference(refDoc, recursive + 1);
-                    } else {
-                        // Avoid loop mapping, ex. tutor -> user -> tutor -> user...
-                        data[key] = this._mapDocField(refDoc, refDoc.data());
-                    }
+                    data[key] = await this._mapDocReference(refDoc, recursive + 1);
                 } else {
                     data[key] = ref;
                 }
