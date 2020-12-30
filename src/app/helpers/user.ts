@@ -4,7 +4,7 @@ import { UserRole } from '@/domain/types';
  * Check object is user or not
  */
 const isObjectUser = (value: any) => {
-    return typeof value.role !== 'undefined' && [UserRole.TUTOR, UserRole.STUDENT].includes(value.role);
+    return typeof value?.role !== 'undefined' && [UserRole.TUTOR, UserRole.STUDENT].includes(value?.role);
 };
 
 /**
