@@ -56,11 +56,8 @@ export class TutorReviewerService extends BaseService<TutorReviewer> {
         queryOption.limit = limit;
 
         if (lastDocument) {
-            if (typeof lastDocument === 'string') {
-                queryOption.startAfter = this.getDocumentRef(lastDocument);
-            } else {
-                queryOption.startAfter = lastDocument;
-            }
+            const ref = typeof lastDocument === 'string' ? this.getDocumentRef(lastDocument) : lastDocument;
+            queryOption.startAfter = await ref.get();
         }
 
         const operatorQueries: IQuery<TutorReviewer>[] = [

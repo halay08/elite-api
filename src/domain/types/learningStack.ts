@@ -24,6 +24,8 @@ type ILearningStack = {
 
     status: LearningStatus;
 
+    startTime: Date;
+
     comment?: string; // cancellation/miss reason, notes,...
 
     earnedAmount: number; // Teaching amount. Default: 0

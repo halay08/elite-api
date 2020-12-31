@@ -16,6 +16,8 @@ export class LearningStackMapper {
 
             status: raw.status,
 
+            startTime: raw.startTime,
+
             comment: raw.comment,
 
             earnedAmount: raw.earnedAmount

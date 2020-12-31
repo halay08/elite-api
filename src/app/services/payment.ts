@@ -24,7 +24,7 @@ export class PaymentService extends BookingService {
     public async onSuccessTransaction({ sessionId, orderId, transactionId }: PaymentProcessing) {
         // Get booking from orderId
         const booking: Booking = await this.bookingService.getBookingByOrderId(orderId);
-        const { id: bookingId, student, tutor, bookedDate } = booking.serialize();
+        const { id: bookingId, student, tutor, bookedDate, bookingSession } = booking.serialize();
 
         // Change booking status to paid
         const updateBookingStatus = this.bookingService.update(bookingId as string, {
@@ -48,6 +48,7 @@ export class PaymentService extends BookingService {
             tutor: this.userService.getDocumentRef(`${tutor.id}`),
             status: LearningStatus.BOOKED,
             earnedAmount: 0,
+            startTime: bookingSession.startTime,
             comment: ''
         });
         const createLearningStack = this.learningStackService.create(learningStack);

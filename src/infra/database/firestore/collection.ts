@@ -278,6 +278,13 @@ export default class FirestoreCollection<T extends IEntity> {
             });
         }
 
+        if (options.orderBy && options.orderBy.length > 0) {
+            options.orderBy.reduce((acc, cur) => {
+                query = acc.orderBy(cur.field as any, cur.order);
+                return query;
+            }, query);
+        }
+
         if (options.startAt) {
             query = query.startAt(options.startAt);
         } else if (options.startAfter) {
@@ -292,13 +299,6 @@ export default class FirestoreCollection<T extends IEntity> {
 
         if (options.limit) {
             query = query.limit(options.limit);
-        }
-
-        if (options.orderBy && options.orderBy.length > 0) {
-            options.orderBy.reduce((acc, cur) => {
-                query = acc.orderBy(cur.field as any, cur.order);
-                return query;
-            }, query);
         }
 
         const documentData = await query.get();
