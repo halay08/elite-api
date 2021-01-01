@@ -7,3 +7,4 @@ export * from './student';
 export * from './booking';
 export * from './coupon';
 export * from './session';
+export * from './learningStack';

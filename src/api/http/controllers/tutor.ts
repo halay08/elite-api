@@ -58,7 +58,8 @@ export class TutorController extends BaseHttpController implements interfaces.Co
             queryOption.limit = LIMIT;
 
             if (lastDocumentId) {
-                queryOption.startAfter = this.tutorService.getDocumentRef(lastDocumentId);
+                const ref = this.tutorService.getDocumentRef(lastDocumentId);
+                queryOption.startAfter = await ref.get();
             }
 
             const operatorQueries = getOperatorQueries(queries);

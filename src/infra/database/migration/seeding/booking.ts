@@ -123,12 +123,14 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
 
         const studentReferences = await this.getUserReferences(UserRole.STUDENT);
         const tutorReferences = await this.getUserReferences(UserRole.TUTOR);
+        const startTime = booking.bookingSession.startTime;
 
         const model: LearningStack = LearningStack.create({
             booking: bookingRef,
             student: studentReferences[0],
             tutor: tutorReferences[0],
             status: LearningStatus.BOOKED,
+            startTime,
             comment: '',
             earnedAmount: 0
         });

@@ -1,5 +1,18 @@
 import { IFirestoreQuery } from './firestore/types';
 
+// Firebase types
+type IDocumentReference = FirebaseFirestore.DocumentReference;
+
+type IDocumentData = FirebaseFirestore.DocumentData;
+
+type IDocumentSnapshot<T> = FirebaseFirestore.DocumentSnapshot<T>;
+
+type ICollectionReference<T> = FirebaseFirestore.CollectionReference<T>;
+
+type IDocumentQuery<T> = IFirestoreQuery<T>;
+
+type IWriteResult = FirebaseFirestore.WriteResult;
+
 type IOrderBy<T> = {
     field: keyof T | string;
 
@@ -19,29 +32,16 @@ type IQueryOption<T> = {
 
     limit: number;
 
-    startAt?: IDocumentReference;
+    startAt?: IDocumentSnapshot<IDocumentData>;
 
-    startAfter?: IDocumentReference;
+    startAfter?: IDocumentSnapshot<IDocumentData>;
 
-    endAt?: IDocumentReference;
+    endAt?: IDocumentSnapshot<IDocumentData>;
 
-    endBefore?: IDocumentReference;
+    endBefore?: IDocumentSnapshot<IDocumentData>;
 
     orderBy: IOrderBy<T>[];
 };
-
-// Firebase types
-type IDocumentReference = FirebaseFirestore.DocumentReference;
-
-type IDocumentData = FirebaseFirestore.DocumentData;
-
-type IDocumentSnapshot<T> = FirebaseFirestore.DocumentSnapshot<T>;
-
-type ICollectionReference<T> = FirebaseFirestore.CollectionReference<T>;
-
-type IDocumentQuery<T> = IFirestoreQuery<T>;
-
-type IWriteResult = FirebaseFirestore.WriteResult;
 
 export {
     IQuery,

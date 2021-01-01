@@ -56,7 +56,7 @@ export class CourseService extends BaseService<Course> {
             return acc + session.serialize().cost;
         }, 0);
 
-        const tutorEntity = await this.tutorService.getById(course.tutor.id);
+        const tutorEntity = await this.tutorService.getByUser(course.tutor.id);
         const tutor = tutorEntity.serialize();
 
         return { ...course, tutor, totalCost };

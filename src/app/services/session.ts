@@ -10,6 +10,7 @@ import * as dayjs from 'dayjs';
 import { inject } from 'inversify';
 import { TutorService } from '@/src/app/services';
 import { ISessionDetail } from '@/src/app/types/session';
+import { NotFoundError } from '@/app/errors';
 
 @provide(TYPES.SessionService)
 export class SessionService extends BaseService<Session> {
@@ -69,8 +70,12 @@ export class SessionService extends BaseService<Session> {
      */
     async getDetailById(id: string): Promise<ISessionDetail> {
         const sessionEnity = await this.getById(id);
+
+        if (typeof sessionEnity === 'undefined' || !sessionEnity) {
+            throw new NotFoundError('Session not found');
+        }
         const session = sessionEnity.serialize();
-        const tutorEntity = await this.tutorService.getById(session.tutor.id);
+        const tutorEntity = await this.tutorService.getByUser(session.tutor.id);
         const tutor = tutorEntity.serialize();
 
         return { ...session, tutor };
