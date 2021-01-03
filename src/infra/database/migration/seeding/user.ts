@@ -29,7 +29,7 @@ export class UserSeeding implements ISeeding {
                 avatar: 'https://ca.slack-edge.com/T018R4JFELS-U018R4LCPFC-3e7f2fc0ab72-512',
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -50,7 +50,7 @@ export class UserSeeding implements ISeeding {
                 avatar: 'https://ca.slack-edge.com/T018R4JFELS-U018R4LCPFC-3e7f2fc0ab72-512',
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -72,7 +72,7 @@ export class UserSeeding implements ISeeding {
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                 videoIntro: 'https://www.youtube.com/watch?v=gvo2wABupiI',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -94,7 +94,7 @@ export class UserSeeding implements ISeeding {
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
                 videoIntro: 'https://www.youtube.com/watch?v=tKboZuXfozo',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -116,7 +116,7 @@ export class UserSeeding implements ISeeding {
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
                 videoIntro: 'https://www.youtube.com/watch?v=D595bNLttPk',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -138,7 +138,7 @@ export class UserSeeding implements ISeeding {
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
                 videoIntro: 'https://www.youtube.com/watch?v=gXadLSFfRLk',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'
@@ -161,7 +161,7 @@ export class UserSeeding implements ISeeding {
                 shortIntro:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
                 videoIntro: 'https://www.youtube.com/watch?v=gXadLSFfRLk',
-                timezone: '+7',
+                timezone: 'Asia/Ho_Chi_Minh',
                 country: {
                     code: 'vn',
                     name: 'Vietnam'

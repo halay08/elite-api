@@ -1,4 +1,5 @@
-import { IDocumentReference } from '@/src/infra/database/types';
+import { IDocumentReference } from '@/infra/database/types';
+
 import { IEntity, ITimestamp, CostType, IMedia } from '.';
 
 enum SessionStatus {

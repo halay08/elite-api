@@ -12,3 +12,4 @@ export * from './teachingData';
 export * from './tutorReviewer';
 export * from './learningStack';
 export * from './tutorReviewerSummary';
+export * from './scheduledTask';

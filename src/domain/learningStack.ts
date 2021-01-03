@@ -1,7 +1,8 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { ILearningStackEntity } from './types';
+import { ILearningStackEntity, LearningStatus } from './types';
+import { IDocumentReference } from '@/src/infra/database/types';
 
 // Collection: learning_stacks
 @injectable()
@@ -22,5 +23,29 @@ export class LearningStack extends Entity<ILearningStackEntity> {
 
     get id(): string {
         return this._props.id || '';
+    }
+
+    get booking(): IDocumentReference {
+        return this._props.booking;
+    }
+
+    get student(): IDocumentReference {
+        return this._props.student;
+    }
+
+    get tutor(): IDocumentReference {
+        return this._props.tutor;
+    }
+
+    get status(): LearningStatus {
+        return this._props.status;
+    }
+
+    get earnedAmount(): number {
+        return this._props.earnedAmount;
+    }
+
+    get comment(): string | undefined {
+        return this._props.comment;
     }
 }

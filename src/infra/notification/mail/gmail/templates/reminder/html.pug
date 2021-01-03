@@ -1,0 +1,17 @@
+p Hi #{name},
+
+p
+  | You've already booked the session. Your order number is&nbsp;
+  strong #{orderId}.&nbsp;
+  br
+  | Session will be start at #{bookedDate}&nbsp;
+  br
+  | The video room was created&nbsp;
+  a(href=`https://dev.elites.work/rooms/${orderId}`) here
+  | &nbsp;but not ready until you get another email to inform you about that.&nbsp;
+  br
+  | Click&nbsp;
+  a(href="https://dev.elites.work/booking") here
+  | &nbsp;to view your booking history.
+  br
+  | Best regards,

@@ -24,6 +24,7 @@ export default {
     TutorReviewerRepository: Symbol.for('TutorReviewerRepository'),
     LearningStackRepository: Symbol.for('LearningStackRepository'),
     TutorReviewerSummaryRepository: Symbol.for('TutorReviewerSummaryRepository'),
+    ScheduledTaskRepository: Symbol.for('ScheduledTaskRepository'),
 
     UserService: Symbol.for('UserService'),
     AuthService: Symbol.for('AuthService'),
@@ -38,6 +39,7 @@ export default {
     TutorReviewerService: Symbol.for('TutorReviewerService'),
     LearningStackService: Symbol.for('LearningStackService'),
     TutorReviewerSummaryService: Symbol.for('TutorReviewerSummaryService'),
+    ScheduledTaskService: Symbol.for('ScheduledTaskService'),
 
     UserSeeding: Symbol.for('UserSeeding'),
     TutorSeeding: Symbol.for('TutorSeeding'),

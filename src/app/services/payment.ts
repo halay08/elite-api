@@ -1,18 +1,26 @@
 import { provide } from 'inversify-binding-decorators';
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { Booking, Room, LearningStack } from '@/domain';
-import { SessionService, BookingService, RoomService, LearningStackService, UserService } from './index';
+import { Booking, Session, Room, LearningStack, ScheduledTask } from '@/domain';
+import { BookingService, UserService } from './index';
 import { PaymentProcessing, SessionStatus, BookingStatus, RoomStatus, LearningStatus } from '@/domain/types';
-import { EmailAdapter, Vendor, TemplateType } from '@/src/infra/notification/mail';
+import {
+    ChainOfEvents,
+    BookingHandler,
+    SessionHandler,
+    LearningStackHandler,
+    VideoCallHandler,
+    ScheduledTaskHandler,
+    NotificationHandler,
+    IPaymentHandler,
+    IPaymentRequestHandler,
+    EmailBookingDataTypes
+} from './paymentHandler';
 
 @provide(TYPES.PaymentService)
 export class PaymentService extends BookingService {
-    @inject(TYPES.SessionService) private readonly sessionService: SessionService;
     @inject(TYPES.UserService) private readonly userService: UserService;
     @inject(TYPES.BookingService) private readonly bookingService: BookingService;
-    @inject(TYPES.RoomService) private readonly roomService: RoomService;
-    @inject(TYPES.LearningStackService) private readonly learningStackService: LearningStackService;
 
     /**
      * Handle the actions after verified that session booked successfully
@@ -25,53 +33,119 @@ export class PaymentService extends BookingService {
         // Get booking from orderId
         const booking: Booking = await this.bookingService.getBookingByOrderId(orderId);
         const { id: bookingId, student, tutor, bookedDate, bookingSession } = booking.serialize();
+        const { startTime, duration } = bookingSession;
+        const bookingData: EmailBookingDataTypes = {
+            orderId,
+            bookedDate,
+            startTime,
+            duration
+        };
 
         // Change booking status to paid
-        const updateBookingStatus = this.bookingService.update(bookingId as string, {
-            transactionId,
-            status: BookingStatus.PAID
-        });
-
-        // Create a room for call
-        const room: Room = Room.create({
-            name: orderId,
-            studentId: student.id,
-            teacherId: tutor.id,
-            status: RoomStatus.NOT_READY
-        });
-        const createRoom = this.roomService.create(room);
-
-        // Create a session stack
-        const learningStack: LearningStack = LearningStack.create({
-            booking: this.bookingService.getDocumentRef(`${bookingId}`),
-            student: this.userService.getDocumentRef(`${student.id}`),
-            tutor: this.userService.getDocumentRef(`${tutor.id}`),
-            status: LearningStatus.BOOKED,
-            earnedAmount: 0,
-            startTime: bookingSession.startTime,
-            comment: ''
-        });
-        const createLearningStack = this.learningStackService.create(learningStack);
+        const bookingEvent: IPaymentRequestHandler<Booking> = {
+            name: ChainOfEvents.BOOKING_HANDLER,
+            data: {
+                transactionId,
+                status: BookingStatus.PAID
+            },
+            id: bookingId as string
+        };
 
         // Change session status to booked
-        const updateSessionStatus = this.sessionService.update(sessionId, {
-            status: SessionStatus.BOOKED
-        });
+        const sessionEvent: IPaymentRequestHandler<Session> = {
+            name: ChainOfEvents.SESSION_HANDLER,
+            data: {
+                status: SessionStatus.BOOKED
+            },
+            id: sessionId
+        };
 
-        return Promise.all([updateBookingStatus, createRoom, createLearningStack, updateSessionStatus])
-            .then(() => {
-                // Send email notification to student
-                const data = {
-                    name: (student as any).name,
-                    orderId,
-                    bookedDate
-                };
+        // Create learning stack
+        const learningStackEvent: IPaymentRequestHandler<LearningStack> = {
+            name: ChainOfEvents.LEARNINGSTACK_HANDLER,
+            data: {
+                booking: this.bookingService.getDocumentRef(`${bookingId}`),
+                student: this.userService.getDocumentRef(`${student.id}`),
+                tutor: this.userService.getDocumentRef(`${tutor.id}`),
+                status: LearningStatus.BOOKED,
+                earnedAmount: 0,
+                comment: ''
+            },
+            id: ''
+        };
 
-                const notification = new EmailAdapter((student as any).email, TemplateType.BOOKING, data, Vendor.GMAIL);
-                notification.send();
-            })
-            .catch(({ message }) => {
-                throw new Error(message);
-            });
+        // Create a room for call
+        const videoCallEvent: IPaymentRequestHandler<Room> = {
+            name: ChainOfEvents.VIDEOCALL_HANDLER,
+            data: {
+                name: orderId,
+                studentId: student.id,
+                tutorId: tutor.id,
+                status: RoomStatus.NOT_READY
+            },
+            id: ''
+        };
+
+        // Create a scheduled task to run in background
+        const scheduledTaskEvent: IPaymentRequestHandler<ScheduledTask> = {
+            name: ChainOfEvents.SCHEDULED_TASK_HANDLER,
+            data: {
+                performAt: startTime,
+                options: {
+                    student,
+                    tutor,
+                    bookingData
+                }
+            },
+            id: ''
+        };
+
+        // Send email notification to student
+        const notificationTaskEvent: IPaymentRequestHandler<any> = {
+            name: ChainOfEvents.NOTIFICATION_TASK_HANDLER,
+            data: {
+                email: (student as any).email,
+                data: { ...bookingData, name: (student as any).name }
+            },
+            id: ''
+        };
+
+        // constructs the actual chain.
+        const bookingHandler = new BookingHandler();
+        bookingHandler
+            .setNext(new SessionHandler())
+            .setNext(new LearningStackHandler())
+            .setNext(new VideoCallHandler())
+            .setNext(new ScheduledTaskHandler())
+            .setNext(new NotificationHandler());
+
+        /**
+         * The chainOfEvents is usually suited to work with a single handler. In most
+         * cases, it is not even aware that the handler is part of a chain.
+         */
+        const chainOfEvents = () => {
+            const listOfEvents: Array<IPaymentRequestHandler<any>> = [
+                bookingEvent,
+                sessionEvent,
+                learningStackEvent,
+                videoCallEvent,
+                scheduledTaskEvent,
+                notificationTaskEvent
+            ];
+
+            return {
+                startAt: (handler: IPaymentHandler) => {
+                    const tasks = listOfEvents.map((event: IPaymentRequestHandler<any>) => {
+                        return handler.handle(event);
+                    });
+
+                    return Promise.all(tasks).catch(({ message }) => {
+                        throw new Error(message);
+                    });
+                }
+            };
+        };
+
+        return chainOfEvents().startAt(bookingHandler);
     }
 }

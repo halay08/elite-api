@@ -4,7 +4,9 @@ export enum Vendor {
 }
 
 export enum TemplateType {
-    BOOKING = 'booking'
+    BOOKING = 'booking',
+    REMINDER_TUTOR = 'reminder_tutor',
+    REMINDER_STUDENT = 'reminder_student'
 }
 
 export interface EmailNotification {

@@ -13,5 +13,6 @@ export const COLLECTIONS = {
     TeachingData: 'teaching_data',
     TutorReviewer: 'tutor_reviewers',
     LearningStack: 'learning_stacks',
-    TutorReviewerSummary: 'tutor_reviewer_summary'
+    TutorReviewerSummary: 'tutor_reviewer_summary',
+    ScheduledTask: 'scheduled_tasks'
 };
