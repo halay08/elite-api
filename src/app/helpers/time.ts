@@ -1,5 +1,8 @@
 import { admin } from '@/src/firebase.config';
 import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 type ITime = {
     year: number;
@@ -31,7 +34,8 @@ const addDate = (date?: Date, days: number = 1): Date => {
 
 const getCustomTime = (time?: Partial<ITime>): Date => {
     const utcTime = getCurrentUTCDate();
-    return dayjs()
+    const date = dayjs
+        .utc()
         .set('year', time?.year || utcTime.getFullYear())
         .set('month', time?.month || utcTime.getDate() + 1)
         .set('date', time?.date || utcTime.getDate())
@@ -39,6 +43,8 @@ const getCustomTime = (time?: Partial<ITime>): Date => {
         .set('minute', time?.minute || utcTime.getMinutes())
         .set('second', time?.second || utcTime.getSeconds())
         .toDate();
+
+    return admin.firestore.Timestamp.fromDate(date).toDate();
 };
 
 export { ITime, getCurrentUTCDate, addDate, getCustomTime };

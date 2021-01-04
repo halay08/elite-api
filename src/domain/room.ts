@@ -24,7 +24,19 @@ export class Room extends Entity<IRoomEntity> {
         return this._props.id || '';
     }
 
+    get name(): string {
+        return this._props.name || '';
+    }
+
     get status(): RoomStatus {
         return this.props.status || RoomStatus.AVAILABBLE;
+    }
+
+    get studentId(): string {
+        return this.props.studentId;
+    }
+
+    get tutorId(): string {
+        return this.props.tutorId;
     }
 }

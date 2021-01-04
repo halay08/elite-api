@@ -3,6 +3,8 @@ import { IFirestoreQuery } from './firestore/types';
 // Firebase types
 type IDocumentReference = FirebaseFirestore.DocumentReference;
 
+type IFirestoreTimestamp = FirebaseFirestore.Timestamp;
+
 type IDocumentData = FirebaseFirestore.DocumentData;
 
 type IDocumentSnapshot<T> = FirebaseFirestore.DocumentSnapshot<T>;
@@ -53,5 +55,6 @@ export {
     IOperatorQuery,
     IDocumentSnapshot,
     IDocumentReference,
-    ICollectionReference
+    ICollectionReference,
+    IFirestoreTimestamp
 };

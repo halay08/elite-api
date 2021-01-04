@@ -10,7 +10,7 @@ export class RoomMapper {
 
             studentId: raw.studentId,
 
-            teacherId: raw.teacherId,
+            tutorId: raw.tutorId,
 
             status: raw.status,
 

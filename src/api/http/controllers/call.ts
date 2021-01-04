@@ -139,7 +139,7 @@ export class CallController extends BaseHttpController implements interfaces.Con
             const roomData = data.serialize();
 
             return res.status(HttpStatus.OK).json({
-                allow: roomData.studentId === user.uid || roomData.teacherId === user.uid
+                allow: roomData.studentId === user.uid || roomData.tutorId === user.uid
             });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();

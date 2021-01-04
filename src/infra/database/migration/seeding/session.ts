@@ -92,9 +92,9 @@ export class SessionSeeding extends BaseSeeding implements ISeeding {
         }
 
         const startTime: Date[] = [
-            time.getCustomTime({ date: 20, month: 12, hour: 8, minute: 30, second: 0 }),
-            time.getCustomTime({ date: 20, month: 12, hour: 9, minute: 30, second: 0 }),
-            time.getCustomTime({ date: 21, month: 12, hour: 9, minute: 30, second: 0 })
+            time.getCustomTime({ year: 2021, date: 20, month: 1, hour: 8, minute: 30, second: 0 }),
+            time.getCustomTime({ year: 2021, date: 20, month: 1, hour: 9, minute: 30, second: 0 }),
+            time.getCustomTime({ year: 2021, date: 21, month: 1, hour: 9, minute: 30, second: 0 })
         ];
 
         return [

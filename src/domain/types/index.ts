@@ -33,3 +33,4 @@ export * from './coupon';
 export * from './payment';
 export * from './teachingData';
 export * from './tutorReviewerSummary';
+export * from './scheduledTask';

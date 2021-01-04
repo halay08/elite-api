@@ -11,7 +11,7 @@ type IRoom = {
 
     studentId: string;
 
-    teacherId: string;
+    tutorId: string;
 
     status: RoomStatus;
 };

@@ -28,3 +28,4 @@ export * from './entity';
 export * from './coupon';
 export * from './teachingData';
 export * from './tutorReviewerSummary';
+export * from './scheduledTask';
