@@ -8,5 +8,5 @@ export type ScheduledTaskData = {
 };
 
 export interface EmailReminderStrategy {
-    sendEmail(): Promise<any>;
+    scheduleToSendEmail(): Promise<any>;
 }

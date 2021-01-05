@@ -15,7 +15,7 @@ enum ScheduledTaskStatus {
 type ScheduledTaskFCMOptions = {};
 type ScheduledTaskSMSOptions = {};
 type ScheduledTaskEmailOptions = {
-    email: string | string[];
+    email: string;
     data: Object;
     template: string;
 };

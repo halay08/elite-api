@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
 
-export default function (msg: any) {
+export function functionLog(msg: any) {
     functions.logger.info(msg, { structuredData: true });
 }

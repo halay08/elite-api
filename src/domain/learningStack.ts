@@ -48,4 +48,8 @@ export class LearningStack extends Entity<ILearningStackEntity> {
     get comment(): string | undefined {
         return this._props.comment;
     }
+
+    get startTime(): Date {
+        return this._props.startTime;
+    }
 }

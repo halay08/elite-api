@@ -69,6 +69,7 @@ export class PaymentService extends BookingService {
                 tutor: this.userService.getDocumentRef(`${tutor.id}`),
                 status: LearningStatus.BOOKED,
                 earnedAmount: 0,
+                startTime,
                 comment: ''
             },
             id: ''

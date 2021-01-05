@@ -7,7 +7,7 @@ enum RoomStatus {
 }
 
 type IRoom = {
-    name?: string;
+    name: string;
 
     studentId: string;
 

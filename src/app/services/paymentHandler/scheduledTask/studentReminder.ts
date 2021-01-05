@@ -16,7 +16,11 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export class StudentReminder extends BaseReminder implements EmailReminderStrategy {
-    public sendEmail(): Promise<ScheduledTask[]> {
+    protected getEmailTemplate(): string {
+        return TemplateType.REMINDER_STUDENT;
+    }
+
+    public scheduleToSendEmail(): Promise<ScheduledTask[]> {
         const scheduledTaskService = Container.get<ScheduledTaskService>(TYPES.ScheduledTaskService);
 
         const userTimezone = this.user.timezone;
@@ -36,8 +40,8 @@ export class StudentReminder extends BaseReminder implements EmailReminderStrate
                 performAt: beforeFifteenMinutes.toDate(),
                 options: {
                     email: this.user.email,
-                    data: { ...this.bookingData, startTime: meetingTime.toDate() },
-                    template: TemplateType.REMINDER_STUDENT
+                    data: { ...this.bookingData, startTime: meetingTime.format('YYYY-MM-DD HH:mm') },
+                    template: this.getEmailTemplate()
                 }
             };
 

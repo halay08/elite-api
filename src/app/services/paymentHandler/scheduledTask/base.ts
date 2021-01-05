@@ -6,6 +6,7 @@ export abstract class BaseReminder {
     protected user: IUserEntity;
     protected bookingData: EmailBookingDataTypes;
     protected performAt: Date;
+
     /**
      * Creates an instance of base service.
      */
@@ -14,4 +15,6 @@ export abstract class BaseReminder {
         this.performAt = performAt;
         this.bookingData = bookingData;
     }
+
+    protected abstract getEmailTemplate(): string;
 }

@@ -14,6 +14,7 @@ import {
     MomoIPNRequest
 } from './types';
 import { env, paymentConfig } from '@/api/http/config/constants';
+import { functionLog } from '@/api/http/helpers';
 
 @injectable()
 export class Momo {
@@ -56,7 +57,10 @@ export class Momo {
      */
     private verifySignature(momoSignature: string, payload: MomoIPNSignature): boolean {
         const ourGeneratedSignature = this.createSignature(payload);
+
         if (process.env.NODE_ENV === 'development') console.log(ourGeneratedSignature);
+        else functionLog(`Generate from payload: ${ourGeneratedSignature}`);
+
         return momoSignature === ourGeneratedSignature;
     }
 
@@ -136,6 +140,8 @@ export class Momo {
             }
         };
         const isValidSignature: boolean = this.verifySignature(signature, ipnPayloadForSignature);
+
+        functionLog(`From MOMO: ${signature}`);
 
         if (!isValidSignature) throw new Error('Signature is not valid!');
 

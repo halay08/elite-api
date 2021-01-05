@@ -6,6 +6,8 @@ import { Room } from '@/domain';
 export class RoomMapper {
     public static toDomain(raw: any): Room {
         return Room.create({
+            id: raw.id,
+
             name: raw.name,
 
             studentId: raw.studentId,

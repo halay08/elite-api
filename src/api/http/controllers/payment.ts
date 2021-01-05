@@ -7,6 +7,7 @@ import { BaseHttpController, controller, httpPost, interfaces, response, request
 
 import TYPES from '@/src/types';
 import { momoWalletDTO, validateCreateMomoWallet, validateMomoIPN } from '@/api/http/requests/payment';
+import { functionLog } from '@/api/http/helpers';
 import { PaymentService } from '@/app/services';
 import { paymentConfig } from '@/api/http/config/constants';
 import { Momo, MomoCaptureWallet, MomoWalletResponse, MomoIPNRequest } from '@/infra/payments/momo';
@@ -157,6 +158,7 @@ export class PaymentController extends BaseHttpController implements interfaces.
     @httpPost('/momo/ipn', validateMomoIPN)
     public async momoIPN(@requestBody() payload: MomoIPNRequest, @response() res: Response) {
         try {
+            functionLog('MOMO Incoming IPN');
             const ipnResponse = await this.paymentByMomo.handleIncomingIPN(payload);
 
             const data: PaymentProcessing = JSON.parse(payload.extraData);
