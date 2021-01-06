@@ -11,8 +11,9 @@ export const COLLECTIONS = {
     Student: 'students',
     Category: 'categories',
     TeachingData: 'teaching_data',
+    LearningData: 'learning_data',
     TutorReviewer: 'tutor_reviewers',
     LearningStack: 'learning_stacks',
-    TutorReviewerSummary: 'tutor_reviewer_summary',
-    ScheduledTask: 'scheduled_tasks'
+    ScheduledTask: 'scheduled_tasks',
+    TutorReviewerSummary: 'tutor_reviewer_summary'
 };

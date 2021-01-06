@@ -32,5 +32,6 @@ export * from './entity';
 export * from './coupon';
 export * from './payment';
 export * from './teachingData';
+export * from './learningData';
 export * from './tutorReviewerSummary';
 export * from './scheduledTask';

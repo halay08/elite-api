@@ -1,23 +1,23 @@
 import { injectable } from 'inversify';
 
 import { Entity } from './entity';
-import { ITeachingDataEntity } from './types';
+import { ILearningDataEntity } from './types';
 import { IDocumentReference } from '@/infra/database/types';
 
-// Collection: teaching_data
+// Collection: learning_data
 @injectable()
-export class TeachingData extends Entity<ITeachingDataEntity> {
-    constructor(props: ITeachingDataEntity) {
+export class LearningData extends Entity<ILearningDataEntity> {
+    constructor(props: ILearningDataEntity) {
         super(props);
     }
 
     /**
      * Creates entity
-     * @param props ITeachingDataEntity properties
-     * @returns ITeachingDataEntity
+     * @param props ILearningDataEntity properties
+     * @returns ILearningDataEntity
      */
-    public static create(props: ITeachingDataEntity): TeachingData {
-        const instance = new TeachingData(props);
+    public static create(props: ILearningDataEntity): LearningData {
+        const instance = new LearningData(props);
         return instance;
     }
 
@@ -25,8 +25,8 @@ export class TeachingData extends Entity<ITeachingDataEntity> {
         return this._props.id || '';
     }
 
-    get tutor(): IDocumentReference {
-        return this._props.tutor;
+    get student(): IDocumentReference {
+        return this._props.student;
     }
 
     get upcomingMinute(): number {
@@ -61,11 +61,7 @@ export class TeachingData extends Entity<ITeachingDataEntity> {
         return this._props.missedSession || 0;
     }
 
-    get missedStudentMinute(): number {
-        return this._props.missedStudentMinute || 0;
-    }
-
-    get totalEarnedAmount(): number {
-        return this._props.totalEarnedAmount || 0;
+    get missedTutorMinute(): number {
+        return this._props.missedTutorMinute || 0;
     }
 }

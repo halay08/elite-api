@@ -7,14 +7,15 @@ import { IRepository, ITeachingDataRepository, IUserRepository } from '@/src/inf
 import Container from '@/src/container';
 import { IDocumentReference, IQueryOption } from '@/infra/database/types';
 import { inject } from 'inversify';
+import { ITeachingDataSummary } from '../types';
 
 @provide(TYPES.TeachingDataService)
 export class TeachingDataService extends BaseService<TeachingData> {
     @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository;
 
     /**
-     * Create course repository instance
-     * @returns IRepository<T>
+     * Gets base repository instance
+     * @returns base repository instance
      */
     protected getBaseRepositoryInstance(): IRepository<TeachingData> {
         return Container.get<ITeachingDataRepository>(TYPES.TeachingDataRepository);
@@ -56,5 +57,20 @@ export class TeachingDataService extends BaseService<TeachingData> {
             limit
         };
         return this.query([], options);
+    }
+
+    /**
+     * Gets teaching data summary
+     * @param tutorId ID of tutor uses to query the learning sessions
+     * @returns ITeachingDataSummary
+     */
+    async getTeachingDataSummary(tutorId: string): Promise<ITeachingDataSummary> {
+        const data: TeachingData = await this.getById(tutorId);
+
+        return {
+            completed: data.completedSession,
+            missed: data.missedSession,
+            totalHour: data.completedMinute / 60
+        };
     }
 }

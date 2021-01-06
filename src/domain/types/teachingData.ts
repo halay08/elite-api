@@ -1,9 +1,8 @@
 import { IDocumentReference } from '@/src/infra/database/types';
-import { IEntity } from '.';
+import { IEntity } from './entity';
 
-type ITeachingData = {
-    tutor: IDocumentReference;
-
+type ITeachingSummary = {
+    // Minutes
     completedMinute?: number;
 
     upcomingMinute?: number;
@@ -12,12 +11,26 @@ type ITeachingData = {
 
     missedMinute?: number;
 
-    totalEarnedAmount?: number;
+    // Total session
+    completedSession?: number;
+
+    missedSession?: number;
+
+    upcomingSession?: number;
+
+    cancelledSession?: number;
 };
 
 /**
  * Tutor teaching data entity
  */
-type ITeachingDataEntity = IEntity & Required<ITeachingData>;
+type ITeachingDataEntity = IEntity &
+    Required<ITeachingSummary> & {
+        tutor: IDocumentReference;
 
-export { ITeachingDataEntity, ITeachingData };
+        missedStudentMinute?: number;
+
+        totalEarnedAmount?: number;
+    };
+
+export { ITeachingDataEntity, ITeachingSummary };

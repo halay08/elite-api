@@ -1,21 +1,23 @@
 import { inject } from 'inversify';
 import TYPES from '@/src/types';
-import { IUserRepository } from '@/src/infra/database/repositories';
 import { provide } from 'inversify-binding-decorators';
 import { UserStatus, UserRole, IUserEntity } from '@/domain/types';
 import { ISeeding } from './interfaces/seeding';
 import { User } from '@/domain';
-import { AuthService } from '@/src/app/services';
+import { AuthService, TutorService, StudentService } from '@/src/app/services';
 import { fireauth } from '@/infra/auth/firebase/types';
+import { BaseSeeding } from '.';
 
 @provide(TYPES.UserSeeding)
-export class UserSeeding implements ISeeding {
-    constructor(
-        @inject(TYPES.UserRepository)
-        private readonly userRepository: IUserRepository,
-        @inject(TYPES.AuthService)
-        private readonly authService: AuthService
-    ) {}
+export class UserSeeding extends BaseSeeding implements ISeeding {
+    @inject(TYPES.AuthService)
+    private readonly authService: AuthService;
+
+    @inject(TYPES.TutorService)
+    private readonly tutorService: TutorService;
+
+    @inject(TYPES.StudentService)
+    private readonly studentService: StudentService;
 
     getUserData(): IUserEntity[] {
         return [
@@ -42,9 +44,9 @@ export class UserSeeding implements ISeeding {
             },
             {
                 role: UserRole.STUDENT,
-                email: 'test@gmail.com',
+                email: 'halay09@gmail.com',
                 status: UserStatus.ACTIVE,
-                name: 'Mr Test',
+                name: 'Mr Khiem',
                 phoneNumber: '0933185827',
                 username: 'test',
                 avatar: 'https://ca.slack-edge.com/T018R4JFELS-U018R4LCPFC-3e7f2fc0ab72-512',
@@ -182,7 +184,7 @@ export class UserSeeding implements ISeeding {
             const { email = '' } = user;
 
             // Check exist user in Firestore
-            const existedUser = await this.userRepository.findBy('email', email);
+            const existedUser = await this.userService.findBy('email', email);
             if (existedUser.length > 0) {
                 console.log(`User ${email} already existed in the database`);
                 continue;
@@ -213,13 +215,18 @@ export class UserSeeding implements ISeeding {
             }
 
             user.id = authUser.uid;
+            if (user.role === UserRole.TUTOR) {
+                user.metadata = this.tutorService.getDocumentRef(user.id);
+            } else if (user.role === UserRole.STUDENT) {
+                user.metadata = this.studentService.getDocumentRef(user.id);
+            }
 
             // Set/update custom claim
             await this.authService.setCustomUserClaims(`${user.id}`, { role: user.role?.toString() });
 
             // Create Firestore user
             const userModel: User = User.create(user);
-            const newUser = await this.userRepository.create(userModel);
+            const newUser = await this.userService.create(userModel);
             const newUserEntity = newUser.serialize();
             console.log(`New user was created ${newUserEntity.id}`);
         }

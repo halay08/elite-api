@@ -27,5 +27,6 @@ export * from './globalSetting';
 export * from './entity';
 export * from './coupon';
 export * from './teachingData';
+export * from './learningData';
 export * from './tutorReviewerSummary';
 export * from './scheduledTask';

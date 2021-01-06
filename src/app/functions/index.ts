@@ -1,4 +1,4 @@
 export * from './user';
-export * from './tutor';
+export * from './learningStack';
 export * from './tutorReviewer';
 export * from './scheduledTask';

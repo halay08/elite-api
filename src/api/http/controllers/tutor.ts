@@ -21,7 +21,7 @@ import {
     TutorService,
     UserService,
     CourseService,
-    LearningStackService,
+    TeachingDataService,
     TutorReviewerService,
     TutorReviewerSummaryService
 } from '@/src/app/services';
@@ -39,7 +39,7 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
     @inject(TYPES.CourseService) private courseService: CourseService;
 
-    @inject(TYPES.LearningStackService) private learningStackService: LearningStackService;
+    @inject(TYPES.TeachingDataService) private teachingDataService: TeachingDataService;
 
     @inject(TYPES.TutorReviewerService) private tutorReviewerService: TutorReviewerService;
 
@@ -83,11 +83,11 @@ export class TutorController extends BaseHttpController implements interfaces.Co
 
     /**
      *
-     * Get info of tutor. No authentication required
+     * Get info of tutor.
      * Postman API document: https://elitework.postman.co
      */
     @httpGet('/:username')
-    public async getBySlug(@requestParam('username') slug: string, @response() res: Response) {
+    public async getByUsername(@requestParam('username') slug: string, @response() res: Response) {
         try {
             // Get user by username
             // It will be used to get tutor by user reference
@@ -107,12 +107,12 @@ export class TutorController extends BaseHttpController implements interfaces.Co
                 throw new NotFoundError('Tutor not found');
             }
 
-            // Get tutor teaching stack summary
-            const tutorStackSummary = await this.learningStackService.getTutorStackSummary(tutor.id);
+            // Get tutor teaching data summary
+            const summary = await this.teachingDataService.getTeachingDataSummary(tutor.id);
 
             const data = {
                 info: tutor.serialize(),
-                summary: tutorStackSummary
+                summary
             };
 
             return res.status(HttpStatus.OK).json(data);

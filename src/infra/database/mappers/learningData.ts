@@ -1,14 +1,14 @@
-import { TeachingData } from '@/domain';
+import { LearningData } from '@/domain';
 
 /**
- * Teaching data mapper
+ * Learning data mapper
  */
-export class TeachingDataMapper {
-    public static toDomain(raw: any): TeachingData {
-        return TeachingData.create({
+export class LearningDataMapper {
+    public static toDomain(raw: any): LearningData {
+        return LearningData.create({
             id: raw.id,
 
-            tutor: raw.tutor,
+            student: raw.student,
 
             completedMinute: raw.completedMinute,
 
@@ -26,9 +26,7 @@ export class TeachingDataMapper {
 
             missedSession: raw.missedSession,
 
-            missedStudentMinute: raw.missedStudentMinute,
-
-            totalEarnedAmount: raw.totalEarnedAmount
+            missedTutorMinute: raw.missedTutorMinute
         });
     }
 }
