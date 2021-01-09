@@ -79,6 +79,7 @@ export class BookingService extends BaseService<Booking> {
         const sessionRef = this.sessionRepository.getDocumentRef(`${session.id}`);
 
         const bookingSession: IBookingSession = {
+            name: session.name,
             startTime: session.startTime,
             duration: session.duration,
             cost: session.cost,

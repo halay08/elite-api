@@ -12,7 +12,7 @@ enum BookingStatus {
     PAID = 'paid'
 }
 
-type IBookingSession = Pick<ISession, 'startTime' | 'duration' | 'cost' | 'costType'>;
+type IBookingSession = Pick<ISession, 'name' | 'startTime' | 'duration' | 'cost' | 'costType'>;
 
 type IBooking = {
     paymentMethod: IBookingPaymentMethod;
@@ -37,7 +37,7 @@ type IBooking = {
     // The data use to store booked session histories.
     bookingSession: IBookingSession;
 
-    amount: number; // Total amount after using discount
+    amount: string; // Total amount after using discount
 
     bookedDate: Date;
 

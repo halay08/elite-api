@@ -4,6 +4,7 @@ import TYPES from '@/src/types';
 import { Booking, Session, Room, LearningStack, ScheduledTask } from '@/domain';
 import { BookingService, UserService } from './index';
 import { PaymentProcessing, SessionStatus, BookingStatus, RoomStatus, LearningStatus } from '@/domain/types';
+import { formatCurrency } from '@/app/helpers';
 import {
     ChainOfEvents,
     BookingHandler,
@@ -29,11 +30,11 @@ export class PaymentService extends BookingService {
      * @returns {String} bookingId
      * @memberof PaymentService
      */
-    public async onSuccessTransaction({ sessionId, orderId, transactionId }: PaymentProcessing) {
+    public async onSuccessTransaction({ sessionId, orderId, transactionId, amount }: PaymentProcessing) {
         // Get booking from orderId
         const booking: Booking = await this.bookingService.getBookingByOrderId(orderId);
         const { id: bookingId, student, tutor, bookedDate, bookingSession } = booking.serialize();
-        const { startTime, duration } = bookingSession;
+        const { startTime, duration, name: sessionName } = bookingSession;
         const bookingData: EmailBookingDataTypes = {
             orderId,
             bookedDate,
@@ -46,7 +47,8 @@ export class PaymentService extends BookingService {
             name: ChainOfEvents.BOOKING_HANDLER,
             data: {
                 transactionId,
-                status: BookingStatus.PAID
+                status: BookingStatus.PAID,
+                amount
             },
             id: bookingId as string
         };
@@ -105,8 +107,19 @@ export class PaymentService extends BookingService {
         const notificationTaskEvent: IPaymentRequestHandler<any> = {
             name: ChainOfEvents.NOTIFICATION_TASK_HANDLER,
             data: {
-                email: (student as any).email,
-                data: { ...bookingData, name: (student as any).name }
+                student: {
+                    name: (student as any).name,
+                    email: (student as any).email
+                },
+                tutor: {
+                    name: (tutor as any).name,
+                    email: (tutor as any).email
+                },
+                orderData: {
+                    ...bookingData,
+                    amount: formatCurrency(amount),
+                    sessionName
+                }
             },
             id: ''
         };

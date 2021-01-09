@@ -31,4 +31,8 @@ export class Booking extends Entity<IBookingEntity> {
     get status(): string {
         return this._props.status || '';
     }
+
+    get amount(): string {
+        return this._props.amount;
+    }
 }

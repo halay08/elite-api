@@ -165,7 +165,8 @@ export class PaymentController extends BaseHttpController implements interfaces.
             await this.paymentService.onSuccessTransaction({
                 ...data,
                 transactionId: payload.transId,
-                orderId: ipnResponse.orderId
+                orderId: ipnResponse.orderId,
+                amount: payload.amount
             });
 
             return res.status(HttpStatus.OK).json(ipnResponse);

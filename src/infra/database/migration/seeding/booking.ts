@@ -60,6 +60,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                 tutor: tutorReferences[0],
                 originSession: sessionReferences[0],
                 bookingSession: {
+                    name: sessions[0].props.name,
                     startTime: sessions[0].props.startTime,
                     duration: sessions[0].props.duration,
                     cost: sessions[0].props.cost,
@@ -67,7 +68,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                 },
                 orderId: 'MOMO1000000',
                 bookedDate: time.getCurrentUTCDate(),
-                amount: 100,
+                amount: '100',
                 paymentMethod: 'momo',
                 transactionId: '2302586804',
                 status: BookingStatus.PAID
@@ -77,6 +78,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                 tutor: tutorReferences[1],
                 originSession: sessionReferences[1],
                 bookingSession: {
+                    name: sessions[1].props.name,
                     startTime: sessions[1].props.startTime,
                     duration: sessions[1].props.duration,
                     cost: sessions[1].props.cost,
@@ -84,7 +86,7 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
                 },
                 orderId: 'MOMO1000001',
                 bookedDate: time.getCurrentUTCDate(),
-                amount: 200,
+                amount: '200',
                 paymentMethod: 'momo',
                 transactionId: '2302586804',
                 status: BookingStatus.PAID

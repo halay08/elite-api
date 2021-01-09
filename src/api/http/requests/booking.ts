@@ -6,7 +6,7 @@ type BookingDTO = {
 
     coupon: string;
 
-    amount: number;
+    amount: string;
 
     sessionId: string;
 
