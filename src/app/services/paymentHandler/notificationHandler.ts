@@ -8,6 +8,7 @@ export class NotificationHandler extends AbstractHandler<any> {
         if (name === ChainOfEvents.NOTIFICATION_TASK_HANDLER) {
             const { student, tutor, orderData } = data;
             const baseURL = process.env.FRONTEND_URL || env.frontend.url;
+            const domain = process.env.DOMAIN || env.frontend.domain;
             const hotLine = process.env.HOT_LINE || env.frontend.hot_line;
 
             const studentNotification = new EmailAdapter(
@@ -15,6 +16,7 @@ export class NotificationHandler extends AbstractHandler<any> {
                 TemplateType.BOOKING_STUDENT,
                 {
                     ...orderData,
+                    domain,
                     orderURL: `${baseURL}/orders`,
                     calendarURL: `${baseURL}/calendar`,
                     name: student.name,
@@ -29,6 +31,7 @@ export class NotificationHandler extends AbstractHandler<any> {
                 TemplateType.BOOKING_TUTOR,
                 {
                     ...orderData,
+                    domain,
                     bookingURL: `${baseURL}/booking`,
                     calendarURL: `${baseURL}/calendar`,
                     name: tutor.name,

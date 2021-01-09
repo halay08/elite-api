@@ -47,4 +47,13 @@ const getCustomTime = (time?: Partial<ITime>): Date => {
     return admin.firestore.Timestamp.fromDate(date).toDate();
 };
 
-export { ITime, getCurrentUTCDate, addDate, getCustomTime };
+const getFormatTimeByLocale = (locale: string = 'vi-VN'): string => {
+    const formats: any = {
+        'es-US': 'MM/DD/YYYY HH:mm',
+        'vi-VN': 'DD/MM/YYYY HH:mm'
+    };
+
+    return formats[locale];
+};
+
+export { ITime, getCurrentUTCDate, addDate, getCustomTime, getFormatTimeByLocale };

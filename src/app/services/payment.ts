@@ -36,6 +36,7 @@ export class PaymentService extends BookingService {
         const { id: bookingId, student, tutor, bookedDate, bookingSession } = booking.serialize();
         const { startTime, duration, name: sessionName } = bookingSession;
         const bookingData: EmailBookingDataTypes = {
+            sessionName,
             orderId,
             bookedDate,
             startTime,
