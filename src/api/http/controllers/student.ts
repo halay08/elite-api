@@ -201,10 +201,10 @@ export class StudentController extends BaseHttpController implements interfaces.
     ) {
         try {
             if (payload.shortIntro) {
-                await this.userService.updateFields(id, { shortIntro: payload.shortIntro });
+                await this.userService.update(id, { shortIntro: payload.shortIntro });
             }
 
-            const updated: Student = await this.studentService.updateByUserId(id, payload);
+            const updated: Student = await this.studentService.update(id, payload);
             return res.status(HttpStatus.OK).json(updated.serialize());
         } catch ({ message }) {
             return res.status(HttpStatus.BAD_REQUEST).send({ message });
