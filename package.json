@@ -20,7 +20,7 @@
         "start": "npm run shell",
         "decrypt:serviceAccountKey": "mkdir -p ./dist && gpg --batch --yes --decrypt --output ./dist/serviceAccountKey.json ./deployment/sa-staging.json.gpg",
         "predeploy": "yarn clean && yarn functions:set-env && yarn build && yarn decrypt:serviceAccountKey",
-        "deploy": "firebase deploy --only functions:api",
+        "deploy": "firebase deploy --only functions",
         "auth": "firebase emulators:start --only auth,pubsub",
         "firestore": "firebase emulators:start --only firestore",
         "tools": "firebase emulators:start --only auth,pubsub,firestore,database",

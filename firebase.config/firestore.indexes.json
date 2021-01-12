@@ -1,0 +1,30 @@
+{
+    "indexes": [
+        {
+            "collectionGroup": "learning_stacks",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "student", "order": "ASCENDING" },
+                { "fieldPath": "startTime", "order": "DESCENDING" }
+            ]
+        },
+        {
+            "collectionGroup": "teaching_data",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "completedMinute", "order": "DESCENDING" },
+                { "fieldPath": "totalEarnedAmount", "order": "DESCENDING" }
+            ]
+        },
+        {
+            "collectionGroup": "tutors",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "deletedAt", "order": "ASCENDING" },
+                { "fieldPath": "happyUsers", "order": "DESCENDING" },
+                { "fieldPath": "reviews", "order": "DESCENDING" }
+            ]
+        }
+    ],
+    "fieldOverrides": []
+}
