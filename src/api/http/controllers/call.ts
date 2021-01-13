@@ -7,6 +7,7 @@ import {
     BaseHttpController,
     controller,
     httpGet,
+    httpPut,
     interfaces,
     requestParam,
     queryParam,
@@ -16,9 +17,9 @@ import {
 import { env } from '@/api/http/config/constants';
 import TYPES from '@/src/types';
 import { Twilio as Call } from '@/infra/call/twillio';
-import { UserRole } from '@/src/domain/types';
+import { UserRole, RoomStatus, LearningStatus } from '@/src/domain/types';
 import { authorize } from '@/api/http/middlewares';
-import { RoomService } from '@/src/app/services';
+import { RoomService, LearningStackService } from '@/src/app/services';
 
 const Validation = {
     token: {
@@ -34,6 +35,7 @@ const Validation = {
 export class CallController extends BaseHttpController implements interfaces.Controller {
     @inject(TYPES.Call) private call: Call;
     @inject(TYPES.RoomService) private roomService: RoomService;
+    @inject(TYPES.LearningStackService) private learningStackService: LearningStackService;
 
     /**
      *
@@ -143,6 +145,59 @@ export class CallController extends BaseHttpController implements interfaces.Con
             });
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
+        }
+    }
+
+    /**
+     *
+     * @api {PUT} /students/:id Update student
+     * @apiGroup Student
+     * @apiVersion  1.0.0
+     *
+     * @apiHeader {String} Authorization Access token
+     * @apiHeaderExample {json} Header-Example:
+     *   {
+     *      "Authorization": "Bearer sdhjfksfdhjk23903482093483290"
+     *   }
+     *
+     * @apiParam  {String} Room Id
+     *
+     * @apiSuccess (200) {Object} New data updated
+     * @apiSuccessExample {Object} Success-Response:
+     * {
+     *      "NIBPpAj9"
+     *  }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     *
+     * @apiError UNAUTHORIZED Return Error Message.
+     * @apiErrorExample {String} Error-Response:
+     *   Error 401: Unauthorized
+     *   Unauthorized
+     */
+    @httpPut('/finish/:roomName')
+    public async finishClass(@requestParam('roomName') roomName: string, @response() res: Response) {
+        try {
+            const room = await this.roomService.findByRoomName(roomName);
+            const { id: roomId } = room.serialize();
+
+            const learningStack = await this.learningStackService.getByOrderId(roomName);
+            const { id: learningStackId } = learningStack.serialize();
+
+            const updateRoom = this.roomService.update(roomId as string, { status: RoomStatus.NOT_READY });
+            const updateLearningStack = this.learningStackService.update(learningStackId as string, {
+                status: LearningStatus.COMPLETED
+            });
+
+            await Promise.all([updateRoom, updateLearningStack]);
+            return res.status(HttpStatus.OK).json(roomId);
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
         }
     }
 }

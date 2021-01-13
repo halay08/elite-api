@@ -204,7 +204,7 @@ export class UserSeeding extends BaseSeeding implements ISeeding {
                     displayName: user.name,
                     emailVerified: true,
                     photoURL: user.avatar,
-                    password: '123123123'
+                    password: 'abcd1234'
                 };
 
                 // Create authentication user

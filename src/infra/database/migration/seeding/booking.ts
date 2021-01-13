@@ -134,7 +134,8 @@ export class BookingSeeding extends BaseSeeding implements ISeeding {
             status: LearningStatus.BOOKED,
             startTime,
             comment: '',
-            earnedAmount: 0
+            earnedAmount: 0,
+            orderId: 'MOMO1000000'
         });
         const newModel = await this.learningStackRepository.create(model);
         const modelEntity: ILearningStackEntity = newModel.serialize();

@@ -8,6 +8,8 @@ export class LearningStackMapper {
         return LearningStack.create({
             id: raw.id,
 
+            orderId: raw.orderId,
+
             booking: raw.booking,
 
             student: raw.student,

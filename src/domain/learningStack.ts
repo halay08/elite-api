@@ -25,6 +25,10 @@ export class LearningStack extends Entity<ILearningStackEntity> {
         return this._props.id || '';
     }
 
+    get orderId(): string {
+        return this._props.orderId;
+    }
+
     get booking(): IDocumentReference {
         return this._props.booking;
     }

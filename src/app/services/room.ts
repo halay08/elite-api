@@ -1,6 +1,7 @@
 import { provide } from 'inversify-binding-decorators';
 
 import { Room } from '@/domain';
+import { RoomStatus } from '@/domain/types';
 import TYPES from '@/src/types';
 import { NotFoundError } from '@/app/errors/notFound';
 import { BaseService } from './base';
@@ -24,7 +25,11 @@ export class RoomService extends BaseService<Room> {
      * @param value The query value
      */
     async findByRoomName(value: string): Promise<Room> {
-        const query = await this.baseRepository.findBy('name', value);
+        const query = await this.baseRepository.query([
+            { name: value, operator: '==' },
+            { status: RoomStatus.AVAILABBLE, operator: '==' }
+        ]);
+
         const [room]: Array<Room> = query || [];
 
         if (!room) throw new NotFoundError('Room is not found');

@@ -13,6 +13,7 @@ import { IDocumentReference, IQueryOption } from '@/src/infra/database/types';
 import { inject } from 'inversify';
 import { ISerializedLearningStack, IGetLearningStackParams } from '@/src/app/types/learningStack';
 import { LIMIT } from '@/src/api/http/config/pagination';
+import { NotFoundError } from '@/app/errors/notFound';
 
 @provide(TYPES.LearningStackService)
 export class LearningStackService extends BaseService<LearningStack> {
@@ -29,6 +30,22 @@ export class LearningStackService extends BaseService<LearningStack> {
      */
     protected getBaseRepositoryInstance(): IRepository<LearningStack> {
         return Container.get<ILearningStackRepository>(TYPES.LearningStackRepository);
+    }
+
+    /**
+     * Find learning stack by orderId.
+     *
+     * @param orderId string
+     * @return LearningStack
+     */
+    async getByOrderId(orderId: string): Promise<LearningStack> {
+        const query = await this.baseRepository.query([{ orderId: orderId, operator: '==' }]);
+
+        const [learningStack]: Array<LearningStack> = query || [];
+
+        if (!learningStack) throw new NotFoundError('LearningStack is not found');
+
+        return learningStack;
     }
 
     /**

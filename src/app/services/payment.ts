@@ -70,6 +70,7 @@ export class PaymentService extends BookingService {
                 booking: this.bookingService.getDocumentRef(`${bookingId}`),
                 student: this.userService.getDocumentRef(`${student.id}`),
                 tutor: this.userService.getDocumentRef(`${tutor.id}`),
+                orderId,
                 status: LearningStatus.BOOKED,
                 earnedAmount: 0,
                 startTime,
