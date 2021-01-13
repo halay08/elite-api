@@ -1,10 +1,7 @@
 import { Joi, validate } from 'express-validation';
+import { Student } from '@/src/domain';
 
-export type UpdateStudentPayload = {
-    studyTitle?: string;
-    studyPlace?: string;
-    jobTitle?: string;
-    jobPlace?: string;
+export type UpdateStudentPayload = Partial<Student> & {
     shortIntro?: string;
 };
 
