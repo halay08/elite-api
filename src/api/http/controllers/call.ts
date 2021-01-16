@@ -150,7 +150,105 @@ export class CallController extends BaseHttpController implements interfaces.Con
 
     /**
      *
-     * @api {PUT} /students/:id Update student
+     * @api {GET} /call/info/:room Get room info
+     * @apiName Get Room Info
+     * @apiGroup Video Call
+     * @apiVersion  1.0.0
+     *
+     * @apiHeader {String} Authorization User's access key.
+     * @apiHeaderExample {json} Header-Example:
+     *     {
+     *       "Authorization": "Bearer: dsfsdkfhjks2904820493204930-sdflskjd"
+     *     }
+     *
+     * @apiParam  {String} room Room Id
+     *
+     * @apiParamExample  {type} Request-Example:
+     * {
+     *     tutorId : 'k7E7OeDPm'
+     *     studentId : 'Ygfec8'
+     *     room : '879OeDPm'
+     * }
+     *
+     * @apiSuccess (200) {json} String token
+     *
+     * @apiSuccessExample {json} Success-Response:
+     * {
+     *     token : '324kjhdsfjkhsk2'
+     * }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     *
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "channel name is required"
+     *   }
+     *
+     *
+     */
+    @httpGet('/info/:id')
+    public async getInfo(@requestParam('roomName') roomName: string, @response() res: Response) {
+        try {
+            const room = await this.roomService.findByRoomName(roomName);
+
+            return res.status(HttpStatus.OK).json(room.serialize()).end();
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ error: error.message }).end();
+        }
+    }
+
+    /**
+     *
+     * @api {PUT} /start/:id Update status for class
+     * @apiGroup Call
+     * @apiVersion  1.0.0
+     *
+     * @apiHeader {String} Authorization Access token
+     * @apiHeaderExample {json} Header-Example:
+     *   {
+     *      "Authorization": "Bearer sdhjfksfdhjk23903482093483290"
+     *   }
+     *
+     * @apiParam  {String} Room Id
+     *
+     * @apiSuccess (200) {Object} New data updated
+     * @apiSuccessExample {Object} Success-Response:
+     * {
+     *      "NIBPpAj9"
+     *  }
+     *
+     * @apiError BAD_REQUEST Return Error Message.
+     * @apiErrorExample {Object} Error-Response:
+     *   Error 400: Bad Request
+     *   {
+     *     "error": "Something went wrong"
+     *   }
+     *
+     * @apiError UNAUTHORIZED Return Error Message.
+     * @apiErrorExample {String} Error-Response:
+     *   Error 401: Unauthorized
+     *   Unauthorized
+     */
+    @httpPut('/start/:roomName')
+    public async startClass(@requestParam('roomName') roomName: string, @response() res: Response) {
+        try {
+            const learningStack = await this.learningStackService.getByOrderId(roomName);
+            const { id: learningStackId } = learningStack.serialize();
+
+            await this.learningStackService.update(learningStackId as string, {
+                status: LearningStatus.STARTED
+            });
+
+            return res.status(HttpStatus.OK).json(learningStackId);
+        } catch ({ message }) {
+            return res.status(HttpStatus.BAD_REQUEST).send({ message });
+        }
+    }
+
+    /**
+     *
+     * @api {PUT} /finish/:id Update student
      * @apiGroup Student
      * @apiVersion  1.0.0
      *
