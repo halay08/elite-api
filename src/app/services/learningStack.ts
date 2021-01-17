@@ -71,10 +71,10 @@ export class LearningStackService extends BaseService<LearningStack> {
      * @returns ISerializedLearningStack[]
      */
     async getByStudentId(params: IGetLearningStackParams): Promise<ISerializedLearningStack[]> {
-        const { uid = '', status = '', startAfter = '', limit = 0 } = params;
+        const { uid = '', status = '', startAfter = '', limit = 0, from = 0, to = 0 } = params;
         const studentRef = this.userRepository.getDocumentRef(uid);
 
-        const operatorQueries = getOperatorQueries({ student: studentRef, status });
+        const operatorQueries = getOperatorQueries({ student: studentRef, status, from, to });
 
         const queryOptions: Partial<IQueryOption<LearningStack>> = {};
 
