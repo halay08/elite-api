@@ -45,8 +45,10 @@ export class LearningStackController extends BaseHttpController implements inter
             const status = queries.status || '';
             const startAfter = queries.startAfter || '';
             const limit = queries.limit ? parseInt(queries.limit) : 0;
+            const from = queries.from ? parseInt(queries.from) : 0;
+            const to = queries.to ? parseInt(queries.to) : 0;
 
-            const data = await this.learningStackService.getByStudentId({ uid, status, startAfter, limit });
+            const data = await this.learningStackService.getByStudentId({ uid, status, startAfter, limit, from, to });
 
             return res.status(HttpStatus.OK).json(data);
         } catch (error) {

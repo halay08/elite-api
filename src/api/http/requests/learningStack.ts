@@ -5,6 +5,10 @@ type ILearningStackQuery = {
     student: IDocumentQuery<Student>;
 
     status?: string;
+
+    from?: number;
+
+    to?: number;
 };
 
 type ILearningStackOption = {
@@ -13,6 +17,12 @@ type ILearningStackOption = {
     limit?: number;
 };
 
-type ILearningStackRequest = { status?: string; startAfter?: string; limit?: string };
+type ILearningStackRequest = {
+    status?: string;
+    startAfter?: string;
+    limit?: string;
+    from?: string;
+    to?: string;
+};
 
 export { ILearningStackRequest, ILearningStackQuery, ILearningStackOption };

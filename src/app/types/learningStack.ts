@@ -5,6 +5,8 @@ type IGetLearningStackParams = {
     status: string;
     startAfter: string;
     limit: number;
+    from?: number;
+    to?: number;
 };
 
 interface ISerializedLearningStack extends Omit<ILearningStackEntity, 'tutor'> {
