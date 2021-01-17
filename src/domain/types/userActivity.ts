@@ -6,11 +6,13 @@ type IUserActivity = {
 
     action_name: string;
 
-    action_details: string;
+    action_details?: string;
 
     requestUrl: string;
 
     ipAddress: string;
+
+    object?: IDocumentReference;
 };
 
 /**

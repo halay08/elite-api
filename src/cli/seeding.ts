@@ -19,6 +19,7 @@ type ISeedingType =
     | 'SessionSeeding'
     | 'StudentSeeding'
     | 'BookingSeeding'
+    | 'UserActivitySeeding'
     | 'TutorReviewerSeeding';
 
 class Seeding {
@@ -29,6 +30,7 @@ class Seeding {
         'SessionSeeding',
         'StudentSeeding',
         'BookingSeeding',
+        'UserActivitySeeding',
         'TutorReviewerSeeding'
     ];
 

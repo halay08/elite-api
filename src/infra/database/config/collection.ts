@@ -15,5 +15,6 @@ export const COLLECTIONS = {
     TutorReviewer: 'tutor_reviewers',
     LearningStack: 'learning_stacks',
     ScheduledTask: 'scheduled_tasks',
+    UserActivity: 'user_activities',
     TutorReviewerSummary: 'tutor_reviewer_summary'
 };
